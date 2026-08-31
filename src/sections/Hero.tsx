@@ -20,6 +20,11 @@ const CHIPS = [
 
 const REVERSE_STEP = 1 / 25
 
+function isTouchDevice(): boolean {
+  if (typeof window === 'undefined') return false
+  return window.matchMedia('(hover: none) and (pointer: coarse)').matches
+}
+
 export function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null)
 
@@ -27,6 +32,45 @@ export function Hero() {
     const v = videoRef.current
     if (!v) return
 
+    // iOS requires the element to be muted BEFORE play() is invoked.
+    v.muted = true
+    v.defaultMuted = true
+    v.setAttribute('muted', '')
+    v.setAttribute('playsinline', '')
+    v.setAttribute('webkit-playsinline', 'true')
+
+    const kick = () => {
+      const p = v.play()
+      if (p && typeof p.then === 'function') p.catch(() => {})
+    }
+
+    // Retry autoplay when the tab becomes visible again or on first user gesture.
+    const onVisible = () => {
+      if (document.visibilityState === 'visible' && v.paused) kick()
+    }
+    const onFirstTouch = () => {
+      if (v.paused) kick()
+      window.removeEventListener('touchstart', onFirstTouch)
+      window.removeEventListener('click', onFirstTouch)
+    }
+    document.addEventListener('visibilitychange', onVisible)
+    window.addEventListener('touchstart', onFirstTouch, { passive: true })
+    window.addEventListener('click', onFirstTouch)
+
+    // On touch devices, skip the reverse-scrub ping-pong (currentTime seeks
+    // are expensive on iOS and often surface the native play button when the
+    // scrub pauses).  Just use the plain `loop` attribute set below.
+    if (isTouchDevice()) {
+      v.loop = true
+      kick()
+      return () => {
+        document.removeEventListener('visibilitychange', onVisible)
+        window.removeEventListener('touchstart', onFirstTouch)
+        window.removeEventListener('click', onFirstTouch)
+      }
+    }
+
+    // Desktop: forward → reverse-scrub → forward ping-pong.
     let direction: 'forward' | 'backward' = 'forward'
     let seeking = false
     let raf = 0
@@ -35,7 +79,6 @@ export function Hero() {
     const onSeeked = () => {
       seeking = false
     }
-
     const reverseStep = () => {
       if (cancelled || direction !== 'backward') return
       if (seeking) {
@@ -46,14 +89,13 @@ export function Hero() {
       if (next <= 0.02) {
         direction = 'forward'
         v.currentTime = 0
-        v.play().catch(() => {})
+        kick()
         return
       }
       seeking = true
       v.currentTime = next
       raf = requestAnimationFrame(reverseStep)
     }
-
     const onEnded = () => {
       direction = 'backward'
       v.pause()
@@ -63,12 +105,15 @@ export function Hero() {
 
     v.addEventListener('ended', onEnded)
     v.addEventListener('seeked', onSeeked)
-    v.play().catch(() => {})
+    kick()
 
     return () => {
       cancelled = true
       v.removeEventListener('ended', onEnded)
       v.removeEventListener('seeked', onSeeked)
+      document.removeEventListener('visibilitychange', onVisible)
+      window.removeEventListener('touchstart', onFirstTouch)
+      window.removeEventListener('click', onFirstTouch)
       cancelAnimationFrame(raf)
     }
   }, [])
@@ -81,7 +126,8 @@ export function Hero() {
           autoPlay
           muted
           playsInline
-          className="absolute inset-0 w-full h-full object-cover"
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
           src="/hero.mp4"
         />
 

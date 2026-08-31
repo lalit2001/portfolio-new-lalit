@@ -195,9 +195,11 @@ function IconTile({
   size?: 'sm' | 'md'
   index?: number
 }) {
-  const iconSize = size === 'sm' ? 14 : 16
-  const padding = size === 'sm' ? 'px-2 py-1.5' : 'px-2.5 py-2'
-  const textSize = size === 'sm' ? 'text-[10px]' : 'text-[11px]'
+  // Icon and typography scale down on narrow viewports so cards do not overflow.
+  const iconSize = size === 'sm' ? 12 : 14
+  const padding =
+    size === 'sm' ? 'px-1.5 py-1 sm:px-2 sm:py-1.5' : 'px-2 py-1.5 sm:px-2.5 sm:py-2'
+  const textSize = size === 'sm' ? 'text-[9px] sm:text-[10px]' : 'text-[10px] sm:text-[11px]'
   return (
     <motion.div
       initial={{ opacity: 0, y: 8, scale: 0.94 }}
@@ -295,19 +297,27 @@ function LayeredVisual({
 }
 
 function WindowVisual({ tools, accent }: { tools: Tool[]; accent: string }) {
-  const windows = [
-    { top: '6%', left: '6%', width: '62%', tools: tools.slice(0, 4) },
-    { top: '30%', left: '30%', width: '62%', tools: tools.slice(4, 8) },
-    { top: '54%', left: '10%', width: '60%', tools: tools.slice(8, tools.length) },
+  const groups = [
+    {
+      tools: tools.slice(0, 4),
+      pos: 'md:absolute md:top-[6%] md:left-[6%] md:w-[62%]',
+    },
+    {
+      tools: tools.slice(4, 8),
+      pos: 'md:absolute md:top-[30%] md:left-[30%] md:w-[62%]',
+    },
+    {
+      tools: tools.slice(8, tools.length),
+      pos: 'md:absolute md:top-[54%] md:left-[10%] md:w-[60%]',
+    },
   ]
   let index = 0
   return (
-    <>
-      {windows.map((w, i) => (
+    <div className="md:absolute md:inset-0 flex flex-col gap-2 p-4 md:p-0">
+      {groups.map((g, i) => (
         <div
           key={i}
-          className="absolute rounded-xl bg-[#151515] border border-white/[0.08] shadow-[0_20px_50px_-15px_rgba(0,0,0,0.75)] overflow-hidden"
-          style={{ top: w.top, left: w.left, width: w.width }}
+          className={`rounded-xl bg-[#151515] border border-white/[0.08] shadow-[0_20px_50px_-15px_rgba(0,0,0,0.75)] overflow-hidden ${g.pos}`}
         >
           <div className="flex items-center gap-1 px-3 py-1.5 border-b border-white/[0.05] bg-black/40">
             <span className="w-1.5 h-1.5 rounded-full bg-white/20" />
@@ -315,7 +325,7 @@ function WindowVisual({ tools, accent }: { tools: Tool[]; accent: string }) {
             <span className="w-1.5 h-1.5 rounded-full bg-white/20" />
           </div>
           <div className="p-2 flex flex-wrap gap-1.5">
-            {w.tools.map((t) => {
+            {g.tools.map((t) => {
               const idx = index++
               return (
                 <IconTile
@@ -330,7 +340,7 @@ function WindowVisual({ tools, accent }: { tools: Tool[]; accent: string }) {
           </div>
         </div>
       ))}
-    </>
+    </div>
   )
 }
 
@@ -364,12 +374,12 @@ function PipelineVisual({
         aria-hidden
         viewBox="0 0 100 100"
         preserveAspectRatio="none"
-        className="absolute inset-4 pointer-events-none"
+        className="absolute inset-4 pointer-events-none hidden sm:block"
       >
         <line x1="33" y1="50" x2="35" y2="50" stroke={accent} strokeOpacity="0.35" strokeWidth="0.6" strokeDasharray="1 1" />
         <line x1="66" y1="50" x2="68" y2="50" stroke={accent} strokeOpacity="0.35" strokeWidth="0.6" strokeDasharray="1 1" />
       </svg>
-      <div className="relative h-full grid grid-cols-3 gap-2">
+      <div className="relative h-full grid grid-cols-1 sm:grid-cols-3 gap-2">
         {cols.map((c) => (
           <div
             key={c.label}
@@ -497,7 +507,9 @@ function OrchestratorVisual({
     <div className="absolute inset-0 p-4">
       <div
         className={`relative h-full ${
-          wide ? 'grid grid-cols-3 gap-3' : 'flex flex-col gap-2'
+          wide
+            ? 'flex flex-col gap-2 lg:grid lg:grid-cols-3 lg:gap-3'
+            : 'flex flex-col gap-2'
         }`}
       >
         <SatelliteGroup
@@ -615,8 +627,8 @@ function CategoryCard({
       <div
         className={`relative overflow-hidden ${
           wide
-            ? 'h-64 lg:h-auto lg:w-3/5 lg:border-b-0 lg:border-r border-b border-white/[0.05]'
-            : 'h-64 md:h-72 border-b border-white/[0.05]'
+            ? 'min-h-[360px] lg:min-h-0 lg:h-auto lg:w-3/5 lg:border-b-0 lg:border-r border-b border-white/[0.05]'
+            : 'min-h-[340px] md:h-72 md:min-h-0 border-b border-white/[0.05]'
         }`}
       >
         {category.visual === 'stack' && (
