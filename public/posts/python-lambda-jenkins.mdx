@@ -1,0 +1,138 @@
+---
+title: Deploying a Python model to AWS Lambda with Jenkins
+date: 2023-05-21
+excerpt: A minimal CI pipeline that packages a Python model, zips its dependencies, and deploys to AWS Lambda on every merge.
+tags: []
+cover: /posts/images/python-lambda-jenkins-cover.svg
+source: medium
+sourceUrl: https://medium.com/@lalitmaharana2001/deploying-a-python-model-to-aws-lambda-using-jenkins-feadb0ca1571
+---
+
+![](/posts/images/python-lambda-jenkins-hero.png)
+
+**Introduction:**
+
+Deploying Python models to AWS Lambda offers a scalable and serverless solution for executing machine learning algorithms. In this blog post, we will explore how to leverage Jenkins, a popular continuous integration and deployment tool, to automate the deployment process. By integrating Jenkins with AWS services like Amazon Elastic Container Registry (ECR) and AWS Lambda, we can create a streamlined pipeline for deploying Python models and keeping them up to date.
+
+**Prerequisites:**
+
+Before we begin, ensure you have a basic understanding of AWS Lambda, Jenkins, and Docker. Familiarity with these technologies will help you follow the steps outlined in this blog post. If you need a refresher, refer to the official documentation for each technology.
+
+![](/posts/images/python-lambda-jenkins-fig1.png)
+
+**Setting up the Jenkins Pipeline:**
+
+The first step in deploying our Python model is to set up a Jenkins pipeline. The provided Jenkinsfile contains the necessary configuration for our deployment pipeline. Let’s take a closer look at the stages involved:
+
+**1.Clone the Latest Code from Git:**
+
+To ensure that we have the latest code from our Git repository, we will add a stage to the pipeline that clones the repository. This step helps us keep the deployment up to date with the latest changes. You can modify the Jenkinsfile to include a stage that clones the repository using Git commands.
+
+``` python
+
+stage('Clone Git Repository') {
+  steps {
+    git 'https://github.com/your-username/your-repo.git'
+  }
+}
+```
+
+**2.** **Building the Docker Image:**
+
+After cloning the repository, the next stage is responsible for building the Docker image that encapsulates our Python model. The pipeline triggers this stage whenever changes are detected in the “app” directory. By leveraging the “docker.build” command, we can build the Docker image using the specified Dockerfile.
+
+``` python
+
+stage('Building Image') {
+  when {
+    changeset "app/**/*"
+  }
+  steps {
+    script {
+      dockerImage = docker.build("${IMAGE_REPO_NAME}:${IMAGE_TAG}", "-f Dockerfile .")
+    }
+  }
+}
+```
+
+**3.** **Pushing to Amazon ECR:**
+
+Once the Docker image is built, the next stage pushes it to Amazon ECR, a fully-managed container registry service. The pipeline checks for changes in the “app” directory to determine when to execute this stage. By running the necessary AWS CLI commands, we authenticate with ECR, tag the Docker image, and push it to the repository.
+
+``` python
+
+stage('Push to ECR') {
+  when {
+    changeset "app/**/*"
+  }
+  steps {
+    script {
+      sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+      sh "docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:$IMAGE_TAG"
+      sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
+    }
+  }
+}
+```
+
+**4. Updating the Lambda Function Image:**
+
+The final stage updates the Lambda function with the new Docker image stored in ECR. Like the previous stages, this step is triggered when changes are detected in the “app” directory. Using the AWS CLI, we update the Lambda function’s code by specifying the image URI from ECR.
+
+``` python
+
+stage('Update Lambda Function Image') {
+  when {
+    changeset "app/**/*"
+  }
+  steps {
+    script {
+      sh "aws lambda update-function-code --region ${AWS_DEFAULT_REGION} --function-name ${LAMBDA_FUNCTION_NAME} --image-uri ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
+    }
+  }
+}
+```
+
+**Additional Steps:**
+
+**5. Testing the Lambda Function:**
+
+To ensure the correctness of our deployed Python model, it’s essential to include a testing step in the deployment pipeline. Add a stage to execute unit tests or integration tests against the deployed Lambda function. This ensures that the model is functioning as expected and provides confidence in its performance.
+
+``` python
+
+stage('Test Lambda Function') {
+  steps {
+    // Add your testing commands here
+  }
+}
+```
+
+**6. Monitoring and Logging:**
+
+Monitoring and logging are critical aspects of any deployed system. Consider adding a stage to configure monitoring and logging for your Lambda function. You can integrate AWS CloudWatch or any other monitoring solution of your choice to gather insights and track the function’s performance.
+
+``` python
+
+stage('Configure Monitoring and Logging') {
+  steps {
+    // Add commands to set up monitoring and logging
+  }
+}
+```
+
+**Conclusion:**
+
+In this blog post, we explored the process of deploying a Python model to AWS Lambda using Jenkins. We can efficiently deploy and update our Python models by automating the deployment pipeline with Jenkins and integrating with AWS services like ECR and Lambda. This approach offers scalability, flexibility, and ease of maintenance. With the knowledge gained from this blog post, you can leverage Jenkins to streamline your Python model deployments and focus on delivering powerful machine-learning applications.
+
+Happy deploying!
+
+References:
+
+- Jenkins Official Documentation: https://www.jenkins.io/doc/
+- AWS Lambda Developer Guide: https://docs.aws.amazon.com/lambda/latest/dg/welcome.html
+- AWS Elastic Container Registry Documentation: https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html
+- Docker Documentation: https://docs.docker.com/
+- AWS CLI Command Reference: https://awscli.amazonaws.com/v2/documentation/api/latest/reference/index.html
+
+![](https://medium.com/_/stat?event=post.clientViewed&amp;referrerSource=full_rss&amp;postId=feadb0ca1571)

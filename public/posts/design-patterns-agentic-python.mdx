@@ -1,0 +1,3037 @@
+---
+title: Complete Guide to All 23 Design Patterns in Agentic Python Systems
+date: 2026-04-23
+excerpt: A field guide to Gang-of-Four design patterns applied to AI agent backends - creational, structural, and behavioral, with Python examples pulled straight from production code.
+tags: [llm, design-patterns, genai, software-development, agentic-ai]
+cover: /posts/images/design-patterns-cover.svg
+source: medium
+sourceUrl: https://medium.com/@lalitmaharana2001/complete-guide-to-all-23-design-patterns-in-agentic-python-systems-ef207898f685
+---
+
+*Comprehensive examples of every Gang of Four pattern applied to AI agent backends*
+
+### Introduction: Why Design Patterns Matter for Agentic AI
+
+![](/posts/images/design-patterns-agentic-python-hero.png)
+
+### The Problem: Building Without Patterns
+
+Imagine you’re building an AI agent backend. You start simple:
+
+``` python
+
+# Week 1: Single database, single LLM
+if db_type == "postgres":
+    # postgres code
+elif db_type == "mongodb":
+    # mongodb code
+
+if llm == "openai":
+    # openai code
+elif llm == "anthropic":
+    # anthropic code
+```
+
+Fast forward 6 months… Now you have:
+
+- 5 different databases (PostgreSQL, MongoDB, Redis, Pinecone, Elasticsearch)
+- 4 LLM providers (OpenAI, Anthropic, Ollama, Azure OpenAI)
+- Conversation history, memory management, vector embeddings
+- Logging, caching, rate limiting, error handling
+- Agent coordination, state management, event handling
+
+Your codebase is now **spaghetti code** with:
+
+- ❌ Duplicated logic across files
+- ❌ Tight coupling making changes risky
+- ❌ No clear architecture to follow
+- ❌ Impossible to test components independently
+- ❌ Onboarding new developers takes weeks
+- ❌ Adding new databases/LLMs requires rewriting core logic
+
+**Design patterns solve these problems.**
+
+### What Are Design Patterns?
+
+Design patterns are **proven, reusable solutions to common programming problems**. They’re like architectural blueprints that show:
+
+- **What** — The core problem being solved
+- **How** — The structure and relationships of objects
+- **When** — Situations where the pattern applies
+- **Why** — Benefits and trade-offs
+
+Think of them like recipes in cooking:
+
+- A recipe is a proven way to make a dish
+- You adapt it to your ingredients and taste
+- You don’t reinvent recipes from scratch each time
+
+Design patterns are to software what recipes are to cooking.
+
+### Why You NEED Design Patterns for Agentic Systems
+
+### 1. Multiple Integrations are Inevitable
+
+Agentic systems are inherently complex:
+
+- **Multiple databases**: Structured (PostgreSQL), document (MongoDB), vector (Pinecone), cache (Redis)
+- **Multiple LLMs**: OpenAI, Anthropic, Ollama, local models, future models
+- **Multiple platforms**: Cloud, local, Docker, Kubernetes
+- **Multiple interfaces**: REST API, WebSocket, CLI, web UI
+
+Without patterns, each new integration means rewriting core logic.
+
+**With patterns**: Add a new database in one file, add a new LLM in one file.
+
+### 2. Agents Need Flexibility
+
+Users want to:
+
+- Switch LLMs based on cost/performance
+- Scale to different databases
+- Deploy on different platforms
+- Enable different features (logging, caching, etc.)
+
+Without patterns, each change requires code modifications and testing.
+
+**With patterns**: Configuration files determine behavior. Zero code changes needed.
+
+### 3. Agentic Systems Are Complex
+
+AI agents involve:
+
+- State management (idle, thinking, responding, error)
+- Task coordination (sequential, parallel, hierarchical)
+- Event handling (user input, response generation, errors)
+- Memory management (conversation history, context, embeddings)
+- Resource sharing (LLM instances, database connections)
+
+Without patterns, complexity becomes **exponential**.
+
+**With patterns**: Each pattern handles one aspect cleanly.
+
+### 4. Testing and Debugging Become Nightmare
+
+When everything is tightly coupled:
+
+``` python
+
+# ❌ Can't test agent logic without real database
+# ❌ Can't test database logic without real LLM
+# ❌ Can't test LLM without paying for API calls
+# ❌ Finding bugs means debugging across multiple files
+```
+
+**With patterns**: Mock implementations allow testing in isolation.
+
+### 5. Team Scalability
+
+Without patterns:
+
+- Every developer has their own approach
+- Code review takes forever (inconsistent style)
+- Onboarding is painful (no standard structure)
+- Integration conflicts are common
+
+**With patterns**: Everyone follows the same blueprint.
+
+### How to Use Design Patterns
+
+### Step 1: Identify Your Problem
+
+Look at your codebase and ask:
+
+- **Is there duplicated logic?** → Use patterns to extract common behavior
+- **Are objects tightly coupled?** → Use patterns to decouple them
+- **Is code hard to test?** → Use patterns to isolate concerns
+- **Will this need to scale?** → Use patterns that allow extension
+
+### Step 2: Find the Right Pattern(s)
+
+Use this decision guide:
+
+``` python
+
+Problem Type        Solution Pattern(s)
+────────────────────────────────────────
+Multiple object types → Factory Method, Abstract Factory
+Complex construction → Builder
+Single instance needed → Singleton
+Incompatible interfaces → Adapter
+Decouple layers → Bridge
+Tree structures → Composite
+Add features → Decorator
+Complex subsystem → Facade
+Control access → Proxy
+Sequential decisions → Chain of Responsibility
+Encapsulate actions → Command
+Sequential access → Iterator
+Object communication → Mediator
+Save state → Memento
+Notify observers → Observer
+Change behavior → State, Strategy
+Define skeleton → Template Method
+Transform structures → Visitor
+```
+
+### Step 3: Implement the Pattern
+
+``` python
+
+# 1. Identify the abstraction (interface)
+class DatabaseConnection(ABC):
+    @abstractmethod
+    def save(self, data): pass
+
+# 2. Create concrete implementations
+class PostgreSQL(DatabaseConnection):
+    def save(self, data): # postgresql specific code
+class MongoDB(DatabaseConnection):
+    def save(self, data): # mongodb specific code
+# 3. Create factory for instantiation
+class DatabaseFactory:
+    @staticmethod
+    def create(db_type):
+        if db_type == "postgres": return PostgreSQL()
+        if db_type == "mongodb": return MongoDB()
+# 4. Use abstraction in your code
+db = DatabaseFactory.create(config.db_type)
+db.save(data)  # Works with any database
+```
+
+### Step 4: Extend Without Modification
+
+Adding a new database is now trivial:
+
+``` python
+
+# Just add one new class
+class Elasticsearch(DatabaseConnection):
+    def save(self, data): # elasticsearch specific code
+
+# Register it
+DatabaseFactory.register("elasticsearch", Elasticsearch)
+# Your agent code doesn't change at all!
+```
+
+### Step 5: Test with Mocks
+
+``` python
+
+# Create mock for testing
+class MockDatabase(DatabaseConnection):
+    def save(self, data):
+        self.saved_data = data
+
+# Test your agent logic
+db = MockDatabase()
+agent = Agent(db=db)
+agent.process("test")
+assert db.saved_data == "test"
+```
+
+### Advantages of Design Patterns
+
+### 1. Code Reusability 🔄
+
+Without patterns:
+
+``` python
+
+# Database logic scattered everywhere
+class Agent1:
+    def __init__(self):
+        self.conn = psycopg2.connect(...)
+    def save(self): ...
+
+class Agent2:
+    def __init__(self):
+        self.conn = psycopg2.connect(...)
+    def save(self): ...
+# 200 lines of duplicate code
+```
+
+With patterns:
+
+``` python
+
+class Agent:
+    def __init__(self, db):
+        self.db = db  # Reuse same DB logic
+
+db = DatabaseFactory.create("postgres")
+agent1 = Agent(db)
+agent2 = Agent(db)  # Both use same database
+```
+
+**Benefit**: Less code, fewer bugs, easier maintenance.
+
+### 2. Flexibility and Extensibility 🔧
+
+Without patterns:
+
+``` python
+
+# Adding new LLM requires changing core agent code
+if llm_type == "openai":
+    response = openai.generate(prompt)
+elif llm_type == "anthropic":
+    response = anthropic.generate(prompt)
+elif llm_type == "ollama":  # Need to modify this file
+    response = ollama.generate(prompt)
+```
+
+With patterns:
+
+``` python
+
+# Adding new LLM is just implementing an interface
+class NewLLM(LLMStrategy):
+    def generate(self, prompt): return ...
+
+# Your agent code never changes
+agent = Agent(llm=LLMFactory.create("newllm"))
+```
+
+**Benefit**: Add features without touching existing code (Open/Closed Principle).
+
+### 3. Maintainability 📚
+
+Without patterns:
+
+- 10 different files all accessing database differently
+- Changing database logic means editing 10 files
+- Easy to miss spots and introduce bugs
+- Code review is a nightmare
+
+With patterns:
+
+- Database logic in one place
+- Change it once, applies everywhere
+- Single source of truth
+- Code review is quick and focused
+
+**Benefit**: Modifications are safe and efficient.
+
+### 4. Testing ✅
+
+Without patterns:
+
+``` python
+
+# ❌ How do you test this?
+class Agent:
+    def __init__(self):
+        self.db = PostgreSQL()  # Can't replace
+        self.llm = OpenAI()     # Can't replace
+    
+    def process(self, query):
+        # Now you're:
+        # - Hitting real database
+        # - Paying for real API calls
+        # - Tests take 10 minutes to run
+```
+
+With patterns:
+
+``` python
+
+# ✅ Easy to test
+class Agent:
+    def __init__(self, db, llm):
+        self.db = db
+        self.llm = llm
+
+# Use mocks in tests
+mock_db = MockDatabase()
+mock_llm = MockLLM()
+agent = Agent(mock_db, mock_llm)
+# Tests run in milliseconds!
+```
+
+**Benefit**: Fast, reliable testing without external dependencies.
+
+### 5. Scalability 📈
+
+Without patterns:
+
+``` python
+
+Team grows → Code becomes messy
+More features → Complex interactions
+New databases → Rewrite core logic
+Different platforms → Separate codebases
+```
+
+With patterns:
+
+``` python
+
+Team grows → Everyone uses same patterns
+More features → Clean separation of concerns
+New databases → Implement interface, register
+Different platforms → Works everywhere
+```
+
+**Benefit**: Code scales with the team and product.
+
+### 6. Onboarding & Team Efficiency 👥
+
+Without patterns:
+
+- New developer takes 2–3 weeks to understand codebase
+- Questions like “where does database logic live?”
+- Everyone has different style
+- Code reviews are subjective
+
+With patterns:
+
+- New developer takes 1–2 days to understand architecture
+- “It uses Factory Pattern for databases”
+- Everyone follows same style
+- Code reviews focus on logic, not structure
+
+**Benefit**: Faster onboarding, better collaboration.
+
+### 7. Future-Proofing 🔮
+
+Without patterns:
+
+``` python
+
+New LLM provider released → Rewrite core logic
+Database goes out of fashion → Migrate everything
+Platform changes → Start over
+```
+
+With patterns:
+
+``` python
+
+New LLM provider → Implement interface in new file
+Database needs replacing → Swap one implementation
+Platform changes → Add new adapter
+```
+
+**Benefit**: Your code adapts to change instead of breaking.
+
+### 8. Reduced Complexity 🧠
+
+Without patterns:
+
+``` python
+
+# 500 line Agent class doing everything
+class Agent:
+    def __init__(self):
+        # Database logic
+        # LLM logic
+        # Memory logic
+        # State logic
+        # Event logic
+        # Caching logic
+        # Validation logic
+        # Error handling
+        # Logging
+        # ...
+```
+
+With patterns:
+
+``` python
+
+# 50 line Agent class using patterns
+class Agent:
+    def __init__(self, db, llm, memory, state, events):
+        self.db = db
+        self.llm = llm
+        # ... each dependency is a separate pattern
+
+# Each pattern is simple, Agent stays simple
+```
+
+**Benefit**: Code is easier to understand and modify.
+
+### 9. Proven Solutions ✨
+
+You’re not guessing anymore:
+
+- Patterns are battle-tested across thousands of projects
+- They solve specific problems in specific ways
+- Trade-offs are well-known
+- Best practices are documented
+
+**Benefit**: “This is how the best developers solve this problem.”
+
+### 10. Communication 💬
+
+Without patterns:
+
+``` python
+
+Developer A: "We need to decouple the database layer"
+Developer B: "What does that even mean?"
+[30 minutes of explanation]
+```
+
+With patterns:
+
+``` python
+
+Developer A: "Let's use the Adapter pattern"
+Developer B: "Oh, I know exactly what that is"
+[5 minutes of discussion]
+```
+
+**Benefit**: Common vocabulary makes communication clearer.
+
+### Real-World Impact: Before vs After
+
+### Before Patterns (Actual Example)
+
+``` python
+
+# agent.py - 2000 lines
+class Agent:
+    def __init__(self, db_type, db_config, llm_type, llm_config):
+        # 50 lines of conditional database setup
+        if db_type == "postgres":
+            import psycopg2
+            self.conn = psycopg2.connect(...)
+        elif db_type == "mongodb":
+            import pymongo
+            self.conn = pymongo.MongoClient(...)
+        
+        # 50 lines of conditional LLM setup
+        if llm_type == "openai":
+            import openai
+            self.client = openai.OpenAI(...)
+        elif llm_type == "anthropic":
+            import anthropic
+            self.client = anthropic.Anthropic(...)
+        
+        # 1900 lines of mixed business logic
+        # ... everything in one class ...
+    
+    def process(self, query):
+        # 100 lines of conditional logic for each DB type
+        if self.db_type == "postgres":
+            # postgres specific code
+        elif self.db_type == "mongodb":
+            # mongodb specific code
+        
+        # 200 lines of conditional logic for each LLM
+        # ... duplicated everywhere ...
+    
+    def save_conversation(self):
+        # Again, conditional based on database type
+        # 50 lines of duplicated logic
+
+# tests.py
+def test_agent():
+    # How to test without hitting real database?
+    # How to test without paying for real API calls?
+    # How to test without Kubernetes deployment?
+    agent = Agent("postgres", {...}, "openai", {...})
+    # This test takes 30 seconds and costs money
+    agent.process("test")
+# Result:
+# - 2000 lines in one file
+# - 800 lines of duplicated logic
+# - Tests are slow and expensive
+# - Adding new database requires modifying 100+ lines
+# - Adding new LLM requires modifying 100+ lines
+# - New developer takes 3 weeks to understand
+```
+
+**Problems:**
+
+- ❌ Tightly coupled
+- ❌ Hard to test
+- ❌ Duplicated logic
+- ❌ Difficult to extend
+- ❌ Slow tests
+- ❌ Expensive tests
+- ❌ Single file too large
+- ❌ Hard to understand
+
+### After Patterns
+
+``` python
+
+# database.py - 200 lines total
+class DatabaseConnection(ABC):
+    @abstractmethod
+    def save(self, data): pass
+
+class PostgreSQL(DatabaseConnection):
+    def save(self, data): # 20 lines
+class MongoDB(DatabaseConnection):
+    def save(self, data): # 20 lines
+class DatabaseFactory:
+    def create(self, db_type): # 10 lines
+# llm.py - 200 lines total
+class LLMStrategy(ABC):
+    @abstractmethod
+    def generate(self, prompt): pass
+class OpenAI(LLMStrategy):
+    def generate(self, prompt): # 20 lines
+class Anthropic(LLMStrategy):
+    def generate(self, prompt): # 20 lines
+class LLMFactory:
+    def create(self, llm_type): # 10 lines
+# agent.py - 50 lines
+class Agent:
+    def __init__(self, db, llm):
+        self.db = db
+        self.llm = llm
+    
+    def process(self, query):
+        response = self.llm.generate(query)
+        self.db.save(response)
+        return response
+# tests.py
+def test_agent():
+    mock_db = MockDatabase()
+    mock_llm = MockLLM()
+    agent = Agent(mock_db, mock_llm)
+    agent.process("test")
+    assert mock_db.saved
+# Result:
+# - 50 lines in main agent file
+# - 400 lines across specialized files
+# - 0 lines of duplicated logic
+# - Tests are fast (milliseconds)
+# - Tests are free (no API calls)
+# - Adding new database: 1 new file (~20 lines)
+# - Adding new LLM: 1 new file (~20 lines)
+# - New developer understands in 1 day
+```
+
+**Benefits:**
+
+- ✅ Loosely coupled
+- ✅ Easy to test
+- ✅ No duplicated logic
+- ✅ Simple to extend
+- ✅ Fast tests
+- ✅ Free tests
+- ✅ Code organized by concern
+- ✅ Easy to understand
+
+**Time Saved:**
+
+- Development: -20%
+- Testing: -50%
+- Debugging: -40%
+- Onboarding: -60%
+- Future maintenance: -70%
+
+### When NOT to Use Patterns
+
+Patterns aren’t always necessary. Don’t use them if:
+
+1.  **Project is tiny** (\< 500 lines)
+
+- Small scripts don’t need patterns
+- Patterns add unnecessary complexity
+
+**2. No future extensibility needed**
+
+- One LLM, one database, one use case
+- Patterns trade complexity now for flexibility later
+
+**3. Performance is critical**
+
+- Some patterns add overhead
+- But this is rarely the bottleneck
+
+**4. Over-engineering**
+
+- Using 10 patterns for a 3-pattern problem
+- More patterns ≠ better design
+
+**Rule of thumb**: Use patterns when you see duplication or anticipate change.
+
+### Your Pattern Implementation Roadmap
+
+### Phase 1: Essential Patterns (Start Here)
+
+1.  **Factory Method** — Multiple implementations
+2.  **Abstract Factory** — Families of objects
+3.  **Decorator** — Add features dynamically
+4.  **Strategy** — Interchangeable algorithms
+
+### Phase 2: Intermediate Patterns (After Phase 1)
+
+1.  **Adapter** — Incompatible interfaces
+2.  **Facade** — Simplify complex subsystems
+3.  **Observer** — Event-driven architecture
+4.  **State** — Manage object behavior
+
+### Phase 3: Advanced Patterns (When Needed)
+
+1.  **Composite** — Hierarchical structures
+2.  **Mediator** — Complex interactions
+3.  **Visitor** — Operate on structures
+4.  All others (based on specific needs)
+
+### Key Takeaways
+
+✅ Design patterns are **proven solutions to recurring problems**
+
+✅ They make code **flexible, maintainable, and testable**
+
+✅ They enable **smooth scaling** as projects grow
+
+✅ They provide **common vocabulary** for teams
+
+✅ They reduce **cognitive load** through familiar structures
+
+✅ They’re **not just theory** — they’re practical tools
+
+✅ Start simple, add patterns as needs emerge
+
+✅ Each pattern solves a **specific problem** (use the right one)
+
+### Table of Contents
+
+### Creational Patterns (5)
+
+1.  Factory Method
+2.  Abstract Factory
+3.  Builder
+4.  Prototype
+5.  Singleton
+
+### Structural Patterns (7)
+
+1.  Adapter
+2.  Bridge
+3.  Composite
+4.  Decorator
+5.  Facade
+6.  Flyweight
+7.  Proxy
+
+### Behavioral Patterns (11)
+
+1.  Chain of Responsibility
+2.  Command
+3.  Iterator
+4.  Mediator
+5.  Memento
+6.  Observer
+7.  State
+8.  Strategy
+9.  Template Method
+10. Visitor
+
+### CREATIONAL PATTERNS
+
+### 1. Factory Method Pattern
+
+**Purpose:** Create objects without specifying exact classes, allowing subclasses to decide.
+
+**Agentic Use Case:** Different task types create different handlers
+
+``` python
+
+from abc import ABC, abstractmethod
+
+# ============================================
+# TASK HANDLER FACTORY METHOD PATTERN
+# ============================================
+class TaskHandler(ABC):
+    """Abstract task handler"""
+    
+    @abstractmethod
+    def execute(self, task_data: dict) -> str:
+        pass
+    
+    @abstractmethod
+    def validate(self, task_data: dict) -> bool:
+        pass
+
+class ResearchTaskHandler(TaskHandler):
+    """Handles research tasks"""
+    
+    def execute(self, task_data: dict) -> str:
+        query = task_data.get("query")
+        return f"Researching: {query}... [research results]"
+    
+    def validate(self, task_data: dict) -> bool:
+        return "query" in task_data
+
+class CodeTaskHandler(TaskHandler):
+    """Handles code generation tasks"""
+    
+    def execute(self, task_data: dict) -> str:
+        language = task_data.get("language", "python")
+        description = task_data.get("description")
+        return f"Generating {language} code for: {description}"
+    
+    def validate(self, task_data: dict) -> bool:
+        return "description" in task_data
+
+class EmailTaskHandler(TaskHandler):
+    """Handles email composition tasks"""
+    
+    def execute(self, task_data: dict) -> str:
+        recipient = task_data.get("recipient")
+        subject = task_data.get("subject")
+        return f"Composing email to {recipient} about {subject}"
+    
+    def validate(self, task_data: dict) -> bool:
+        return "recipient" in task_data and "subject" in task_data
+
+class TaskProcessor:
+    """Factory class - creates appropriate handler"""
+    
+    def create_handler(self, task_type: str) -> TaskHandler:
+        """Factory method"""
+        handlers = {
+            "research": ResearchTaskHandler,
+            "code": CodeTaskHandler,
+            "email": EmailTaskHandler,
+        }
+        
+        handler_class = handlers.get(task_type.lower())
+        if not handler_class:
+            raise ValueError(f"Unknown task type: {task_type}")
+        
+        return handler_class()
+    
+    def process_task(self, task_type: str, task_data: dict) -> str:
+        """Create and execute task"""
+        handler = self.create_handler(task_type)
+        
+        if not handler.validate(task_data):
+            raise ValueError(f"Invalid task data for {task_type}")
+        
+        return handler.execute(task_data)
+
+# Usage
+processor = TaskProcessor()
+result = processor.process_task("research", {"query": "machine learning trends"})
+result = processor.process_task("code", {"language": "python", "description": "fibonacci function"})
+result = processor.process_task("email", {"recipient": "user@example.com", "subject": "Meeting reminder"})
+```
+
+### 2. Abstract Factory Pattern
+
+**Purpose:** Create families of related objects without specifying concrete classes.
+
+**Agentic Use Case:** Different LLM + Database + Memory combinations (already covered in previous article, showing extended version)
+
+``` python
+
+# ============================================
+# ABSTRACT FACTORY - AGENT ECOSYSTEM
+# ============================================
+
+from abc import ABC, abstractmethod
+# Abstract Products
+class LLM(ABC):
+    @abstractmethod
+    def generate(self, prompt: str) -> str:
+        pass
+
+class Memory(ABC):
+    @abstractmethod
+    def store(self, key: str, value: str):
+        pass
+    
+    @abstractmethod
+    def retrieve(self, key: str) -> str:
+        pass
+
+class Toolkit(ABC):
+    @abstractmethod
+    def execute_tool(self, tool_name: str, **kwargs) -> str:
+        pass
+
+# Concrete Products for OpenAI Ecosystem
+class OpenAILLM(LLM):
+    def generate(self, prompt: str) -> str:
+        return f"[OpenAI Response to: {prompt}]"
+
+class OpenAIMemory(Memory):
+    def __init__(self):
+        self.storage = {}
+    
+    def store(self, key: str, value: str):
+        self.storage[key] = value
+    
+    def retrieve(self, key: str) -> str:
+        return self.storage.get(key, "")
+
+class OpenAIToolkit(Toolkit):
+    def execute_tool(self, tool_name: str, **kwargs) -> str:
+        return f"[OpenAI Tool: {tool_name} executed]"
+
+# Concrete Products for Anthropic Ecosystem
+class AnthropicLLM(LLM):
+    def generate(self, prompt: str) -> str:
+        return f"[Claude Response to: {prompt}]"
+
+class AnthropicMemory(Memory):
+    def __init__(self):
+        self.storage = {}
+    
+    def store(self, key: str, value: str):
+        self.storage[key] = value.upper()  # Store in uppercase
+    
+    def retrieve(self, key: str) -> str:
+        return self.storage.get(key, "")
+
+class AnthropicToolkit(Toolkit):
+    def execute_tool(self, tool_name: str, **kwargs) -> str:
+        return f"[Claude Tool: {tool_name} executed safely]"
+
+# Abstract Factory
+class AgentFactory(ABC):
+    @abstractmethod
+    def create_llm(self) -> LLM:
+        pass
+    
+    @abstractmethod
+    def create_memory(self) -> Memory:
+        pass
+    
+    @abstractmethod
+    def create_toolkit(self) -> Toolkit:
+        pass
+
+# Concrete Factories
+class OpenAIAgentFactory(AgentFactory):
+    def create_llm(self) -> LLM:
+        return OpenAILLM()
+    
+    def create_memory(self) -> Memory:
+        return OpenAIMemory()
+    
+    def create_toolkit(self) -> Toolkit:
+        return OpenAIToolkit()
+
+class AnthropicAgentFactory(AgentFactory):
+    def create_llm(self) -> LLM:
+        return AnthropicLLM()
+    
+    def create_memory(self) -> Memory:
+        return AnthropicMemory()
+    
+    def create_toolkit(self) -> Toolkit:
+        return AnthropicToolkit()
+
+# Client
+class Agent:
+    def __init__(self, factory: AgentFactory):
+        self.llm = factory.create_llm()
+        self.memory = factory.create_memory()
+        self.toolkit = factory.create_toolkit()
+    
+    def run(self, prompt: str):
+        response = self.llm.generate(prompt)
+        self.memory.store("last_response", response)
+        result = self.toolkit.execute_tool("respond", message=response)
+        return result
+
+# Usage
+openai_agent = Agent(OpenAIAgentFactory())
+openai_agent.run("What is AI?")
+anthropic_agent = Agent(AnthropicAgentFactory())
+anthropic_agent.run("What is AI?")
+```
+
+### 3. Builder Pattern
+
+**Purpose:** Construct complex objects step by step.
+
+**Agentic Use Case:** Build complex agent configurations
+
+``` python
+
+# ============================================
+# BUILDER PATTERN - AGENT CONFIGURATION
+# ============================================
+
+from typing import List, Dict, Any
+class AgentPrompt:
+    def __init__(self):
+        self.system_prompt = ""
+        self.tools_available = []
+        self.constraints = []
+        self.examples = []
+        self.output_format = ""
+    
+    def __str__(self):
+        return f"""
+System: {self.system_prompt}
+Tools: {self.tools_available}
+Constraints: {self.constraints}
+Examples: {len(self.examples)} examples
+Output Format: {self.output_format}
+"""
+
+class AgentPromptBuilder:
+    """Builder for complex agent prompts"""
+    
+    def __init__(self):
+        self.agent_prompt = AgentPrompt()
+    
+    def set_system_prompt(self, prompt: str) -> "AgentPromptBuilder":
+        self.agent_prompt.system_prompt = prompt
+        return self
+    
+    def add_tool(self, tool_name: str) -> "AgentPromptBuilder":
+        self.agent_prompt.tools_available.append(tool_name)
+        return self
+    
+    def add_constraint(self, constraint: str) -> "AgentPromptBuilder":
+        self.agent_prompt.constraints.append(constraint)
+        return self
+    
+    def add_example(self, input_ex: str, output_ex: str) -> "AgentPromptBuilder":
+        self.agent_prompt.examples.append({
+            "input": input_ex,
+            "output": output_ex
+        })
+        return self
+    
+    def set_output_format(self, format_spec: str) -> "AgentPromptBuilder":
+        self.agent_prompt.output_format = format_spec
+        return self
+    
+    def build(self) -> AgentPrompt:
+        return self.agent_prompt
+
+# Usage - Fluent interface
+research_agent = (AgentPromptBuilder()
+    .set_system_prompt("You are a research expert")
+    .add_tool("search_web")
+    .add_tool("fetch_document")
+    .add_tool("analyze_data")
+    .add_constraint("Always cite sources")
+    .add_constraint("Provide balanced view")
+    .add_example("What is AI?", "AI is the simulation of human intelligence...")
+    .set_output_format("JSON with keys: summary, sources, confidence")
+    .build())
+print(research_agent)
+# Another agent with different configuration
+coding_agent = (AgentPromptBuilder()
+    .set_system_prompt("You are an expert Python developer")
+    .add_tool("write_code")
+    .add_tool("execute_code")
+    .add_tool("debug_code")
+    .add_constraint("Follow PEP 8")
+    .add_constraint("Add docstrings")
+    .add_example("Fibonacci function", "def fib(n): ...")
+    .set_output_format("Code block with explanation")
+    .build())
+print(coding_agent)
+```
+
+### 4. Prototype Pattern
+
+**Purpose:** Create objects by cloning an existing object rather than creating from scratch.
+
+**Agentic Use Case:** Clone agent configurations for variants
+
+``` python
+
+# ============================================
+# PROTOTYPE PATTERN - AGENT CLONING
+# ============================================
+
+from copy import deepcopy
+class AgentConfig:
+    def __init__(self, name: str, model: str, temperature: float, tools: list):
+        self.name = name
+        self.model = model
+        self.temperature = temperature
+        self.tools = tools
+        self.system_prompt = ""
+        self.max_tokens = 2048
+    
+    def clone(self) -> "AgentConfig":
+        """Create a deep copy of this configuration"""
+        return deepcopy(self)
+    
+    def __repr__(self):
+        return f"Agent({self.name}, model={self.model}, temp={self.temperature})"
+
+# Create a base/prototype configuration
+base_agent = AgentConfig(
+    name="BaseAgent",
+    model="gpt-4",
+    temperature=0.7,
+    tools=["search", "calculate"]
+)
+base_agent.system_prompt = "You are a helpful assistant"
+base_agent.max_tokens = 2048
+# Clone and customize for specific use cases
+research_agent = base_agent.clone()
+research_agent.name = "ResearchAgent"
+research_agent.temperature = 0.5  # More focused
+research_agent.tools.append("web_search")
+creative_agent = base_agent.clone()
+creative_agent.name = "CreativeAgent"
+creative_agent.temperature = 0.9  # More creative
+creative_agent.system_prompt = "You are a creative writer"
+debug_agent = base_agent.clone()
+debug_agent.name = "DebugAgent"
+debug_agent.temperature = 0.2  # Very focused
+debug_agent.model = "gpt-4-turbo"  # Use faster model
+print(base_agent)
+print(research_agent)
+print(creative_agent)
+print(debug_agent)
+# Original unchanged
+print(f"Base agent tools: {base_agent.tools}")
+print(f"Research agent tools: {research_agent.tools}")
+```
+
+### 5. Singleton Pattern
+
+**Purpose:** Ensure only one instance of a class exists globally.
+
+**Agentic Use Case:** Global agent configuration manager, event bus
+
+``` python
+
+# ============================================
+# SINGLETON PATTERN - GLOBAL RESOURCES
+# ============================================
+
+from threading import Lock
+class AgentConfigManager:
+    """Singleton - manages global agent configuration"""
+    
+    _instance = None
+    _lock = Lock()
+    
+    def __new__(cls):
+        if cls._instance is None:
+            with cls._lock:
+                # Double-checked locking
+                if cls._instance is None:
+                    cls._instance = super().__new__(cls)
+                    cls._instance._initialized = False
+        return cls._instance
+    
+    def __init__(self):
+        if self._initialized:
+            return
+        self.config = {}
+        self.llm_provider = None
+        self.db_type = None
+        self._initialized = True
+    
+    def set_config(self, key: str, value):
+        self.config[key] = value
+    
+    def get_config(self, key: str):
+        return self.config.get(key)
+    
+    def set_llm(self, provider: str):
+        self.llm_provider = provider
+    
+    def get_llm(self):
+        return self.llm_provider
+
+# Usage
+config1 = AgentConfigManager()
+config1.set_llm("openai")
+config1.set_config("temperature", 0.7)
+config2 = AgentConfigManager()
+print(f"Same instance: {config1 is config2}")  # True
+print(f"LLM: {config2.get_llm()}")  # openai
+print(f"Temperature: {config2.get_config('temperature')}")  # 0.7
+
+# Pythonic Singleton using decorator
+def singleton(cls):
+    instances = {}
+    
+    def get_instance(*args, **kwargs):
+        if cls not in instances:
+            instances[cls] = cls(*args, **kwargs)
+        return instances[cls]
+    
+    return get_instance
+
+@singleton
+class EventBus:
+    """Singleton event bus using decorator"""
+    
+    def __init__(self):
+        self.subscribers = {}
+    
+    def subscribe(self, event_type: str, handler):
+        if event_type not in self.subscribers:
+            self.subscribers[event_type] = []
+        self.subscribers[event_type].append(handler)
+    
+    def publish(self, event_type: str, data):
+        if event_type in self.subscribers:
+            for handler in self.subscribers[event_type]:
+                handler(data)
+
+# Usage
+bus1 = EventBus()
+bus2 = EventBus()
+print(f"Same bus: {bus1 is bus2}")  # True
+```
+
+### STRUCTURAL PATTERNS
+
+### 6. Adapter Pattern
+
+**Purpose:** Convert interface of a class to another clients expect.
+
+**Agentic Use Case:** Adapt different LLM APIs to common interface (already covered, showing extended)
+
+``` python
+
+# ============================================
+# ADAPTER PATTERN - LLM API ADAPTATION
+# ============================================
+
+from abc import ABC, abstractmethod
+# Target interface - what our agent expects
+class StandardLLM(ABC):
+    @abstractmethod
+    def query(self, prompt: str, max_tokens: int = 1024) -> str:
+        pass
+
+# Existing incompatible interfaces
+class HuggingFaceLLM:
+    """HuggingFace API - different interface"""
+    def inference(self, text: str, length: int = 1024) -> dict:
+        return {
+            "output": f"[HF Response to: {text}]",
+            "tokens_used": length
+        }
+
+class TensorFlowLLM:
+    """TensorFlow - yet another interface"""
+    def predict(self, input_text: str, output_length: int = 1024) -> tuple:
+        return (f"[TF Response to: {input_text}]", output_length)
+
+class OllamaLLM:
+    """Ollama - different parameters"""
+    def generate(self, prompt: str, num_predict: int = 1024) -> str:
+        return f"[Ollama Response to: {prompt}]"
+
+# Adapters - make incompatible interfaces work
+class HuggingFaceAdapter(StandardLLM):
+    def __init__(self, hf_llm: HuggingFaceLLM):
+        self.hf_llm = hf_llm
+    
+    def query(self, prompt: str, max_tokens: int = 1024) -> str:
+        result = self.hf_llm.inference(prompt, length=max_tokens)
+        return result["output"]
+
+class TensorFlowAdapter(StandardLLM):
+    def __init__(self, tf_llm: TensorFlowLLM):
+        self.tf_llm = tf_llm
+    
+    def query(self, prompt: str, max_tokens: int = 1024) -> str:
+        response, _ = self.tf_llm.predict(prompt, output_length=max_tokens)
+        return response
+
+class OllamaAdapter(StandardLLM):
+    def __init__(self, ollama_llm: OllamaLLM):
+        self.ollama_llm = ollama_llm
+    
+    def query(self, prompt: str, max_tokens: int = 1024) -> str:
+        return self.ollama_llm.generate(prompt, num_predict=max_tokens)
+
+# Agent code - works with any adapter
+class UniversalAgent:
+    def __init__(self, llm: StandardLLM):
+        self.llm = llm
+    
+    def process(self, user_input: str) -> str:
+        return self.llm.query(user_input)
+
+# Usage - all work the same way!
+hf_adapted = HuggingFaceAdapter(HuggingFaceLLM())
+agent1 = UniversalAgent(hf_adapted)
+print(agent1.process("What is AI?"))
+tf_adapted = TensorFlowAdapter(TensorFlowLLM())
+agent2 = UniversalAgent(tf_adapted)
+print(agent2.process("What is AI?"))
+ollama_adapted = OllamaAdapter(OllamaLLM())
+agent3 = UniversalAgent(ollama_adapted)
+print(agent3.process("What is AI?"))
+```
+
+### 7. Bridge Pattern
+
+**Purpose:** Decouple abstraction from implementation so they can vary independently.
+
+**Agentic Use Case:** Decouple agent behavior from execution platform
+
+``` python
+
+# ============================================
+# BRIDGE PATTERN - ABSTRACTION & IMPLEMENTATION
+# ============================================
+
+from abc import ABC, abstractmethod
+# Implementation - how to execute tasks
+class ExecutionPlatform(ABC):
+    @abstractmethod
+    def execute_code(self, code: str) -> str:
+        pass
+    
+    @abstractmethod
+    def call_api(self, endpoint: str, params: dict) -> str:
+        pass
+
+class LocalExecution(ExecutionPlatform):
+    def execute_code(self, code: str) -> str:
+        return f"[Local execution: {code[:30]}...]"
+    
+    def call_api(self, endpoint: str, params: dict) -> str:
+        return f"[Local API call to {endpoint}]"
+
+class CloudExecution(ExecutionPlatform):
+    def execute_code(self, code: str) -> str:
+        return f"[Cloud execution: {code[:30]}...] (scalable)"
+    
+    def call_api(self, endpoint: str, params: dict) -> str:
+        return f"[Cloud API call to {endpoint}] (with monitoring)"
+
+class DockerExecution(ExecutionPlatform):
+    def execute_code(self, code: str) -> str:
+        return f"[Container execution: {code[:30]}...] (isolated)"
+    
+    def call_api(self, endpoint: str, params: dict) -> str:
+        return f"[Container API call to {endpoint}] (sandboxed)"
+
+# Abstraction - what the agent does
+class Agent(ABC):
+    def __init__(self, platform: ExecutionPlatform):
+        self.platform = platform
+    
+    @abstractmethod
+    def perform_task(self):
+        pass
+
+class DataProcessingAgent(Agent):
+    def perform_task(self):
+        code = "import pandas as pd; df = pd.read_csv('data.csv')"
+        return self.platform.execute_code(code)
+
+class APIIntegrationAgent(Agent):
+    def perform_task(self):
+        return self.platform.call_api("/api/data", {"limit": 100})
+
+class ResearchAgent(Agent):
+    def perform_task(self):
+        code = "results = search_web('latest AI research')"
+        return self.platform.execute_code(code)
+
+# Usage - Mix and match abstraction and implementation
+local_data_agent = DataProcessingAgent(LocalExecution())
+print(local_data_agent.perform_task())
+cloud_data_agent = DataProcessingAgent(CloudExecution())
+print(cloud_data_agent.perform_task())
+docker_research_agent = ResearchAgent(DockerExecution())
+print(docker_research_agent.perform_task())
+api_agent_cloud = APIIntegrationAgent(CloudExecution())
+print(api_agent_cloud.perform_task())
+```
+
+### 8. Composite Pattern
+
+**Purpose:** Compose objects into tree structures to represent hierarchies.
+
+**Agentic Use Case:** Composite tasks and sub-tasks
+
+``` python
+
+# ============================================
+# COMPOSITE PATTERN - HIERARCHICAL TASKS
+# ============================================
+
+from abc import ABC, abstractmethod
+from typing import List
+class Task(ABC):
+    @abstractmethod
+    def execute(self) -> str:
+        pass
+    
+    @abstractmethod
+    def add_subtask(self, task: "Task"):
+        pass
+    
+    @abstractmethod
+    def get_duration(self) -> float:
+        pass
+
+class SimpleTask(Task):
+    """Leaf node - single task"""
+    
+    def __init__(self, name: str, duration: float = 1.0):
+        self.name = name
+        self.duration = duration
+    
+    def execute(self) -> str:
+        return f"Executing: {self.name}"
+    
+    def add_subtask(self, task: Task):
+        raise ValueError("Cannot add subtask to SimpleTask")
+    
+    def get_duration(self) -> float:
+        return self.duration
+
+class CompositeTask(Task):
+    """Composite node - contains multiple tasks"""
+    
+    def __init__(self, name: str):
+        self.name = name
+        self.subtasks: List[Task] = []
+    
+    def add_subtask(self, task: Task):
+        self.subtasks.append(task)
+    
+    def execute(self) -> str:
+        results = [f"Starting composite task: {self.name}"]
+        for subtask in self.subtasks:
+            results.append(f"  - {subtask.execute()}")
+        results.append(f"Completed: {self.name}")
+        return "\n".join(results)
+    
+    def get_duration(self) -> float:
+        return sum(task.get_duration() for task in self.subtasks)
+
+# Build a hierarchy
+research_project = CompositeTask("Research Project")
+# Add sub-tasks
+literature_review = CompositeTask("Literature Review")
+literature_review.add_subtask(SimpleTask("Search databases", 2.0))
+literature_review.add_subtask(SimpleTask("Read papers", 5.0))
+literature_review.add_subtask(SimpleTask("Summarize findings", 1.5))
+research_project.add_subtask(literature_review)
+# Add more tasks
+experiments = CompositeTask("Experiments")
+experiments.add_subtask(SimpleTask("Setup environment", 1.0))
+experiments.add_subtask(SimpleTask("Run experiments", 10.0))
+experiments.add_subtask(SimpleTask("Collect results", 1.0))
+research_project.add_subtask(experiments)
+research_project.add_subtask(SimpleTask("Write report", 3.0))
+# Execute entire hierarchy
+print(research_project.execute())
+print(f"\nTotal duration: {research_project.get_duration()} hours")
+```
+
+### 9. Decorator Pattern
+
+**Purpose:** Attach additional responsibilities to an object dynamically.
+
+**Agentic Use Case:** Add features to agent responses (validation, logging, caching, etc.)
+
+``` python
+
+# ============================================
+# DECORATOR PATTERN - AGENT RESPONSE ENHANCEMENT
+# ============================================
+
+from abc import ABC, abstractmethod
+from typing import Callable
+import time
+import hashlib
+class ResponseHandler(ABC):
+    @abstractmethod
+    def handle(self, prompt: str) -> str:
+        pass
+
+class BasicResponseHandler(ResponseHandler):
+    """Base implementation"""
+    
+    def handle(self, prompt: str) -> str:
+        return f"Response to: {prompt}"
+
+# Decorators - add functionality
+class LoggingDecorator(ResponseHandler):
+    def __init__(self, handler: ResponseHandler):
+        self.handler = handler
+    
+    def handle(self, prompt: str) -> str:
+        print(f"[LOG] Handling prompt: {prompt[:50]}...")
+        response = self.handler.handle(prompt)
+        print(f"[LOG] Response generated: {len(response)} chars")
+        return response
+
+class CachingDecorator(ResponseHandler):
+    def __init__(self, handler: ResponseHandler):
+        self.handler = handler
+        self.cache = {}
+    
+    def handle(self, prompt: str) -> str:
+        # Create cache key from prompt
+        key = hashlib.md5(prompt.encode()).hexdigest()
+        
+        if key in self.cache:
+            print("[CACHE] Cache hit!")
+            return self.cache[key]
+        
+        print("[CACHE] Cache miss - generating response")
+        response = self.handler.handle(prompt)
+        self.cache[key] = response
+        return response
+
+class ValidationDecorator(ResponseHandler):
+    def __init__(self, handler: ResponseHandler):
+        self.handler = handler
+    
+    def handle(self, prompt: str) -> str:
+        if not prompt or len(prompt)  str:
+        start = time.time()
+        response = self.handler.handle(prompt)
+        duration = time.time() - start
+        
+        print(f"[TIMING] Completed in {duration:.3f} seconds")
+        return response
+
+class SafetyDecorator(ResponseHandler):
+    def __init__(self, handler: ResponseHandler):
+        self.handler = handler
+        self.dangerous_keywords = ["delete", "drop", "remove", "execute"]
+    
+    def handle(self, prompt: str) -> str:
+        for keyword in self.dangerous_keywords:
+            if keyword.lower() in prompt.lower():
+                return f"[SAFETY] Blocked dangerous operation: {keyword}"
+        
+        return self.handler.handle(prompt)
+
+# Usage - Stack decorators
+handler = BasicResponseHandler()
+# Add validation
+handler = ValidationDecorator(handler)
+# Add safety checks
+handler = SafetyDecorator(handler)
+# Add logging
+handler = LoggingDecorator(handler)
+# Add caching
+handler = CachingDecorator(handler)
+# Add timing
+handler = TimingDecorator(handler)
+# Use it
+print(handler.handle("What is machine learning?"))
+print("\n---\n")
+print(handler.handle("What is machine learning?"))  # From cache
+print("\n---\n")
+print(handler.handle("delete everything"))  # Blocked by safety
+```
+
+### 10. Facade Pattern
+
+**Purpose:** Provide unified interface to complex subsystems.
+
+**Agentic Use Case:** Simple interface for complex agent operations
+
+``` python
+
+# ============================================
+# FACADE PATTERN - SIMPLIFIED AGENT INTERFACE
+# ============================================
+
+from abc import ABC, abstractmethod
+# Complex subsystems
+class DatabaseService:
+    def query(self, sql: str) -> list:
+        return [{"result": "data"}]
+    
+    def save(self, data: dict):
+        print(f"Saved to DB: {data}")
+
+class LLMService:
+    def generate(self, prompt: str) -> str:
+        return f"Generated response for: {prompt}"
+
+class ValidationService:
+    def validate_input(self, text: str) -> bool:
+        return len(text) > 0
+    
+    def validate_output(self, text: str) -> bool:
+        return len(text) > 0
+
+class LoggingService:
+    def log(self, message: str):
+        print(f"[LOG] {message}")
+    
+    def log_error(self, error: str):
+        print(f"[ERROR] {error}")
+
+class CachingService:
+    def __init__(self):
+        self.cache = {}
+    
+    def get(self, key: str):
+        return self.cache.get(key)
+    
+    def set(self, key: str, value):
+        self.cache[key] = value
+
+# Facade - simplifies complex interactions
+class AgentFacade:
+    """Simple unified interface for agent operations"""
+    
+    def __init__(self):
+        self.db = DatabaseService()
+        self.llm = LLMService()
+        self.validator = ValidationService()
+        self.logger = LoggingService()
+        self.cache = CachingService()
+    
+    def process_query(self, user_query: str) -> str:
+        """One simple method handles everything"""
+        
+        # Input validation
+        if not self.validator.validate_input(user_query):
+            self.logger.log_error("Invalid input")
+            return ""
+        
+        self.logger.log(f"Processing query: {user_query}")
+        
+        # Check cache
+        cached = self.cache.get(user_query)
+        if cached:
+            self.logger.log("Cache hit")
+            return cached
+        
+        # Generate response
+        try:
+            response = self.llm.generate(user_query)
+            
+            # Validate output
+            if not self.validator.validate_output(response):
+                self.logger.log_error("Invalid output")
+                return ""
+            
+            # Save to database
+            self.db.save({"query": user_query, "response": response})
+            
+            # Cache result
+            self.cache.set(user_query, response)
+            
+            self.logger.log("Query processed successfully")
+            return response
+        
+        except Exception as e:
+            self.logger.log_error(str(e))
+            return ""
+
+# Usage - Simple!
+agent = AgentFacade()
+result = agent.process_query("What is AI?")
+print(f"Result: {result}")
+result = agent.process_query("What is AI?")  # Uses cache
+print(f"Result: {result}")
+```
+
+### 11. Flyweight Pattern
+
+**Purpose:** Share common state between multiple objects to reduce memory.
+
+**Agentic Use Case:** Shared LLM instances across agents
+
+``` python
+
+# ============================================
+# FLYWEIGHT PATTERN - SHARED RESOURCES
+# ============================================
+
+from typing import Dict
+
+class LLMInstance:
+    """Flyweight - shared LLM instance"""
+    
+    def __init__(self, model_name: str, parameters: dict):
+        self.model_name = model_name
+        self.parameters = parameters
+        print(f"Creating LLM instance: {model_name} (memory: ~2GB)")
+    
+    def generate(self, prompt: str) -> str:
+        return f"[{self.model_name}] {prompt}"
+
+class LLMFactory:
+    """Flyweight Factory - manages shared instances"""
+    
+    _instances: Dict[str, LLMInstance] = {}
+    
+    @classmethod
+    def get_llm(cls, model_name: str, parameters: dict = None) -> LLMInstance:
+        """
+        Get or create shared LLM instance
+        Same model name returns same instance (memory efficient)
+        """
+        if model_name not in cls._instances:
+            cls._instances[model_name] = LLMInstance(model_name, parameters or {})
+        
+        return cls._instances[model_name]
+
+class Agent:
+    """Agents share LLM instances"""
+    
+    def __init__(self, name: str, model_name: str):
+        self.name = name
+        # Get shared LLM instance
+        self.llm = LLMFactory.get_llm(model_name)
+    
+    def process(self, prompt: str) -> str:
+        return self.llm.generate(f"{self.name}: {prompt}")
+
+# Usage - Multiple agents sharing same LLM
+print("Creating agents...")
+agent1 = Agent("ResearchBot", "gpt-4")
+agent2 = Agent("CodingBot", "gpt-4")
+agent3 = Agent("CreativeBot", "gpt-4")
+# All share the same LLM instance!
+print(f"\nAgent1 and Agent2 share same LLM: {agent1.llm is agent2.llm}")
+# Different model creates new instance
+agent4 = Agent("LocalBot", "llama-2")
+print(f"Agent1 and Agent4 different LLM: {agent1.llm is agent4.llm}")
+# Process with shared resources
+print("\n" + agent1.process("What is AI?"))
+print(agent2.process("Write Python code"))
+print(agent3.process("Create a story"))
+```
+
+### 12. Proxy Pattern
+
+**Purpose:** Control access to another object.
+
+**Agentic Use Case:** Control access to expensive LLM calls
+
+``` python
+
+# ============================================
+# PROXY PATTERN - CONTROLLED ACCESS
+# ============================================
+
+from abc import ABC, abstractmethod
+from datetime import datetime, timedelta
+class LLM(ABC):
+    @abstractmethod
+    def generate(self, prompt: str) -> str:
+        pass
+
+class RealLLM(LLM):
+    """Expensive real LLM"""
+    
+    def __init__(self):
+        self.call_count = 0
+    
+    def generate(self, prompt: str) -> str:
+        self.call_count += 1
+        return f"[Real LLM Response #{self.call_count}] {prompt[:30]}..."
+
+class LLMProxy(LLM):
+    """Proxy to control access to RealLLM"""
+    
+    def __init__(self, real_llm: RealLLM, rate_limit: int = 5):
+        self.real_llm = real_llm
+        self.rate_limit = rate_limit
+        self.call_count = 0
+        self.reset_time = datetime.now() + timedelta(minutes=1)
+        self.cache = {}
+    
+    def generate(self, prompt: str) -> str:
+        # Check cache first
+        if prompt in self.cache:
+            print("[PROXY] Cache hit!")
+            return self.cache[prompt]
+        
+        # Check rate limit
+        if datetime.now() > self.reset_time:
+            self.call_count = 0
+            self.reset_time = datetime.now() + timedelta(minutes=1)
+        
+        if self.call_count >= self.rate_limit:
+            return "[PROXY] Rate limit exceeded. Try again later."
+        
+        # Check cost (mock)
+        if self._is_expensive_query(prompt):
+            print("[PROXY] Expensive query - use simpler approach")
+            return self._simple_response(prompt)
+        
+        # Forward to real LLM
+        print("[PROXY] Forwarding to real LLM")
+        self.call_count += 1
+        response = self.real_llm.generate(prompt)
+        
+        # Cache response
+        self.cache[prompt] = response
+        
+        return response
+    
+    def _is_expensive_query(self, prompt: str) -> bool:
+        expensive_keywords = ["analyze", "research", "comprehensive"]
+        return any(word in prompt.lower() for word in expensive_keywords)
+    
+    def _simple_response(self, prompt: str) -> str:
+        return f"[Simple Response] {prompt[:30]}..."
+
+# Usage
+real_llm = RealLLM()
+proxy = LLMProxy(real_llm, rate_limit=3)
+# Cached response
+print(proxy.generate("What is AI?"))
+print(proxy.generate("What is AI?"))  # From cache
+# Expensive query handled specially
+print(proxy.generate("Comprehensive analysis of AI"))
+# Rate limiting
+for i in range(5):
+    print(proxy.generate(f"Query {i}"))
+```
+
+### BEHAVIORAL PATTERNS
+
+### 13. Chain of Responsibility Pattern
+
+**Purpose:** Pass request along a chain of handlers.
+
+**Agentic Use Case:** Agent handling escalation chain
+
+``` python
+
+# ============================================
+# CHAIN OF RESPONSIBILITY - HANDLER CHAIN
+# ============================================
+
+from abc import ABC, abstractmethod
+from enum import Enum
+class QueryType(Enum):
+    SIMPLE = 1
+    TECHNICAL = 2
+    COMPLEX = 3
+    URGENT = 4
+
+class Query:
+    def __init__(self, text: str, query_type: QueryType):
+        self.text = text
+        self.query_type = query_type
+        self.handled = False
+
+class Handler(ABC):
+    def __init__(self):
+        self.next_handler = None
+    
+    def set_next(self, handler: "Handler") -> "Handler":
+        self.next_handler = handler
+        return handler
+    
+    @abstractmethod
+    def handle(self, query: Query) -> str:
+        pass
+
+class SimpleQueryHandler(Handler):
+    """Handles simple queries"""
+    
+    def handle(self, query: Query) -> str:
+        if query.query_type == QueryType.SIMPLE:
+            print("[SimpleQueryHandler] Handling simple query")
+            query.handled = True
+            return f"Simple response to: {query.text}"
+        
+        if self.next_handler:
+            return self.next_handler.handle(query)
+        
+        return "No handler found"
+
+class TechnicalQueryHandler(Handler):
+    """Handles technical queries"""
+    
+    def handle(self, query: Query) -> str:
+        if query.query_type == QueryType.TECHNICAL:
+            print("[TechnicalQueryHandler] Handling technical query")
+            query.handled = True
+            return f"Technical analysis: {query.text}"
+        
+        if self.next_handler:
+            return self.next_handler.handle(query)
+        
+        return "No handler found"
+
+class ComplexQueryHandler(Handler):
+    """Handles complex queries"""
+    
+    def handle(self, query: Query) -> str:
+        if query.query_type == QueryType.COMPLEX:
+            print("[ComplexQueryHandler] Handling complex query")
+            query.handled = True
+            return f"Deep research: {query.text}"
+        
+        if self.next_handler:
+            return self.next_handler.handle(query)
+        
+        return "No handler found"
+
+class UrgentQueryHandler(Handler):
+    """Handles urgent queries - highest priority"""
+    
+    def handle(self, query: Query) -> str:
+        if query.query_type == QueryType.URGENT:
+            print("[UrgentQueryHandler] PRIORITY: Handling urgent query")
+            query.handled = True
+            return f"URGENT RESPONSE: {query.text}"
+        
+        if self.next_handler:
+            return self.next_handler.handle(query)
+        
+        return "No handler found"
+
+# Setup chain
+urgent = UrgentQueryHandler()
+complex_h = ComplexQueryHandler()
+technical = TechnicalQueryHandler()
+simple = SimpleQueryHandler()
+urgent.set_next(complex_h).set_next(technical).set_next(simple)
+# Process queries
+queries = [
+    Query("What is AI?", QueryType.SIMPLE),
+    Query("How to implement CNN?", QueryType.TECHNICAL),
+    Query("Design entire AI system", QueryType.COMPLEX),
+    Query("CRITICAL: System down!", QueryType.URGENT),
+]
+for query in queries:
+    response = urgent.handle(query)
+    print(f"Response: {response}\n")
+```
+
+### 14. Command Pattern
+
+**Purpose:** Encapsulate requests as objects.
+
+**Agentic Use Case:** Undo/Redo operations, task queuing
+
+``` python
+
+# ============================================
+# COMMAND PATTERN - ENCAPSULATED REQUESTS
+# ============================================
+
+from abc import ABC, abstractmethod
+from typing import List
+from datetime import datetime
+class Command(ABC):
+    @abstractmethod
+    def execute(self) -> str:
+        pass
+    
+    @abstractmethod
+    def undo(self):
+        pass
+
+class Agent:
+    def __init__(self, name: str):
+        self.name = name
+        self.memory = []
+        self.command_history: List[Command] = []
+    
+    def add_to_memory(self, info: str):
+        self.memory.append(info)
+        return f"Added to memory: {info}"
+    
+    def clear_memory(self):
+        self.memory.clear()
+        return "Memory cleared"
+    
+    def update_config(self, key: str, value):
+        return f"Updated {key} = {value}"
+
+class AddMemoryCommand(Command):
+    def __init__(self, agent: Agent, info: str):
+        self.agent = agent
+        self.info = info
+    
+    def execute(self) -> str:
+        return self.agent.add_to_memory(self.info)
+    
+    def undo(self):
+        if self.info in self.agent.memory:
+            self.agent.memory.remove(self.info)
+
+class ClearMemoryCommand(Command):
+    def __init__(self, agent: Agent):
+        self.agent = agent
+        self.backup = None
+    
+    def execute(self) -> str:
+        self.backup = self.agent.memory.copy()
+        return self.agent.clear_memory()
+    
+    def undo(self):
+        self.agent.memory = self.backup
+
+class UpdateConfigCommand(Command):
+    def __init__(self, agent: Agent, key: str, value):
+        self.agent = agent
+        self.key = key
+        self.new_value = value
+        self.old_value = None
+    
+    def execute(self) -> str:
+        self.old_value = getattr(self.agent, self.key, None)
+        setattr(self.agent, self.key, self.new_value)
+        return self.agent.update_config(self.key, self.new_value)
+    
+    def undo(self):
+        if self.old_value is not None:
+            setattr(self.agent, self.key, self.old_value)
+
+class CommandQueue:
+    """Executes commands and maintains history"""
+    
+    def __init__(self):
+        self.history: List[Command] = []
+        self.execution_log: List[str] = []
+    
+    def execute(self, command: Command) -> str:
+        result = command.execute()
+        self.history.append(command)
+        self.execution_log.append(f"[{datetime.now().isoformat()}] {result}")
+        return result
+    
+    def undo(self):
+        if self.history:
+            command = self.history.pop()
+            command.undo()
+            self.execution_log.append(f"[UNDO] {command.__class__.__name__}")
+    
+    def redo(self):
+        # Simplified - would need to track undone commands
+        pass
+    
+    def show_history(self):
+        return "\n".join(self.execution_log)
+
+# Usage
+agent = Agent("ResearchBot")
+queue = CommandQueue()
+# Execute commands
+queue.execute(AddMemoryCommand(agent, "Topic: Machine Learning"))
+queue.execute(AddMemoryCommand(agent, "Date: 2024"))
+queue.execute(UpdateConfigCommand(agent, "temperature", 0.7))
+print(queue.show_history())
+print(f"\nAgent memory: {agent.memory}")
+# Undo operations
+queue.undo()
+queue.undo()
+print(f"\nAfter undo, memory: {agent.memory}")
+```
+
+### 15. Iterator Pattern
+
+**Purpose:** Access elements sequentially without exposing structure.
+
+**Agentic Use Case:** Iterate through conversation history, knowledge base
+
+``` python
+
+# ============================================
+# ITERATOR PATTERN - SEQUENTIAL ACCESS
+# ============================================
+
+from abc import ABC, abstractmethod
+from typing import Iterator, List, Any
+class Message:
+    def __init__(self, role: str, content: str):
+        self.role = role
+        self.content = content
+    
+    def __repr__(self):
+        return f"{self.role}: {self.content[:50]}..."
+
+class ConversationHistory:
+    """Collection of messages with custom iterator"""
+    
+    def __init__(self):
+        self.messages: List[Message] = []
+    
+    def add_message(self, role: str, content: str):
+        self.messages.append(Message(role, content))
+    
+    def __iter__(self):
+        return ConversationIterator(self.messages)
+    
+    def reverse_iterator(self):
+        """Iterate in reverse"""
+        return ReverseConversationIterator(self.messages)
+    
+    def filter_by_role(self, role: str):
+        """Iterate only messages from specific role"""
+        return FilteredIterator(self.messages, role)
+
+class ConversationIterator(Iterator):
+    def __init__(self, messages: List[Message]):
+        self.messages = messages
+        self.index = 0
+    
+    def __next__(self) -> Message:
+        if self.index  Message:
+        if self.index >= 0:
+            message = self.messages[self.index]
+            self.index -= 1
+            return message
+        raise StopIteration
+
+class FilteredIterator(Iterator):
+    def __init__(self, messages: List[Message], role: str):
+        self.messages = [m for m in messages if m.role == role]
+        self.index = 0
+    
+    def __next__(self) -> Message:
+        if self.index < len(self.messages):
+            message = self.messages[self.index]
+            self.index += 1
+            return message
+        raise StopIteration
+
+# Usage
+history = ConversationHistory()
+history.add_message("user", "What is AI?")
+history.add_message("assistant", "AI is artificial intelligence...")
+history.add_message("user", "How does it work?")
+history.add_message("assistant", "AI works through machine learning...")
+print("Forward iteration:")
+for message in history:
+    print(f"  {message}")
+print("\nReverse iteration:")
+for message in history.reverse_iterator():
+    print(f"  {message}")
+print("\nOnly user messages:")
+for message in history.filter_by_role("user"):
+    print(f"  {message}")
+```
+
+### 16. Mediator Pattern
+
+**Purpose:** Define object that encapsulates how objects interact.
+
+**Agentic Use Case:** Multiple agents coordinating through mediator
+
+``` python
+
+# ============================================
+# MEDIATOR PATTERN - AGENT COORDINATION
+# ============================================
+
+from abc import ABC, abstractmethod
+from typing import Dict
+class Mediator(ABC):
+    @abstractmethod
+    def send_message(self, sender: str, receiver: str, message: str):
+        pass
+
+class ConcreteMediator(Mediator):
+    """Coordinates communication between agents"""
+    
+    def __init__(self):
+        self.agents: Dict[str, "Agent"] = {}
+        self.message_log: list = []
+    
+    def register_agent(self, agent: "Agent"):
+        self.agents[agent.name] = agent
+        agent.set_mediator(self)
+    
+    def send_message(self, sender: str, receiver: str, message: str):
+        if receiver not in self.agents:
+            print(f"[MEDIATOR] {receiver} not found!")
+            return
+        
+        self.message_log.append({
+            "from": sender,
+            "to": receiver,
+            "message": message
+        })
+        
+        print(f"[MEDIATOR] {sender} -> {receiver}: {message[:50]}...")
+        self.agents[receiver].receive_message(sender, message)
+    
+    def broadcast(self, sender: str, message: str):
+        """Send message to all agents"""
+        for agent_name, agent in self.agents.items():
+            if agent_name != sender:
+                self.send_message(sender, agent_name, message)
+
+class Agent:
+    def __init__(self, name: str):
+        self.name = name
+        self.mediator = None
+        self.inbox = []
+    
+    def set_mediator(self, mediator: Mediator):
+        self.mediator = mediator
+    
+    def send(self, receiver: str, message: str):
+        self.mediator.send_message(self.name, receiver, message)
+    
+    def broadcast(self, message: str):
+        self.mediator.broadcast(self.name, message)
+    
+    def receive_message(self, sender: str, message: str):
+        self.inbox.append((sender, message))
+        self.process_message(sender, message)
+    
+    def process_message(self, sender: str, message: str):
+        print(f"  [{self.name}] Processing message from {sender}")
+
+# Usage
+mediator = ConcreteMediator()
+# Create agents
+research_agent = Agent("ResearchBot")
+coding_agent = Agent("CodeBot")
+writing_agent = Agent("WriterBot")
+# Register agents
+mediator.register_agent(research_agent)
+mediator.register_agent(coding_agent)
+mediator.register_agent(writing_agent)
+# Agents communicate through mediator
+research_agent.send("CodeBot", "I need code for ML models")
+coding_agent.send("WriterBot", "Here's the implementation")
+writing_agent.broadcast("Research and code complete!")
+print("\nMessage log:")
+for log in mediator.message_log:
+    print(f"  {log['from']} -> {log['to']}: {log['message'][:40]}...")
+```
+
+### 17. Memento Pattern
+
+**Purpose:** Capture and externalize object state without breaking encapsulation.
+
+**Agentic Use Case:** Save and restore agent state
+
+``` python
+
+# ============================================
+# MEMENTO PATTERN - STATE SNAPSHOTS
+# ============================================
+
+from abc import ABC, abstractmethod
+from datetime import datetime
+from typing import List
+class AgentMemento:
+    """Memento - stores agent state"""
+    
+    def __init__(self, name: str, state: dict, timestamp: str):
+        self.name = name
+        self.state = state.copy()
+        self.timestamp = timestamp
+    
+    def get_state(self):
+        return self.state.copy()
+
+class Agent:
+    """Originator - creates mementos"""
+    
+    def __init__(self, name: str):
+        self.name = name
+        self.memory = []
+        self.config = {}
+        self.conversation_count = 0
+    
+    def add_memory(self, item: str):
+        self.memory.append(item)
+    
+    def update_config(self, key: str, value):
+        self.config[key] = value
+    
+    def process_conversation(self):
+        self.conversation_count += 1
+    
+    def create_memento(self) -> AgentMemento:
+        """Capture current state"""
+        state = {
+            "memory": self.memory.copy(),
+            "config": self.config.copy(),
+            "conversation_count": self.conversation_count
+        }
+        return AgentMemento(
+            self.name,
+            state,
+            datetime.now().isoformat()
+        )
+    
+    def restore_from_memento(self, memento: AgentMemento):
+        """Restore from memento"""
+        state = memento.get_state()
+        self.memory = state["memory"]
+        self.config = state["config"]
+        self.conversation_count = state["conversation_count"]
+    
+    def show_state(self):
+        print(f"Agent: {self.name}")
+        print(f"  Memory: {self.memory}")
+        print(f"  Config: {self.config}")
+        print(f"  Conversations: {self.conversation_count}")
+
+class AgentCaretaker:
+    """Caretaker - manages mementos"""
+    
+    def __init__(self):
+        self.snapshots: List[AgentMemento] = []
+    
+    def save_snapshot(self, agent: Agent):
+        """Save agent state"""
+        snapshot = agent.create_memento()
+        self.snapshots.append(snapshot)
+        print(f"[SAVE] Snapshot at {snapshot.timestamp}")
+    
+    def restore_snapshot(self, agent: Agent, index: int):
+        """Restore agent state"""
+        if 0 <= index < len(self.snapshots):
+            snapshot = self.snapshots[index]
+            agent.restore_from_memento(snapshot)
+            print(f"[RESTORE] Restored to {snapshot.timestamp}")
+    
+    def list_snapshots(self):
+        for i, snapshot in enumerate(self.snapshots):
+            print(f"  [{i}] {snapshot.timestamp}: {snapshot.state}")
+
+# Usage
+agent = Agent("ResearchBot")
+caretaker = AgentCaretaker()
+# Initial state
+agent.add_memory("Topic: AI")
+agent.update_config("temperature", 0.7)
+agent.show_state()
+# Save first snapshot
+caretaker.save_snapshot(agent)
+# Modify state
+agent.add_memory("Subtopic: NLP")
+agent.add_memory("Method: Transformers")
+agent.update_config("model", "gpt-4")
+agent.process_conversation()
+agent.process_conversation()
+agent.show_state()
+print()
+caretaker.save_snapshot(agent)
+# Modify more
+agent.add_memory("Tool: BERT")
+agent.conversation_count = 100
+agent.show_state()
+print()
+caretaker.save_snapshot(agent)
+# Restore to earlier state
+print("\nRestoring to snapshot 1...")
+caretaker.restore_snapshot(agent, 1)
+agent.show_state()
+print("\nAll snapshots:")
+caretaker.list_snapshots()
+```
+
+### 18. Observer Pattern
+
+(Already covered in previous article — extended example)
+
+**Purpose:** Define one-to-many dependency between objects.
+
+**Agentic Use Case:** Event-driven agent system
+
+``` python
+
+# ============================================
+# OBSERVER PATTERN - EVENT SYSTEM (EXTENDED)
+# ============================================
+
+from abc import ABC, abstractmethod
+from typing import List
+from datetime import datetime
+class Event:
+    def __init__(self, event_type: str, source: str, data: dict):
+        self.event_type = event_type
+        self.source = source
+        self.data = data
+        self.timestamp = datetime.now()
+
+class Observer(ABC):
+    @abstractmethod
+    def update(self, event: Event):
+        pass
+
+class LoggingObserver(Observer):
+    def update(self, event: Event):
+        print(f"[LOG] {event.timestamp.isoformat()} - {event.event_type} from {event.source}")
+
+class MetricsObserver(Observer):
+    def __init__(self):
+        self.metrics = {
+            "total_events": 0,
+            "events_by_type": {}
+        }
+    
+    def update(self, event: Event):
+        self.metrics["total_events"] += 1
+        
+        if event.event_type not in self.metrics["events_by_type"]:
+            self.metrics["events_by_type"][event.event_type] = 0
+        
+        self.metrics["events_by_type"][event.event_type] += 1
+    
+    def show_metrics(self):
+        print(f"Total events: {self.metrics['total_events']}")
+        for event_type, count in self.metrics["events_by_type"].items():
+            print(f"  {event_type}: {count}")
+
+class PersistenceObserver(Observer):
+    def __init__(self):
+        self.event_history = []
+    
+    def update(self, event: Event):
+        self.event_history.append({
+            "type": event.event_type,
+            "source": event.source,
+            "data": event.data,
+            "timestamp": event.timestamp.isoformat()
+        })
+
+class Subject:
+    def __init__(self):
+        self.observers: List[Observer] = []
+    
+    def attach(self, observer: Observer):
+        self.observers.append(observer)
+    
+    def detach(self, observer: Observer):
+        self.observers.remove(observer)
+    
+    def notify(self, event: Event):
+        for observer in self.observers:
+            observer.update(event)
+
+class AgentWithObserver(Subject):
+    def __init__(self, name: str):
+        super().__init__()
+        self.name = name
+    
+    def process_query(self, query: str):
+        self.notify(Event("query_received", self.name, {"query": query}))
+        # Process...
+        self.notify(Event("query_processing", self.name, {"status": "processing"}))
+        # Generate response...
+        self.notify(Event("response_generated", self.name, {"response": "answer"}))
+
+# Usage
+agent = AgentWithObserver("ResearchBot")
+# Attach observers
+logger = LoggingObserver()
+metrics = MetricsObserver()
+persistence = PersistenceObserver()
+agent.attach(logger)
+agent.attach(metrics)
+agent.attach(persistence)
+# Process queries
+agent.process_query("What is AI?")
+agent.process_query("How does ML work?")
+# Show metrics
+print()
+metrics.show_metrics()
+```
+
+### 19. State Pattern
+
+(Already covered in previous article — extended example)
+
+**Purpose:** Allow object to alter behavior when state changes.
+
+``` python
+
+# ============================================
+# STATE PATTERN - AGENT WORKFLOW (EXTENDED)
+# ============================================
+
+from abc import ABC, abstractmethod
+from enum import Enum
+class WorkflowState(ABC):
+    @abstractmethod
+    def on_enter(self, agent: "WorkflowAgent"):
+        pass
+    
+    @abstractmethod
+    def process(self, agent: "WorkflowAgent", data: str) -> str:
+        pass
+    
+    @abstractmethod
+    def on_exit(self, agent: "WorkflowAgent"):
+        pass
+
+class InitializationState(WorkflowState):
+    def on_enter(self, agent):
+        print(f"[INIT] Initializing {agent.name}")
+    
+    def process(self, agent, data):
+        agent.load_configuration()
+        agent.transition_to(ReadyState())
+        return "Initialized"
+    
+    def on_exit(self, agent):
+        print(f"[INIT] Exit initialization")
+
+class ReadyState(WorkflowState):
+    def on_enter(self, agent):
+        print(f"[READY] {agent.name} is ready")
+    
+    def process(self, agent, data):
+        if data == "quit":
+            agent.transition_to(ShutdownState())
+            return "Shutting down"
+        
+        agent.transition_to(ProcessingState())
+        return "Processing started"
+    
+    def on_exit(self, agent):
+        pass
+
+class ProcessingState(WorkflowState):
+    def on_enter(self, agent):
+        print(f"[PROCESSING] {agent.name} processing request")
+    
+    def process(self, agent, data):
+        result = agent.generate_response(data)
+        agent.transition_to(ReadyState())
+        return result
+    
+    def on_exit(self, agent):
+        print(f"[PROCESSING] Completed")
+
+class ErrorState(WorkflowState):
+    def on_enter(self, agent):
+        print(f"[ERROR] {agent.name} encountered error")
+    
+    def process(self, agent, data):
+        agent.log_error(data)
+        agent.transition_to(ReadyState())
+        return "Error logged, ready for retry"
+    
+    def on_exit(self, agent):
+        pass
+
+class ShutdownState(WorkflowState):
+    def on_enter(self, agent):
+        print(f"[SHUTDOWN] {agent.name} shutting down")
+    
+    def process(self, agent, data):
+        return "Shutdown complete"
+    
+    def on_exit(self, agent):
+        agent.cleanup()
+
+class WorkflowAgent:
+    def __init__(self, name: str):
+        self.name = name
+        self.state = InitializationState()
+        self.state.on_enter(self)
+    
+    def transition_to(self, state: WorkflowState):
+        self.state.on_exit(self)
+        self.state = state
+        state.on_enter(self)
+    
+    def process(self, data: str) -> str:
+        return self.state.process(self, data)
+    
+    def load_configuration(self):
+        print(f"  Loading config for {self.name}")
+    
+    def generate_response(self, data: str) -> str:
+        return f"Response to: {data}"
+    
+    def log_error(self, error: str):
+        print(f"  Error logged: {error}")
+    
+    def cleanup(self):
+        print(f"  Cleanup for {self.name}")
+
+# Usage
+agent = WorkflowAgent("MainAgent")
+print("\n")
+result = agent.process("initialize")
+print(f"Result: {result}\n")
+result = agent.process("What is AI?")
+print(f"Result: {result}\n")
+result = agent.process("quit")
+print(f"Result: {result}\n")
+```
+
+### 20. Strategy Pattern
+
+(Already covered — showing extended with multiple variations)
+
+**Purpose:** Define family of algorithms and make them interchangeable.
+
+``` python
+
+# ============================================
+# STRATEGY PATTERN - RESPONSE STRATEGIES
+# ============================================
+
+from abc import ABC, abstractmethod
+class ResponseStrategy(ABC):
+    @abstractmethod
+    def generate(self, prompt: str) -> str:
+        pass
+
+class DetailedStrategy(ResponseStrategy):
+    def generate(self, prompt: str) -> str:
+        return f"[DETAILED] Comprehensive answer to '{prompt}' with full context and examples..."
+
+class ConciseStrategy(ResponseStrategy):
+    def generate(self, prompt: str) -> str:
+        return f"[CONCISE] Quick answer: {prompt}"
+
+class CreativeStrategy(ResponseStrategy):
+    def generate(self, prompt: str) -> str:
+        return f"[CREATIVE] Imaginative response to '{prompt}' with metaphors and analogies..."
+
+class TechnicalStrategy(ResponseStrategy):
+    def generate(self, prompt: str) -> str:
+        return f"[TECHNICAL] Detailed technical explanation of '{prompt}' with equations..."
+
+class Agent:
+    def __init__(self, name: str):
+        self.name = name
+        self.strategy = DetailedStrategy()  # Default strategy
+    
+    def set_strategy(self, strategy: ResponseStrategy):
+        self.strategy = strategy
+    
+    def respond(self, prompt: str) -> str:
+        return self.strategy.generate(prompt)
+
+# Usage
+agent = Agent("MultiAgent")
+# Use different strategies
+strategies = [
+    ("Detailed", DetailedStrategy()),
+    ("Concise", ConciseStrategy()),
+    ("Creative", CreativeStrategy()),
+    ("Technical", TechnicalStrategy()),
+]
+prompt = "What is machine learning?"
+for name, strategy in strategies:
+    agent.set_strategy(strategy)
+    print(agent.respond(prompt))
+    print()
+```
+
+### 21. Template Method Pattern
+
+**Purpose:** Define skeleton of algorithm, let subclasses override steps.
+
+**Agentic Use Case:** Common agent workflow with customizable steps
+
+``` python
+
+# ============================================
+# TEMPLATE METHOD PATTERN - AGENT WORKFLOW
+# ============================================
+
+from abc import ABC, abstractmethod
+class AgentTemplate(ABC):
+    """Template for agent workflow"""
+    
+    def execute_task(self, task: str) -> str:
+        """Template method - defines algorithm structure"""
+        
+        # Step 1: Parse input
+        parsed = self.parse_input(task)
+        
+        # Step 2: Validate
+        if not self.validate(parsed):
+            return "Invalid input"
+        
+        # Step 3: Retrieve context
+        context = self.retrieve_context(parsed)
+        
+        # Step 4: Generate response
+        response = self.generate_response(parsed, context)
+        
+        # Step 5: Format response
+        formatted = self.format_response(response)
+        
+        # Step 6: Log action
+        self.log_action(task, formatted)
+        
+        return formatted
+    
+    # Override these in subclasses
+    @abstractmethod
+    def parse_input(self, task: str) -> dict:
+        pass
+    
+    @abstractmethod
+    def validate(self, data: dict) -> bool:
+        pass
+    
+    @abstractmethod
+    def retrieve_context(self, data: dict) -> str:
+        pass
+    
+    @abstractmethod
+    def generate_response(self, data: dict, context: str) -> str:
+        pass
+    
+    # These can have default implementations
+    def format_response(self, response: str) -> str:
+        return response.upper()
+    
+    def log_action(self, task: str, response: str):
+        print(f"[LOG] Task: {task[:30]}... Response length: {len(response)}")
+
+class ResearchAgent(AgentTemplate):
+    def parse_input(self, task: str) -> dict:
+        return {"query": task}
+    
+    def validate(self, data: dict) -> bool:
+        return len(data.get("query", "")) > 3
+    
+    def retrieve_context(self, data: dict) -> str:
+        return f"Research context for: {data['query']}"
+    
+    def generate_response(self, data: dict, context: str) -> str:
+        return f"Research findings on {data['query']}: {context}"
+
+class CodeAgent(AgentTemplate):
+    def parse_input(self, task: str) -> dict:
+        parts = task.split(":")
+        return {"language": parts[0] if len(parts) > 1 else "python", "task": task}
+    
+    def validate(self, data: dict) -> bool:
+        return data.get("task") and data.get("language")
+    
+    def retrieve_context(self, data: dict) -> str:
+        return f"Code templates for {data['language']}"
+    
+    def generate_response(self, data: dict, context: str) -> str:
+        return f"Code solution in {data['language']}: def solution(): pass"
+    
+    def format_response(self, response: str) -> str:
+        # Override: don't uppercase code
+        return response
+
+class WriterAgent(AgentTemplate):
+    def parse_input(self, task: str) -> dict:
+        return {"topic": task}
+    
+    def validate(self, data: dict) -> bool:
+        return len(data.get("topic", "")) > 0
+    
+    def retrieve_context(self, data: dict) -> str:
+        return f"Writing guidelines for {data['topic']}"
+    
+    def generate_response(self, data: dict, context: str) -> str:
+        return f"Article on {data['topic']}: Once upon a time..."
+
+# Usage
+agents = [ResearchAgent(), CodeAgent(), WriterAgent()]
+for agent in agents:
+    result = agent.execute_task("artificial intelligence")
+    print(result)
+    print()
+```
+
+### 22. Visitor Pattern
+
+**Purpose:** Represent operation to perform on elements of structure without changing structure.
+
+**Agentic Use Case:** Analyze or transform conversation history
+
+``` python
+
+# ============================================
+# VISITOR PATTERN - ANALYZE CONVERSATIONS
+# ============================================
+
+from abc import ABC, abstractmethod
+from typing import List
+class Message:
+    def __init__(self, role: str, content: str, timestamp: str):
+        self.role = role
+        self.content = content
+        self.timestamp = timestamp
+    
+    def accept(self, visitor: "MessageVisitor"):
+        visitor.visit_message(self)
+
+class Conversation:
+    def __init__(self, conversation_id: str):
+        self.conversation_id = conversation_id
+        self.messages: List[Message] = []
+    
+    def add_message(self, message: Message):
+        self.messages.append(message)
+    
+    def accept(self, visitor: "ConversationVisitor"):
+        visitor.visit_conversation(self)
+
+class MessageVisitor(ABC):
+    @abstractmethod
+    def visit_message(self, message: Message):
+        pass
+
+class ConversationVisitor(ABC):
+    @abstractmethod
+    def visit_conversation(self, conversation: Conversation):
+        pass
+
+class LengthAnalyzer(ConversationVisitor):
+    def visit_conversation(self, conversation: Conversation):
+        total_chars = 0
+        for message in conversation.messages:
+            total_chars += len(message.content)
+        
+        print(f"[LENGTH] Conversation {conversation.conversation_id}: {total_chars} chars")
+
+class SentimentAnalyzer(ConversationVisitor):
+    def visit_conversation(self, conversation: Conversation):
+        sentiments = {"positive": 0, "negative": 0, "neutral": 0}
+        
+        for message in conversation.messages:
+            sentiment = self._analyze(message.content)
+            sentiments[sentiment] += 1
+        
+        print(f"[SENTIMENT] {conversation.conversation_id}: {sentiments}")
+    
+    def _analyze(self, text: str) -> str:
+        positive_words = ["good", "great", "excellent", "happy"]
+        negative_words = ["bad", "awful", "terrible", "sad"]
+        
+        text_lower = text.lower()
+        
+        pos_count = sum(1 for word in positive_words if word in text_lower)
+        neg_count = sum(1 for word in negative_words if word in text_lower)
+        
+        if pos_count > neg_count:
+            return "positive"
+        elif neg_count > pos_count:
+            return "negative"
+        return "neutral"
+
+class TopicExtractor(ConversationVisitor):
+    def visit_conversation(self, conversation: Conversation):
+        topics = set()
+        
+        for message in conversation.messages:
+            extracted = self._extract_topics(message.content)
+            topics.update(extracted)
+        
+        print(f"[TOPICS] {conversation.conversation_id}: {topics}")
+    
+    def _extract_topics(self, text: str) -> List[str]:
+        keywords = ["AI", "ML", "Python", "data", "model", "algorithm"]
+        return [k for k in keywords if k.lower() in text.lower()]
+
+class StatisticsCollector(ConversationVisitor):
+    def visit_conversation(self, conversation: Conversation):
+        user_msgs = sum(1 for m in conversation.messages if m.role == "user")
+        assistant_msgs = sum(1 for m in conversation.messages if m.role == "assistant")
+        avg_length = sum(len(m.content) for m in conversation.messages) / len(conversation.messages)
+        
+        print(f"[STATS] {conversation.conversation_id}:")
+        print(f"  User messages: {user_msgs}")
+        print(f"  Assistant messages: {assistant_msgs}")
+        print(f"  Avg message length: {avg_length:.0f} chars")
+
+# Usage
+conversation = Conversation("conv_001")
+conversation.add_message(Message("user", "Tell me about AI", "2024-01-01"))
+conversation.add_message(Message("assistant", "AI is great technology", "2024-01-01"))
+conversation.add_message(Message("user", "How does ML algorithm work?", "2024-01-01"))
+conversation.add_message(Message("assistant", "ML is excellent for data processing", "2024-01-01"))
+# Apply different visitors
+conversation.accept(LengthAnalyzer())
+conversation.accept(SentimentAnalyzer())
+conversation.accept(TopicExtractor())
+conversation.accept(StatisticsCollector())
+```
+
+### 23. Interpreter Pattern (Bonus Behavioral)
+
+**Purpose:** Define grammar and interpreter for language.
+
+**Agentic Use Case:** Parse and execute agent commands
+
+``` python
+
+# ============================================
+# INTERPRETER PATTERN - COMMAND LANGUAGE
+# ============================================
+
+from abc import ABC, abstractmethod
+class Expression(ABC):
+    @abstractmethod
+    def interpret(self, context: dict) -> str:
+        pass
+
+class LiteralExpression(Expression):
+    def __init__(self, value: str):
+        self.value = value
+    
+    def interpret(self, context: dict) -> str:
+        return self.value
+
+class VariableExpression(Expression):
+    def __init__(self, name: str):
+        self.name = name
+    
+    def interpret(self, context: dict) -> str:
+        return context.get(self.name, f"undefined_{self.name}")
+
+class SetExpression(Expression):
+    def __init__(self, var_name: str, value_expr: Expression):
+        self.var_name = var_name
+        self.value_expr = value_expr
+    
+    def interpret(self, context: dict) -> str:
+        value = self.value_expr.interpret(context)
+        context[self.var_name] = value
+        return f"Set {self.var_name} = {value}"
+
+class IfExpression(Expression):
+    def __init__(self, condition: str, then_expr: Expression, else_expr: Expression = None):
+        self.condition = condition
+        self.then_expr = then_expr
+        self.else_expr = else_expr
+    
+    def interpret(self, context: dict) -> str:
+        if self.condition == "true" or context.get(self.condition):
+            return self.then_expr.interpret(context)
+        elif self.else_expr:
+            return self.else_expr.interpret(context)
+        return "Condition false"
+
+class PrintExpression(Expression):
+    def __init__(self, var_expr: Expression):
+        self.var_expr = var_expr
+    
+    def interpret(self, context: dict) -> str:
+        value = self.var_expr.interpret(context)
+        print(f"[OUTPUT] {value}")
+        return f"Printed: {value}"
+
+class CommandInterpreter:
+    """Simple interpreter for agent commands"""
+    
+    def __init__(self):
+        self.context = {}
+    
+    def interpret_command(self, command: str) -> str:
+        # Parse simple commands
+        if command.startswith("SET"):
+            parts = command.split()
+            # SET name value
+            var_name = parts[1]
+            value = parts[2] if len(parts) > 2 else ""
+            expr = SetExpression(var_name, LiteralExpression(value))
+            return expr.interpret(self.context)
+        
+        elif command.startswith("PRINT"):
+            parts = command.split()
+            var_name = parts[1] if len(parts) > 1 else ""
+            expr = PrintExpression(VariableExpression(var_name))
+            return expr.interpret(self.context)
+        
+        elif command.startswith("GET"):
+            parts = command.split()
+            var_name = parts[1] if len(parts) > 1 else ""
+            return VariableExpression(var_name).interpret(self.context)
+        
+        return "Unknown command"
+
+# Usage
+interpreter = CommandInterpreter()
+commands = [
+    "SET name Alice",
+    "SET age 30",
+    "PRINT name",
+    "PRINT age",
+    "GET name",
+]
+for cmd in commands:
+    result = interpreter.interpret_command(cmd)
+    print(f"$ {cmd}")
+    print(f"  Result: {result}\n")
+```
+
+### PATTERN COMPARISON CHART
+
+![](/posts/images/design-patterns-agentic-python-fig1.png)
+
+### When to Use Each Pattern
+
+### Quick Decision Tree
+
+``` python
+
+Need to CREATE objects?
+├─ How many variations? 
+│  ├─ One method per type → Factory Method
+│  ├─ Families of related objects → Abstract Factory
+│  ├─ Complex step-by-step → Builder
+│  ├─ Clone existing → Prototype
+│  └─ Single global instance → Singleton
+```
+
+``` python
+
+Need to COMPOSE objects?
+├─ Different interfaces?
+│  ├─ Adapt incompatible interfaces → Adapter
+│  ├─ Decouple abstraction/impl → Bridge
+│  ├─ Tree structures → Composite
+│  ├─ Add features dynamically → Decorator
+│  ├─ Simplify complex subsystem → Facade
+│  ├─ Share common state → Flyweight
+│  └─ Control access → Proxy
+```
+
+``` python
+
+Need to DEFINE algorithms/interactions?
+├─ Objects communicate?
+│  ├─ Pass along chain → Chain of Responsibility
+│  ├─ Encapsulate requests → Command
+│  ├─ Access sequentially → Iterator
+│  ├─ Coordinate objects → Mediator
+│  ├─ Save/Restore state → Memento
+│  ├─ Notify observers → Observer
+│  ├─ Change behavior by state → State
+│  ├─ Interchangeable algorithms → Strategy
+│  ├─ Algorithm skeleton → Template Method
+│  └─ Perform on elements → Visitor
+```
+
+### Conclusion
+
+You now have practical examples of **all 23 Gang of Four design patterns** applied to agentic Python applications. Key takeaways:
+
+1.  **Creational patterns** handle flexible object creation
+2.  **Structural patterns** organize complex object relationships
+3.  **Behavioral patterns** manage object communication and responsibilities
+
+Start with the most relevant patterns for your use case and build from there. Overusing patterns creates complexity; using them judiciously creates elegant systems.
+
+Happy designing! 🎨
+
+*Share your favorite pattern combination in the comments below.*
+
+#DesignPatterns #SoftwareArchitecture #Python #AI #BackendDevelopment #SoftwareEngineering #ArtificialIntelligence
+#AgenticAI
+#LLM
+#CodingTips
+#DeveloperCommunity
+#TechBlog
+#Programming #TechLeadership
+#EngineeringBestPractices
+#CareerGrowth
+#LearningToCode
+#TechCommunity
+
+![](https://medium.com/_/stat?event=post.clientViewed&amp;referrerSource=full_rss&amp;postId=ef207898f685)

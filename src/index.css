@@ -6,12 +6,26 @@
   font-family: 'Almarai', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 html,
 body,
 #root {
   background: #000000;
   color: #E1E0CC;
   min-height: 100%;
+}
+
+section[id] {
+  scroll-margin-top: 5rem;
 }
 
 body {
@@ -48,6 +62,180 @@ body::before {
 ::selection {
   background: #DEDBC8;
   color: #000;
+}
+
+.prose-post {
+  color: rgba(222, 219, 200, 0.85);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+.prose-post > * + * {
+  margin-top: 1.2em;
+}
+.prose-post h1,
+.prose-post h2,
+.prose-post h3,
+.prose-post h4 {
+  color: #DEDBC8;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin-top: 2em;
+  margin-bottom: 0.6em;
+}
+.prose-post h1 { font-size: 2rem; }
+.prose-post h2 { font-size: 1.5rem; }
+.prose-post h3 { font-size: 1.25rem; }
+.prose-post h4 { font-size: 1.1rem; }
+.prose-post p { color: rgba(222, 219, 200, 0.82); }
+.prose-post a {
+  color: #DEDBC8;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(222, 219, 200, 0.35);
+  transition: text-decoration-color 200ms;
+}
+.prose-post a:hover {
+  text-decoration-color: #DEDBC8;
+}
+.prose-post strong { color: #DEDBC8; font-weight: 600; }
+.prose-post em { font-family: 'Instrument Serif', serif; font-style: italic; }
+.prose-post ul,
+.prose-post ol {
+  padding-left: 1.4em;
+}
+.prose-post ul { list-style: disc; }
+.prose-post ol { list-style: decimal; }
+.prose-post li { margin: 0.35em 0; }
+.prose-post li::marker { color: rgba(222, 219, 200, 0.45); }
+.prose-post blockquote {
+  border-left: 2px solid rgba(222, 219, 200, 0.25);
+  padding: 0.2em 0 0.2em 1.2em;
+  color: rgba(222, 219, 200, 0.7);
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 1.1em;
+}
+.prose-post code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.9em;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  color: #DEDBC8;
+}
+.prose-post pre {
+  background: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 1.1em 1.3em;
+  overflow-x: auto;
+  font-size: 0.85em;
+  line-height: 1.55;
+}
+.prose-post pre code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}
+.prose-post hr {
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin: 2em 0;
+}
+.prose-post img,
+.prose-post svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 2em auto;
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 30px 60px -20px rgba(0, 0, 0, 0.7);
+  background: #0a0a0a;
+}
+.prose-post p:has(> img:only-child),
+.prose-post p:has(> a:only-child > img:only-child) {
+  margin: 2em 0;
+}
+.prose-post figure {
+  margin: 2em 0;
+}
+.prose-post figure img {
+  margin: 0 auto;
+}
+.prose-post figure figcaption,
+.prose-post p:has(> img) + p em:only-child {
+  display: block;
+  text-align: center;
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 0.95em;
+  color: rgba(222, 219, 200, 0.6);
+  margin-top: 0.8em;
+}
+
+.prose-post .table-wrap,
+.prose-post figure > table {
+  overflow-x: auto;
+}
+
+.prose-post table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9em;
+  margin: 2em 0;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0a0a0a;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 20px 50px -20px rgba(0, 0, 0, 0.65);
+}
+.prose-post thead {
+  background: linear-gradient(
+    to bottom,
+    rgba(245, 195, 105, 0.09),
+    rgba(255, 255, 255, 0.02)
+  );
+}
+.prose-post th {
+  color: #DEDBC8;
+  font-weight: 600;
+  font-size: 0.78em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.9em 1.1em;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.prose-post td {
+  color: rgba(222, 219, 200, 0.85);
+  padding: 0.85em 1.1em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  vertical-align: top;
+}
+.prose-post tbody tr:last-child td {
+  border-bottom: 0;
+}
+.prose-post tbody tr {
+  transition: background-color 200ms ease;
+}
+.prose-post tbody tr:hover {
+  background: rgba(222, 219, 200, 0.03);
+}
+.prose-post td:first-child {
+  color: #DEDBC8;
+  font-weight: 500;
+}
+.prose-post td code,
+.prose-post th code {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.1em 0.35em;
+  font-size: 0.85em;
 }
 
 .dotted-text {

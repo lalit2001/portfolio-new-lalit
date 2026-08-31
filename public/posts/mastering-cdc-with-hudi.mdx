@@ -1,0 +1,114 @@
+---
+title: Mastering CDC with Hudi: managing trains at an Indian railway station
+date: 2024-08-10
+excerpt: A field metaphor - Indian railway stations - for wrapping your head around Change Data Capture on Apache Hudi.
+tags: [data-ingestion, data-engineering, data-deduplication, apache-hudi, cdc]
+cover: /posts/images/mastering-cdc-with-hudi-cover.svg
+source: medium
+sourceUrl: https://medium.com/@lalitmaharana2001/mastering-cdc-with-hudi-the-tale-of-managing-trains-at-an-indian-railway-station-f1a798a26e6e
+---
+
+Hello, data enthusiasts! 👋 Lalit here, ready to take you on a journey through the fascinating world of Change Data Capture (CDC) and deduplication using Apache Hudi. Today’s adventure is set in a place familiar to us the bustling and ever-busy Indian railway station. 🚂💨
+
+### 🛤️ Setting the Scene
+
+Imagine you’re the station master at one of India’s busiest railway junctions. Every day, trains arrive, depart, reschedule, or even cancel. Keeping track of all these changes is no small feat! 🎟️
+
+This situation is much like what happens in our databases. Just as you need to manage train schedules efficiently to ensure smooth operations at the station, we need to handle CDC in our data pipelines. Enter Apache Hudi our trusty station management system that keeps everything running on time! 🕒✨
+
+### ✨ What is Apache Hudi?
+
+Apache Hudi (Hadoop Upserts Deletes and Incrementals) is an open-source data management framework designed to efficiently handle large-scale data changes in data lakes. It enables you to perform upserts (update existing records and insert new ones) and deletes, making it ideal for environments with constantly changing data. Hudi integrates well with big data tools like Apache Spark and cloud storage, ensuring your datasets remain up-to-date without needing full rewrites, which is crucial for Change Data Capture (CDC) scenarios.
+
+### 🔑 What is precombine field in Hudi?
+
+The precombine field in Hudi helps determine which record to keep when multiple changes occur for the same key. It’s like the station master’s rulebook, prioritizing the most recent or relevant update based on a timestamp or version number. This ensures that your data reflects the latest changes, similar to how a station master maintains the most current train schedule.
+
+### 🚋 The Tracks to Success
+
+Let’s map out our plan using PySpark and Hudi, much like plotting the tracks for trains at a station:
+
+1.  Start with a solid foundation of PySpark 🚧
+2.  Add Apache Hudi for effective management 🛠️
+3.  Incorporate logic to handle train schedule changes 🚦
+4.  Establish a precombine key to manage train priorities 🗝️
+5.  Ensure no duplicate schedules exist 🚫
+
+### 🏗️ Building the Station (Development Environment)
+
+Before we dive into the code, let’s set up our environment. Think of this as building the station infrastructure.
+
+First, create a directory for your project and notebooks to keep your work organized:
+
+![](/posts/images/mastering-cdc-with-hudi-hero.png)
+
+Then, create a docker-compose.yml file to establish your workspace:
+
+![](/posts/images/mastering-cdc-with-hudi-fig1.png)
+
+Start the Docker container and get ready to take control of the station:
+
+``` python
+
+docker-compose up -d
+```
+
+Open your web browser and head to http://localhost:8888 to access Jupyter Notebook.
+
+### 🚦 Managing Train Schedules (The Code)
+
+Now that our station is up and running, let’s begin managing those train schedules. Create a new notebook in Jupyter and add the following code:
+
+![](/posts/images/mastering-cdc-with-hudi-fig2.png)
+
+Here, we set up our Spark session just like a station master preparing their control room. Everything needs to be configured perfectly to ensure smooth operations!
+
+### 🕒 Scheduling Trains (Handling Data Operations)
+
+Next, let’s define how we’ll handle the various operations — like trains arriving, departing, or being rescheduled.
+
+![](/posts/images/mastering-cdc-with-hudi-fig3.png)
+
+This function generates a unique precombine_key for each record by combining the operation timestamp with the type of operation (Update, Insert, Delete).
+
+- Assign numerical values to operations: Update = 3, Insert = 2, Delete = 1.
+- Converts the operation timestamp to a long value and add the op_value.
+- This combined value is used as the precombine_key.
+
+Why It’s Useful
+
+The precombine_key helps Hudi decide which record to keep when multiple changes occur for the same primary key. It prioritizes the most recent operation and ensures updates take precedence over inserts, which in turn take precedence over deletes. This way, your dataset always reflects the latest and most relevant state.
+
+### 🚉 Managing Train Cancellations and Reassignments
+
+Handling cancellations and reassignments is crucial. Here’s how we do it:
+
+![](/posts/images/mastering-cdc-with-hudi-fig4.png)
+
+This function is like the station master marking a train as canceled or rescheduled, ensuring that our system reflects the latest information.
+
+### 🚂 Scheduling Trains for the Day
+
+Let’s now simulate a day at our station:
+
+![](/posts/images/mastering-cdc-with-hudi-fig5.png)
+
+This is where the action happens. Trains (our data) are scheduled, rescheduled, or canceled, and everything is recorded in Hudi, ensuring we keep track of the final, correct schedule.
+
+### 📊 Reading the Final Train Schedule
+
+Finally, let’s see the results of the final train schedule after all changes have been processed:
+
+![](/posts/images/mastering-cdc-with-hudi-fig6.png)
+
+This is like the station master’s final list of trains for the day, perfectly organized and free of errors.
+
+### 🌟 Conclusion: A Smooth Journey with Hudi
+
+Just like managing a busy railway station, handling CDC and deduplication in data pipelines is all about keeping track of changes efficiently. With Apache Hudi and PySpark, we’ve ensured that our “trains” are on time, and no schedules are duplicated or missed.
+
+So, whether you’re managing trains at a busy station or data in a fast-paced system, remember: the key is organization, prioritization, and always keeping an eye on the clock! 🚉🕒
+
+#DataEngineering #ApacheHudi #CDC #PySpark #BigData #IndianTech #Docker #aws #spark
+
+![](https://medium.com/_/stat?event=post.clientViewed&amp;referrerSource=full_rss&amp;postId=f1a798a26e6e)

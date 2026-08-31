@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="c-glow" cx="50%" cy="115%" r="90%">
+      <stop offset="0%" stop-color="#A9E9FB" stop-opacity="0.55"/>
+      <stop offset="30%" stop-color="#A9E9FB" stop-opacity="0.2"/>
+      <stop offset="70%" stop-color="#A9E9FB" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#0a0a0a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="c-tile" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#DEDBC8" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#DEDBC8" stop-opacity="0.02"/>
+    </linearGradient>
+    <linearGradient id="c-accent" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#A9E9FB" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#A9E9FB" stop-opacity="0.05"/>
+    </linearGradient>
+    <filter id="c-noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.045 0"/>
+    </filter>
+  </defs>
+  <rect width="800" height="500" fill="#0a0a0a"/>
+  <rect width="800" height="500" fill="url(#c-glow)"/>
+  <g stroke="#A9E9FB" fill="none" opacity="0.75">
+    <rect x="80"  y="150" width="140" height="60" rx="10" stroke-opacity="0.6" stroke-width="1"/>
+    <rect x="330" y="120" width="140" height="60" rx="10" stroke-opacity="0.85" stroke-width="1.2" fill="url(#c-accent)"/>
+    <rect x="580" y="150" width="140" height="60" rx="10" stroke-opacity="0.6" stroke-width="1"/>
+    <path d="M 220 180 Q 275 180 330 150" stroke-opacity="0.7"/>
+    <path d="M 470 150 Q 525 150 580 180" stroke-opacity="0.7"/>
+    <rect x="200" y="290" width="140" height="60" rx="10" stroke-opacity="0.6" stroke-width="1"/>
+    <rect x="460" y="290" width="140" height="60" rx="10" stroke-opacity="0.6" stroke-width="1"/>
+    <path d="M 400 210 Q 400 250 270 290" stroke-opacity="0.55"/>
+    <path d="M 400 210 Q 400 250 530 290" stroke-opacity="0.55"/>
+  </g>
+  <g fill="#A9E9FB" opacity="0.8">
+    <circle cx="150" cy="180" r="3"/>
+    <circle cx="400" cy="150" r="4"/>
+    <circle cx="650" cy="180" r="3"/>
+    <circle cx="270" cy="320" r="3"/>
+    <circle cx="530" cy="320" r="3"/>
+  </g>
+  <text x="80" y="450" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" fill="#A9E9FB" opacity="0.75">writing / migrate-data-airbyte</text>
+  <rect width="800" height="500" filter="url(#c-noise)" opacity="0.75"/>
+</svg>

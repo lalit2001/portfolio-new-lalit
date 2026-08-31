@@ -1,0 +1,148 @@
+---
+title: Vector similarity on AWS Neptune Analytics
+date: 2024-03-11
+excerpt: Combining property graphs with vector embeddings on Neptune Analytics to surface hidden connections.
+tags: []
+cover: /posts/images/aws-neptune-vector-similarity-cover.svg
+source: medium
+sourceUrl: https://medium.com/@lalitmaharana2001/unveiling-connections-harnessing-vector-similarity-on-aws-neptune-analytics-952976adef7e
+---
+
+Introduction:
+
+In today’s data-driven world, graph databases have emerged as a powerful tool for modeling and analyzing complex, interconnected data. AWS Neptune Analytics, a built-in graph analytics engine, takes this capability to new heights by enabling advanced analytics and pattern detection within your graph data. One exciting feature of Neptune Analytics is its support for vector similarity, which allows you to uncover relationships between entities based on their vector representations. In this blog post, we’ll explore how to create a new Neptune Analytics graph and leverage vector similarity to uncover hidden connections.
+
+Create Graph
+
+Before we dive into vector similarity, let’s first create a new Neptune Analytics graph. This graph will serve as the foundation for our analysis.
+
+1.  Sign in to the AWS Management Console, and navigate to the Amazon Neptune console at https://console.aws.amazon.com/neptune/.
+2.  In the left navigation pane, select “Graphs” under the “Analytics” section.
+3.  Click on the “Create graph” button.
+4.  Enter a descriptive name for your new graph.
+5.  Decide whether you want to create an empty graph or a graph preloaded with data:
+
+\* If you choose “Create empty graph”, specify the number of memory-optimized Neptune Capacity Units (m-NCUs) to allocate to the new graph. The range is between 128 and 1024 m-NCUs, with each m-NCU providing approximately 1 GiB of memory capacity and corresponding compute and networking resources.
+
+\* If you choose “Create Graph from existing source”, Neptune Analytics will bulk-load data for you during the graph creation process. This option is recommended for importing large datasets, typically 50 GiB or larger.
+
+\* Set the minimum and maximum m-NCU values, or leave them at their default values (128 m-NCUs).
+
+\* Under “Load role ARN”, select an IAM role with the necessary permissions for data import. (Refer to the “Creating IAM roles for loading data” documentation for instructions on creating this role.)
+
+\* Specify the source of the data you want to load:
+
+\- If loading from a Neptune cluster, select the cluster under “Neptune cluster.”
+
+\- If loading from a Neptune cluster snapshot, select the manual DB snapshot under “Neptune DB snapshot.”
+
+\- If loading from Amazon S3, enter the URL of the S3 location where the data file(s) are located under “Resource URI.” Ensure that the path ends with a slash (“/”) to indicate a folder location.
+
+6\. Under “Availability settings,” choose the number of failover replicas you want to create for the new graph. The default is one replica, but you can select between zero and two replicas.
+
+7\. In the “Network and security” section:Check “Allow from public” if you want to create a public endpoint for your new Neptune Analytics graph, making it accessible over the internet.Check “Customize encryption settings” if you want to use your own KMS key to encrypt your data, and then specify the KMS key.
+
+8\. Under “Vector search settings,” if you plan to set up a vector index for the graph, select “Use vector dimension” and specify the number of dimensions for the vectors in the index.
+
+9\. In the “Advanced settings” section, you can optionally turn off deletion protection for the new graph by selecting “Turn off deletion protection.” Deletion protection is enabled by default.
+
+10\. Optionally, under “Tags,” associate tags with your new Neptune Analytics graph.
+
+11\. Once you’ve configured all the desired settings, click the “Create Graph” button to initiate the graph creation process.
+
+![](/posts/images/aws-neptune-vector-similarity-hero.png)
+
+Connect to an AWS Neptune graph using boto3
+
+1.  Set up AWS credentials: First, you need to set up your AWS credentials. It’s recommended to use environment variables or an AWS credentials file instead of hard-coding your access keys in the code. You can follow the AWS documentation on how to set up your credentials: [Configuring the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)
+2.  Import the necessary libraries:
+
+``` python
+
+import boto3
+```
+
+3\. Create a Neptune client:
+
+``` python
+
+session = boto3.Session()
+neptune_client = session.client('neptune-graph', region_name='us-west-2')
+```
+
+4\. Create nodes in the graph:
+
+``` python
+
+text = "This is an example text"
+response = neptune_client.execute_query(
+    graphIdentifier='',
+    queryString=f"""
+        MERGE (user:User {{user_id: 'user'}})
+        MERGE (text:Text{{text: "{text}"}})
+        MERGE (user)-[:Has_chunk]->(text)
+    """,
+    language='OPEN_CYPHER',
+)
+```
+
+Note: Replace 'identifier' with the actual identifier of your Neptune Analytics graph, and 'user' with the desired value for the user_id property.
+
+1.  insert vector to Node:
+
+``` python
+
+embeddings = [[0.1, 0.2, 0.3, ...]]  # Replace with your actual embeddings
+```
+
+``` python
+
+response = neptune_client.execute_query(
+    graphIdentifier='',
+    queryString=f"""
+        MATCH (user:User {{user_id: 'user'}})
+        CALL neptune.algo.vectors.upsert(user, {list(embeddings[0])})
+        YIELD node, embedding
+        RETURN user, embedding
+    """,
+    language='OPEN_CYPHER',
+)
+```
+
+This query matches a User node updates its vector embedding using the neptune.algo.vectors.upsert function, and returns the User node and its embedding.
+
+After executing this query, you can perform vector similarity searches using the neptune.algo.vectors.topKByEmbedding function in Neptune Analytics. Here’s an example:
+
+``` python
+
+embedding = [[0.1, 0.2, 0.3, ...]]
+response = client.execute_query(
+    graphIdentifier='',
+    queryString=f"""
+            MATCH (u:User {{user_id: 'user'}})-[:Has_chunk]->(n:Text)
+            CALL neptune.algo.vectors.topKByEmbedding(
+            {embedding},
+              {{
+                topK: 2,
+                concurrency: 1
+              }}
+            )
+            YIELD node, score
+            RETURN n.text, score
+            """,
+    language='OPEN_CYPHER',
+    
+)
+```
+
+This function takes the target embedding and returns the top K (in this case, 2) most similar nodes based on their embeddings, along with their similarity scores.
+
+Reference :
+
+1.  https://docs.aws.amazon.com/neptune-analytics/latest/userguide/vector-index.html
+2.  https://docs.aws.amazon.com/neptune-analytics/latest/userguide/create-graph-using-console.html
+3.  https://docs.aws.amazon.com/neptune-analytics/latest/userguide/vss-algorithms.html
+
+#AI #ML #LLM #AWS #NEPTUNE
+
+![](https://medium.com/_/stat?event=post.clientViewed&amp;referrerSource=full_rss&amp;postId=952976adef7e)

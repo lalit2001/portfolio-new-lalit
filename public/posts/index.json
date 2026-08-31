@@ -1,0 +1,42 @@
+[
+  {
+    "slug": "design-patterns-agentic-python",
+    "title": "Complete Guide to All 23 Design Patterns in Agentic Python Systems",
+    "date": "2026-04-23",
+    "excerpt": "A field guide to Gang-of-Four design patterns applied to AI agent backends - creational, structural, and behavioral, with Python examples pulled straight from production code.",
+    "tags": ["design-patterns", "agents", "python", "llm"],
+    "cover": "/posts/images/design-patterns-cover.svg"
+  },
+  {
+    "slug": "mastering-cdc-with-hudi",
+    "title": "Mastering CDC with Hudi: managing trains at an Indian railway station",
+    "date": "2024-08-10",
+    "excerpt": "A field metaphor - Indian railway stations - for wrapping your head around Change Data Capture on Apache Hudi.",
+    "tags": ["data-engineering", "hudi", "cdc"],
+    "cover": "/posts/images/mastering-cdc-with-hudi-cover.svg"
+  },
+  {
+    "slug": "migrate-data-airbyte",
+    "title": "Migrate data like a boss with Airbyte",
+    "date": "2024-04-21",
+    "excerpt": "Setting up Airbyte with Docker Compose and building a pipeline to migrate between two Postgres databases.",
+    "tags": ["airbyte", "docker", "postgres"],
+    "cover": "/posts/images/migrate-data-airbyte-cover.svg"
+  },
+  {
+    "slug": "aws-neptune-vector-similarity",
+    "title": "Vector similarity on AWS Neptune Analytics",
+    "date": "2024-03-11",
+    "excerpt": "Combining property graphs with vector embeddings on Neptune Analytics to surface hidden connections.",
+    "tags": ["aws", "neptune", "vector-search"],
+    "cover": "/posts/images/aws-neptune-vector-similarity-cover.svg"
+  },
+  {
+    "slug": "python-lambda-jenkins",
+    "title": "Deploying a Python model to AWS Lambda with Jenkins",
+    "date": "2023-05-21",
+    "excerpt": "A minimal CI pipeline that packages a Python model, zips its dependencies, and deploys to AWS Lambda on every merge.",
+    "tags": ["aws", "lambda", "jenkins", "ci-cd"],
+    "cover": "/posts/images/python-lambda-jenkins-cover.svg"
+  }
+]

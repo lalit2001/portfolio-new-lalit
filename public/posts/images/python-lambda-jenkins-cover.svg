@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="c-glow" cx="50%" cy="115%" r="90%">
+      <stop offset="0%" stop-color="#DEDBC8" stop-opacity="0.55"/>
+      <stop offset="30%" stop-color="#DEDBC8" stop-opacity="0.2"/>
+      <stop offset="70%" stop-color="#DEDBC8" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#0a0a0a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="c-tile" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#DEDBC8" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#DEDBC8" stop-opacity="0.02"/>
+    </linearGradient>
+    <linearGradient id="c-accent" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#DEDBC8" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#DEDBC8" stop-opacity="0.05"/>
+    </linearGradient>
+    <filter id="c-noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.045 0"/>
+    </filter>
+  </defs>
+  <rect width="800" height="500" fill="#0a0a0a"/>
+  <rect width="800" height="500" fill="url(#c-glow)"/>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" fill="#DEDBC8">
+    <text x="60" y="130" opacity="0.4">$ jenkins build</text>
+    <text x="60" y="160" opacity="0.55">→ package model.zip</text>
+    <text x="60" y="190" opacity="0.55">→ aws lambda update-function-code</text>
+    <text x="60" y="220" opacity="0.55">→ deploy: OK</text>
+    <text x="60" y="270" opacity="0.35" fill="#DEDBC8">└── ok, live in 8s</text>
+  </g>
+  <g stroke="#DEDBC8" stroke-opacity="0.35" stroke-width="0.8" fill="none">
+    <rect x="40" y="100" width="380" height="200" rx="10"/>
+  </g>
+  <g fill="#DEDBC8" opacity="0.75">
+    <circle cx="60" cy="118" r="3"/>
+    <circle cx="72" cy="118" r="3" fill-opacity="0.6"/>
+    <circle cx="84" cy="118" r="3" fill-opacity="0.4"/>
+  </g>
+  <text x="80" y="450" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" fill="#DEDBC8" opacity="0.75">writing / python-lambda-jenkins</text>
+  <rect width="800" height="500" filter="url(#c-noise)" opacity="0.75"/>
+</svg>

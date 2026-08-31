@@ -1,25 +1,19 @@
-import {
-  motion,
-  useScroll,
-  useTransform,
-  MotionValue,
-} from 'framer-motion'
-import { useRef, ReactNode } from 'react'
+import { motion, useInView } from 'framer-motion'
+import { useRef } from 'react'
 import {
   Cloud,
   Server,
   Database,
+  HardDrive,
   Sparkles,
   LucideIcon,
 } from 'lucide-react'
 import { WordsPullUpMultiStyle } from '../components/WordsPullUpMultiStyle'
+import { BrandIcon } from '../components/BrandIcon'
 
-interface Tech {
-  name: string
-  monogram: string
-  top: string
-  left: string
-  size?: 'sm' | 'md' | 'lg'
+interface Tool {
+  slug: string
+  label: string
 }
 
 interface Category {
@@ -29,50 +23,63 @@ interface Category {
   description: string
   Icon: LucideIcon
   accent: string
-  accentSoft: string
-  items: Tech[]
+  accentRgb: string
+  visual: 'stack' | 'window' | 'wave' | 'shelves' | 'graph'
+  tools: Tool[]
+  span?: 'wide'
 }
 
 const CATEGORIES: Category[] = [
   {
     name: 'Cloud &',
-    serifTail: 'Infra',
+    serifTail: 'Infrastructure',
     eyebrow: 'The ground floor',
     description:
-      'Containers, orchestrators, cloud primitives. The stuff that has to be right at 3 a.m.',
+      'From EC2 to Batch, the primitives that hold up production at 3 a.m.',
     Icon: Cloud,
     accent: '#A9E9FB',
-    accentSoft: 'rgba(169, 233, 251, 0.16)',
-    items: [
-      { name: 'AWS',       monogram: 'A',  top: '12%', left: '22%', size: 'lg' },
-      { name: 'ECS',       monogram: 'EC', top: '20%', left: '68%' },
-      { name: 'Lambda',    monogram: 'λ',  top: '30%', left: '38%', size: 'md' },
-      { name: 'Docker',    monogram: 'D',  top: '38%', left: '78%', size: 'md' },
-      { name: 'Terraform', monogram: 'T',  top: '46%', left: '18%' },
-      { name: 'GKE',       monogram: 'K',  top: '52%', left: '52%' },
-      { name: 'Glue',      monogram: 'G',  top: '62%', left: '72%' },
-      { name: 'EMR',       monogram: 'EM', top: '68%', left: '30%' },
-      { name: 'Batch',     monogram: 'B',  top: '78%', left: '58%' },
-      { name: 'GCP',       monogram: 'G',  top: '85%', left: '20%' },
+    accentRgb: '169, 233, 251',
+    visual: 'stack',
+    tools: [
+      { slug: 'aws', label: 'AWS' },
+      { slug: 'ec2', label: 'EC2' },
+      { slug: 's3', label: 'S3' },
+      { slug: 'ecs', label: 'ECS' },
+      { slug: 'ecr', label: 'ECR' },
+      { slug: 'lambda', label: 'Lambda' },
+      { slug: 'api-gateway', label: 'API Gateway' },
+      { slug: 'secrets-manager', label: 'Secrets' },
+      { slug: 'glue', label: 'Glue' },
+      { slug: 'emr', label: 'EMR' },
+      { slug: 'batch', label: 'Batch' },
+      { slug: 'docker', label: 'Docker' },
+      { slug: 'terraform', label: 'Terraform' },
+      { slug: 'github-actions', label: 'GitHub Actions' },
+      { slug: 'gitlab-ci', label: 'GitLab CI' },
     ],
   },
   {
-    name: 'Backend',
-    serifTail: 'services',
+    name: 'Backend &',
+    serifTail: 'APIs',
     eyebrow: 'Boring for a reason',
     description:
       'Event-driven microservices, type systems, contracts. The stuff that has to hold up under load.',
     Icon: Server,
     accent: '#88E7C2',
-    accentSoft: 'rgba(136, 231, 194, 0.16)',
-    items: [
-      { name: 'Spring Boot', monogram: 'SB', top: '15%', left: '25%', size: 'lg' },
-      { name: 'FastAPI',     monogram: 'F',  top: '22%', left: '65%', size: 'md' },
-      { name: 'Quarkus',     monogram: 'Q',  top: '38%', left: '20%' },
-      { name: 'Go',          monogram: 'GO', top: '45%', left: '55%', size: 'md' },
-      { name: 'Next.js',     monogram: 'N',  top: '58%', left: '78%' },
-      { name: 'gRPC',        monogram: 'g',  top: '68%', left: '32%' },
-      { name: 'Kafka',       monogram: 'K',  top: '80%', left: '60%' },
+    accentRgb: '136, 231, 194',
+    visual: 'window',
+    tools: [
+      { slug: 'java-spring-boot', label: 'Spring Boot' },
+      { slug: 'quarkus', label: 'Quarkus' },
+      { slug: 'fastapi', label: 'FastAPI' },
+      { slug: 'nextjs', label: 'Next.js' },
+      { slug: 'go', label: 'Go' },
+      { slug: 'microservices', label: 'Microservices' },
+      { slug: 'rest', label: 'REST' },
+      { slug: 'eda', label: 'Event-Driven' },
+      { slug: 'rabbitmq', label: 'RabbitMQ' },
+      { slug: 'aws-sqs', label: 'AWS SQS' },
+      { slug: 'ibm-mq', label: 'IBM MQ' },
     ],
   },
   {
@@ -83,397 +90,588 @@ const CATEGORIES: Category[] = [
       'Streams, batches, tables, catalogs. The plumbing of every intelligent system I ship.',
     Icon: Database,
     accent: '#FED792',
-    accentSoft: 'rgba(254, 215, 146, 0.16)',
-    items: [
-      { name: 'Snowflake',  monogram: '❄',  top: '10%', left: '55%', size: 'lg' },
-      { name: 'Iceberg',    monogram: 'IC', top: '18%', left: '22%' },
-      { name: 'Trino',      monogram: 'T',  top: '28%', left: '75%' },
-      { name: 'Flink',      monogram: 'F',  top: '35%', left: '42%', size: 'md' },
-      { name: 'Kafka',      monogram: 'K',  top: '46%', left: '18%' },
-      { name: 'Airflow',    monogram: 'A',  top: '52%', left: '62%' },
-      { name: 'Hudi',       monogram: 'H',  top: '62%', left: '30%' },
-      { name: 'ClickHouse', monogram: 'CH', top: '70%', left: '72%', size: 'md' },
-      { name: 'Paimon',     monogram: 'P',  top: '80%', left: '48%' },
-      { name: 'Doris',      monogram: 'D',  top: '86%', left: '22%' },
+    accentRgb: '254, 215, 146',
+    visual: 'wave',
+    tools: [
+      { slug: 'apache-hudi', label: 'Hudi' },
+      { slug: 'iceberg', label: 'Iceberg' },
+      { slug: 'apache-paimon', label: 'Paimon' },
+      { slug: 'kafka', label: 'Kafka' },
+      { slug: 'flink', label: 'Flink' },
+      { slug: 'apache-nifi', label: 'NiFi' },
+      { slug: 'airflow', label: 'Airflow' },
+      { slug: 'apache-arrow', label: 'Arrow' },
+      { slug: 'datafusion', label: 'DataFusion' },
+      { slug: 'trino', label: 'Trino' },
     ],
   },
   {
-    name: 'Agentic',
-    serifTail: 'AI',
+    name: 'Databases',
+    serifTail: '& stores',
+    eyebrow: 'Rows, columns, graphs, docs',
+    description:
+      'Warehouses, OLTP, cache, graph. The right store for the shape of the question.',
+    Icon: HardDrive,
+    accent: '#FCD7ED',
+    accentRgb: '252, 215, 237',
+    visual: 'shelves',
+    tools: [
+      { slug: 'redshift', label: 'Redshift' },
+      { slug: 'clickhouse', label: 'ClickHouse' },
+      { slug: 'snowflake', label: 'Snowflake' },
+      { slug: 'mongo', label: 'MongoDB' },
+      { slug: 'postgres', label: 'PostgreSQL' },
+      { slug: 'documentdb', label: 'DocumentDB' },
+      { slug: 'redis', label: 'Redis' },
+      { slug: 'neo4j', label: 'Neo4j' },
+    ],
+  },
+  {
+    name: 'GenAI &',
+    serifTail: 'LLM systems',
     eyebrow: 'Systems that think',
     description:
       'The runtime, the memory, the connectors. Everything between the model and the user.',
     Icon: Sparkles,
-    accent: '#FCD7ED',
-    accentSoft: 'rgba(252, 215, 237, 0.16)',
-    items: [
-      { name: 'LangChain',  monogram: 'LC', top: '12%', left: '30%', size: 'lg' },
-      { name: 'LangGraph',  monogram: 'LG', top: '22%', left: '68%' },
-      { name: 'LlamaIndex', monogram: 'LI', top: '32%', left: '18%' },
-      { name: 'MCP',        monogram: 'M',  top: '38%', left: '52%', size: 'md' },
-      { name: 'A2A',        monogram: 'A',  top: '48%', left: '78%' },
-      { name: 'RAG',        monogram: 'R',  top: '56%', left: '25%', size: 'md' },
-      { name: 'Self-RAG',   monogram: 'sR', top: '64%', left: '58%' },
-      { name: 'Bedrock',    monogram: 'B',  top: '72%', left: '80%' },
-      { name: 'Langfuse',   monogram: 'LF', top: '80%', left: '32%' },
-      { name: 'NL2SQL',     monogram: 'NL', top: '88%', left: '62%' },
+    accent: '#B8B4E0',
+    accentRgb: '184, 180, 224',
+    visual: 'graph',
+    span: 'wide',
+    tools: [
+      { slug: 'langchain', label: 'LangChain' },
+      { slug: 'langgraph', label: 'LangGraph' },
+      { slug: 'llamaindex', label: 'LlamaIndex' },
+      { slug: 'mcp', label: 'MCP' },
+      { slug: 'a2a', label: 'A2A' },
+      { slug: 'aws-bedrock', label: 'AWS Bedrock' },
+      { slug: 'langfuse', label: 'Langfuse' },
+      { slug: 'rag', label: 'RAG' },
+      { slug: 'self-rag', label: 'Self-RAG' },
+      { slug: 'nl2sql', label: 'NL2SQL' },
     ],
   },
 ]
 
-const HEX_TO_RGB: Record<string, string> = {
-  '#A9E9FB': '169, 233, 251',
-  '#88E7C2': '136, 231, 194',
-  '#FED792': '254, 215, 146',
-  '#FCD7ED': '252, 215, 237',
-}
-
-const N = CATEGORIES.length
-
-function segmentRange(i: number) {
-  return { start: i / N, end: (i + 1) / N }
-}
-
-function useLayerOpacity(progress: MotionValue<number>, index: number) {
-  const { start, end } = segmentRange(index)
-  const fade = 0.03
-  const isFirst = index === 0
-  const isLast = index === N - 1
-  return useTransform(
-    progress,
-    [start - fade, start + fade, end - fade, end + fade],
-    [isFirst ? 1 : 0, 1, 1, isLast ? 1 : 0],
-  )
-}
-
-function CategoryLayer({
-  progress,
-  index,
-  children,
-}: {
-  progress: MotionValue<number>
-  index: number
-  children: ReactNode
-}) {
-  const opacity = useLayerOpacity(progress, index)
-  return (
-    <motion.div style={{ opacity }} className="absolute inset-0">
-      {children}
-    </motion.div>
-  )
-}
-
-function FloatingPill({
-  tech,
+function IconTile({
+  tool,
   accent,
-  progress,
-  start,
-  end,
-  index,
-  total,
+  className = '',
+  style,
+  size = 'md',
+  index = 0,
 }: {
-  tech: Tech
+  tool: Tool
   accent: string
-  progress: MotionValue<number>
-  start: number
-  end: number
-  index: number
-  total: number
+  className?: string
+  style?: React.CSSProperties
+  size?: 'sm' | 'md'
+  index?: number
 }) {
-  const segLen = end - start
-  const t = start + segLen * 0.08 + segLen * 0.75 * (index / Math.max(total - 1, 1))
-  const opacity = useTransform(progress, [t - 0.006, t + 0.025], [0, 1])
-  const y = useTransform(progress, [t - 0.006, t + 0.025], [14, 0])
-  const rgb = HEX_TO_RGB[accent] ?? '255, 255, 255'
-  const size = tech.size ?? 'sm'
-
-  const textSize =
-    size === 'lg' ? 'text-sm md:text-base' : size === 'md' ? 'text-xs md:text-sm' : 'text-[11px] md:text-xs'
-  const padding =
-    size === 'lg' ? 'px-3.5 py-2 md:px-4 md:py-2.5' : size === 'md' ? 'px-3 py-1.5 md:py-2' : 'px-2.5 py-1.5'
-  const dotSize = size === 'lg' ? 'w-5 h-5' : size === 'md' ? 'w-4 h-4' : 'w-3.5 h-3.5'
-  const dotText = size === 'lg' ? 'text-[10px]' : size === 'md' ? 'text-[9px]' : 'text-[8px]'
-
+  const iconSize = size === 'sm' ? 14 : 16
+  const padding = size === 'sm' ? 'px-2 py-1.5' : 'px-2.5 py-2'
+  const textSize = size === 'sm' ? 'text-[10px]' : 'text-[11px]'
   return (
     <motion.div
-      style={{
-        opacity,
-        y,
-        top: tech.top,
-        left: tech.left,
-        background: `rgba(0, 0, 0, 0.55)`,
-        borderColor: `rgba(${rgb}, 0.35)`,
-        boxShadow: `0 8px 24px -8px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.03), 0 0 24px -8px rgba(${rgb}, 0.35)`,
+      initial={{ opacity: 0, y: 8, scale: 0.94 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{
+        duration: 0.5,
+        delay: 0.15 + Math.min(index, 14) * 0.05,
+        ease: [0.22, 1, 0.36, 1],
       }}
-      className={`group absolute -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-2 rounded-full border backdrop-blur-[3px] whitespace-nowrap will-change-transform ${padding}`}
+      className={`group/tile relative flex items-center gap-2 rounded-xl border border-white/[0.1] bg-black/60 backdrop-blur-[2px] shadow-[0_10px_28px_-10px_rgba(0,0,0,0.7)] whitespace-nowrap ${padding} ${className}`}
+      style={style}
     >
-      <span
-        className={`rounded-full ${dotSize} flex items-center justify-center font-semibold ${dotText}`}
-        style={{
-          background: `rgba(${rgb}, 0.18)`,
-          color: accent,
-          boxShadow: `inset 0 0 0 1px rgba(${rgb}, 0.55)`,
-        }}
-      >
-        {tech.monogram}
-      </span>
+      <BrandIcon
+        slug={tool.slug}
+        label={tool.label}
+        size={iconSize}
+        color={accent}
+      />
       <span className={`text-primary/90 ${textSize} leading-none`}>
-        {tech.name}
+        {tool.label}
       </span>
     </motion.div>
   )
 }
 
-function CategoryPane({
-  category,
-  progress,
-  index,
+/** Cloud & Infrastructure - horizontal infra tiers, each labeled */
+function LayeredVisual({
+  tools,
+  accent,
 }: {
-  category: Category
-  progress: MotionValue<number>
-  index: number
+  tools: Tool[]
+  accent: string
 }) {
-  const { start, end } = segmentRange(index)
-  const iconOpacity = useTransform(
-    progress,
-    [start, start + 0.03],
-    [0, 1],
-  )
-  const iconScale = useTransform(progress, [start, start + 0.06], [0.92, 1])
-  const iconRotate = useTransform(progress, [start, end], [-4, 4])
-
+  const bySlug = (slug: string) => tools.find((t) => t.slug === slug)
+  const bands = [
+    {
+      label: 'compute',
+      items: ['aws', 'ec2', 'ecs', 'lambda'].map(bySlug).filter(Boolean) as Tool[],
+    },
+    {
+      label: 'storage & api',
+      items: ['s3', 'ecr', 'api-gateway', 'secrets-manager'].map(bySlug).filter(Boolean) as Tool[],
+    },
+    {
+      label: 'deploy · iac · ci',
+      items: ['docker', 'terraform', 'github-actions', 'gitlab-ci'].map(bySlug).filter(Boolean) as Tool[],
+    },
+  ]
+  let index = 0
   return (
-    <div className="w-full h-full flex flex-col md:flex-row gap-8 md:gap-14 items-start md:items-center">
-      <div className="w-full md:w-2/5 flex flex-col">
-        <div className="flex items-center gap-4 mb-6">
-          <motion.div
+    <div className="absolute inset-0 flex flex-col gap-2 p-4">
+      {bands.map((band, bi) => (
+        <div
+          key={band.label}
+          className="flex-1 rounded-xl bg-black/40 border border-white/[0.05] relative overflow-hidden"
+        >
+          <div
+            aria-hidden
+            className="absolute inset-0 opacity-40"
             style={{
-              opacity: iconOpacity,
-              scale: iconScale,
-              rotate: iconRotate,
-              background: category.accentSoft,
-              color: category.accent,
-              borderColor: category.accent,
+              background: `linear-gradient(90deg, rgba(${
+                bi === 0 ? '169, 233, 251' : bi === 1 ? '169, 233, 251' : '169, 233, 251'
+              }, 0.06) 0%, transparent 60%)`,
             }}
-            className="w-14 h-14 rounded-2xl border ring-1 ring-white/[0.05] flex items-center justify-center will-change-transform"
+          />
+          <div
+            className="absolute top-2 left-3 text-[9px] tracking-[0.25em] uppercase"
+            style={{ color: accent, opacity: 0.55 }}
           >
-            <category.Icon className="w-6 h-6" strokeWidth={1.5} />
-          </motion.div>
-          <div className="text-primary/40 text-[10px] tracking-[0.3em] uppercase">
-            {String(index + 1).padStart(2, '0')} / {String(N).padStart(2, '0')}
+            {band.label}
+          </div>
+          <div className="absolute inset-0 pt-6 pl-3 pr-3 flex flex-wrap gap-1.5 items-center content-center">
+            {band.items.map((t) => {
+              const i = index++
+              return (
+                <IconTile
+                  key={t.slug}
+                  tool={t}
+                  accent={accent}
+                  size="sm"
+                  index={i}
+                />
+              )
+            })}
           </div>
         </div>
-
-        <div
-          className="text-primary/70 text-[10px] sm:text-xs tracking-[0.2em] uppercase mb-4"
-          style={{ color: category.accent }}
-        >
-          {category.eyebrow}
-        </div>
-
-        <h3 className="text-primary text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[0.95] font-medium tracking-tight">
-          {category.name}{' '}
-          <span className="italic font-serif">{category.serifTail}</span>
-        </h3>
-
-        <p className="mt-6 text-primary/70 text-sm md:text-base leading-relaxed max-w-md">
-          {category.description}
-        </p>
-
-        <div className="mt-6 text-primary/40 text-xs">
-          {category.items.length} tools
-        </div>
-      </div>
-
-      <div className="relative w-full md:w-3/5 h-[360px] sm:h-[420px] md:h-full min-h-[380px] rounded-2xl overflow-hidden">
-        <div
-          aria-hidden
-          className="absolute inset-0"
-          style={{
-            background: `radial-gradient(ellipse 60% 90% at 50% 110%, rgba(${HEX_TO_RGB[category.accent] ?? '255,255,255'}, 0.28) 0%, rgba(${HEX_TO_RGB[category.accent] ?? '255,255,255'}, 0.1) 30%, transparent 65%)`,
-          }}
-        />
-        <div className="noise-overlay opacity-30 mix-blend-screen pointer-events-none" />
-        <div
-          aria-hidden
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              'radial-gradient(ellipse 100% 100% at 50% 100%, transparent 55%, rgba(0,0,0,0.55) 100%)',
-          }}
-        />
-
-        <div className="relative w-full h-full">
-          {category.items.map((tech, i) => (
-            <FloatingPill
-              key={tech.name}
-              tech={tech}
-              accent={category.accent}
-              progress={progress}
-              start={start}
-              end={end}
-              index={i}
-              total={category.items.length}
-            />
-          ))}
-        </div>
-
-        <div
-          className="absolute bottom-3 left-1/2 -translate-x-1/2 text-[10px] tracking-[0.3em] uppercase z-10"
-          style={{ color: category.accent, opacity: 0.7 }}
-        >
-          {category.name.replace(/[&\s]+$/, '')} {category.serifTail}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function ProgressDots({
-  progress,
-}: {
-  progress: MotionValue<number>
-}) {
-  return (
-    <div className="flex items-center gap-2">
-      {CATEGORIES.map((cat, i) => (
-        <ProgressDot key={cat.name} progress={progress} index={i} />
       ))}
     </div>
   )
 }
 
-function ProgressDot({
-  progress,
-  index,
-}: {
-  progress: MotionValue<number>
-  index: number
-}) {
-  const { start, end } = segmentRange(index)
-  const opacity = useTransform(
-    progress,
-    [start - 0.02, start + 0.02, end - 0.02, end + 0.02],
-    [0.25, 1, 1, 0.25],
-  )
-  const width = useTransform(
-    progress,
-    [start - 0.02, start + 0.02, end - 0.02, end + 0.02],
-    ['8px', '28px', '28px', '8px'],
-  )
-  const color = CATEGORIES[index].accent
+function WindowVisual({ tools, accent }: { tools: Tool[]; accent: string }) {
+  const windows = [
+    { top: '8%', left: '8%', width: '60%', tools: tools.slice(0, 4) },
+    { top: '32%', left: '32%', width: '58%', tools: tools.slice(4, 8) },
+    { top: '58%', left: '14%', width: '55%', tools: tools.slice(8, 11) },
+  ]
+  let index = 0
   return (
-    <motion.div
-      style={{ opacity, width, background: color }}
-      className="h-1 rounded-full transition-colors"
-    />
+    <>
+      {windows.map((w, i) => (
+        <div
+          key={i}
+          className="absolute rounded-xl bg-[#151515] border border-white/[0.08] shadow-[0_20px_50px_-15px_rgba(0,0,0,0.75)] overflow-hidden"
+          style={{ top: w.top, left: w.left, width: w.width }}
+        >
+          <div className="flex items-center gap-1 px-3 py-1.5 border-b border-white/[0.05] bg-black/40">
+            <span className="w-1.5 h-1.5 rounded-full bg-white/20" />
+            <span className="w-1.5 h-1.5 rounded-full bg-white/20" />
+            <span className="w-1.5 h-1.5 rounded-full bg-white/20" />
+          </div>
+          <div className="p-2 flex flex-wrap gap-1.5">
+            {w.tools.map((t) => {
+              const idx = index++
+              return (
+                <IconTile
+                  key={t.slug}
+                  tool={t}
+                  accent={accent}
+                  size="sm"
+                  index={idx}
+                />
+              )
+            })}
+          </div>
+        </div>
+      ))}
+    </>
   )
 }
 
-function CategoryBackdrop({
-  progress,
-  index,
-  rgb,
+/** Data engineering - 3-column pipeline: ingest → transform → serve */
+function PipelineVisual({
+  tools,
+  accent,
 }: {
-  progress: MotionValue<number>
-  index: number
-  rgb: string
+  tools: Tool[]
+  accent: string
 }) {
-  const opacity = useLayerOpacity(progress, index)
+  const bySlug = (slug: string) => tools.find((t) => t.slug === slug)
+  const cols = [
+    {
+      label: 'ingest',
+      items: ['kafka', 'apache-nifi'].map(bySlug).filter(Boolean) as Tool[],
+    },
+    {
+      label: 'transform',
+      items: ['flink', 'airflow', 'apache-arrow', 'datafusion'].map(bySlug).filter(Boolean) as Tool[],
+    },
+    {
+      label: 'store & serve',
+      items: ['apache-hudi', 'iceberg', 'apache-paimon', 'trino'].map(bySlug).filter(Boolean) as Tool[],
+    },
+  ]
+  let index = 0
+  return (
+    <div className="absolute inset-0 p-4">
+      <svg
+        aria-hidden
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        className="absolute inset-4 pointer-events-none"
+      >
+        <line x1="33" y1="50" x2="35" y2="50" stroke={accent} strokeOpacity="0.35" strokeWidth="0.6" strokeDasharray="1 1" />
+        <line x1="66" y1="50" x2="68" y2="50" stroke={accent} strokeOpacity="0.35" strokeWidth="0.6" strokeDasharray="1 1" />
+      </svg>
+      <div className="relative h-full grid grid-cols-3 gap-2">
+        {cols.map((c) => (
+          <div
+            key={c.label}
+            className="rounded-xl bg-black/40 border border-white/[0.05] p-2 pt-6 flex flex-col gap-1.5 items-stretch relative"
+          >
+            <div
+              className="absolute top-2 left-2 text-[9px] tracking-[0.2em] uppercase"
+              style={{ color: accent, opacity: 0.55 }}
+            >
+              {c.label}
+            </div>
+            {c.items.map((t) => {
+              const i = index++
+              return (
+                <IconTile
+                  key={t.slug}
+                  tool={t}
+                  accent={accent}
+                  size="sm"
+                  index={i}
+                  className="justify-start"
+                />
+              )
+            })}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function ShelvesVisual({ tools, accent }: { tools: Tool[]; accent: string }) {
+  const rows = [
+    tools.slice(0, 3),
+    tools.slice(3, 6),
+    tools.slice(6, 8),
+  ]
+  let index = 0
+  return (
+    <>
+      <svg
+        viewBox="0 0 400 240"
+        preserveAspectRatio="none"
+        className="absolute inset-0 w-full h-full opacity-40"
+      >
+        <line x1="0" y1="70" x2="400" y2="70" stroke={accent} strokeOpacity="0.35" strokeWidth="0.5" />
+        <line x1="0" y1="140" x2="400" y2="140" stroke={accent} strokeOpacity="0.35" strokeWidth="0.5" />
+        <line x1="0" y1="210" x2="400" y2="210" stroke={accent} strokeOpacity="0.35" strokeWidth="0.5" />
+      </svg>
+      {rows.map((row, r) => (
+        <div
+          key={r}
+          className="absolute flex gap-2 items-center justify-center"
+          style={{
+            top: `${18 + r * 28}%`,
+            left: '50%',
+            transform: 'translateX(-50%)',
+          }}
+        >
+          {row.map((t) => {
+            const idx = index++
+            return (
+              <IconTile
+                key={t.slug}
+                tool={t}
+                accent={accent}
+                size="sm"
+                index={idx}
+              />
+            )
+          })}
+        </div>
+      ))}
+    </>
+  )
+}
+
+/** GenAI - orchestrator card at the center + 3 labeled satellite groups */
+function OrchestratorVisual({
+  tools,
+  accent,
+  wide = false,
+}: {
+  tools: Tool[]
+  accent: string
+  wide?: boolean
+}) {
+  const bySlug = (slug: string) => tools.find((t) => t.slug === slug)
+  const framework = ['langchain', 'langgraph', 'llamaindex']
+    .map(bySlug)
+    .filter(Boolean) as Tool[]
+  const retrieval = ['rag', 'self-rag', 'nl2sql', 'mcp']
+    .map(bySlug)
+    .filter(Boolean) as Tool[]
+  const runtime = ['aws-bedrock', 'a2a', 'langfuse']
+    .map(bySlug)
+    .filter(Boolean) as Tool[]
+
+  return (
+    <div className="absolute inset-0 p-4">
+      <div
+        className={`relative h-full ${
+          wide ? 'grid grid-cols-3 gap-3' : 'flex flex-col gap-2'
+        }`}
+      >
+        <SatelliteGroup
+          label="framework"
+          items={framework}
+          accent={accent}
+          startIndex={0}
+        />
+        <SatelliteGroup
+          label="retrieval"
+          items={retrieval}
+          accent={accent}
+          startIndex={framework.length}
+          highlight
+        />
+        <SatelliteGroup
+          label="runtime · observe"
+          items={runtime}
+          accent={accent}
+          startIndex={framework.length + retrieval.length}
+        />
+      </div>
+    </div>
+  )
+}
+
+function SatelliteGroup({
+  label,
+  items,
+  accent,
+  startIndex,
+  highlight = false,
+}: {
+  label: string
+  items: Tool[]
+  accent: string
+  startIndex: number
+  highlight?: boolean
+}) {
+  return (
+    <div
+      className={`rounded-xl border p-3 pt-6 flex flex-col gap-1.5 relative overflow-hidden ${
+        highlight
+          ? 'bg-black/60 border-white/[0.08]'
+          : 'bg-black/35 border-white/[0.05]'
+      }`}
+    >
+      {highlight && (
+        <div
+          aria-hidden
+          className="absolute inset-0 pointer-events-none opacity-70"
+          style={{
+            background: `radial-gradient(ellipse 60% 100% at 50% 50%, rgba(184, 180, 224, 0.12) 0%, transparent 65%)`,
+          }}
+        />
+      )}
+      <div
+        className="absolute top-2 left-3 text-[9px] tracking-[0.25em] uppercase"
+        style={{ color: accent, opacity: 0.6 }}
+      >
+        {label}
+      </div>
+      <div className="relative flex flex-wrap gap-1.5">
+        {items.map((t, i) => (
+          <IconTile
+            key={t.slug}
+            tool={t}
+            accent={accent}
+            size="sm"
+            index={startIndex + i}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function CategoryCard({
+  category,
+  index,
+}: {
+  category: Category
+  index: number
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+  const inView = useInView(ref, { once: true, margin: '-80px' })
+  const rgb = category.accentRgb
+  const wide = category.span === 'wide'
+
   return (
     <motion.div
-      aria-hidden
-      style={{ opacity }}
-      className="absolute inset-0 pointer-events-none"
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+      transition={{
+        duration: 0.8,
+        delay: index * 0.1,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      className={`group relative flex ${
+        wide ? 'flex-col lg:flex-row' : 'flex-col'
+      } rounded-3xl bg-[#0e0e0e] ring-1 ring-white/[0.06] hover:ring-white/[0.15] transition-all overflow-hidden ${
+        wide ? 'md:col-span-2' : ''
+      }`}
     >
       <div
-        className="absolute inset-0"
+        aria-hidden
+        className="absolute inset-0 pointer-events-none opacity-70"
         style={{
-          background: `radial-gradient(ellipse 70% 65% at 50% -3%, rgba(${rgb}, 0.28) 0%, rgba(${rgb}, 0.12) 25%, rgba(${rgb}, 0.04) 45%, transparent 68%)`,
+          background: `radial-gradient(ellipse 60% 100% at 50% -5%, rgba(${rgb}, 0.14) 0%, rgba(${rgb}, 0.05) 30%, transparent 65%)`,
         }}
       />
+      <div className="noise-overlay opacity-30 mix-blend-screen pointer-events-none" />
+
       <div
-        className="absolute inset-0"
-        style={{
-          background: `radial-gradient(ellipse 55% 60% at 15% 105%, rgba(${rgb}, 0.14) 0%, transparent 55%)`,
-        }}
-      />
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `radial-gradient(ellipse 45% 60% at 100% 60%, rgba(${rgb}, 0.08) 0%, transparent 55%)`,
-        }}
-      />
+        className={`relative overflow-hidden ${
+          wide
+            ? 'h-64 lg:h-auto lg:w-3/5 lg:border-b-0 lg:border-r border-b border-white/[0.05]'
+            : 'h-64 md:h-72 border-b border-white/[0.05]'
+        }`}
+      >
+        {category.visual === 'stack' && (
+          <LayeredVisual tools={category.tools} accent={category.accent} />
+        )}
+        {category.visual === 'window' && (
+          <WindowVisual tools={category.tools} accent={category.accent} />
+        )}
+        {category.visual === 'wave' && (
+          <PipelineVisual tools={category.tools} accent={category.accent} />
+        )}
+        {category.visual === 'shelves' && (
+          <ShelvesVisual tools={category.tools} accent={category.accent} />
+        )}
+        {category.visual === 'graph' && (
+          <OrchestratorVisual
+            tools={category.tools}
+            accent={category.accent}
+            wide={wide}
+          />
+        )}
+
+        <div
+          aria-hidden
+          className={`absolute pointer-events-none ${
+            wide
+              ? 'inset-y-0 right-0 w-1/4 lg:bg-gradient-to-l lg:from-[#0e0e0e]'
+              : 'inset-x-0 bottom-0 h-1/3 bg-gradient-to-b from-transparent to-[#0e0e0e]/90'
+          }`}
+        />
+      </div>
+
+      <div className={`relative p-6 md:p-8 ${wide ? 'lg:w-2/5 lg:flex lg:flex-col lg:justify-center' : ''}`}>
+        <div className="flex items-center gap-3 mb-4">
+          <div
+            className="w-10 h-10 rounded-xl flex items-center justify-center border ring-1 ring-white/[0.05]"
+            style={{
+              background: `rgba(${rgb}, 0.12)`,
+              color: category.accent,
+              borderColor: category.accent,
+            }}
+          >
+            <category.Icon className="w-5 h-5" strokeWidth={1.5} />
+          </div>
+          <div
+            className="text-[10px] sm:text-xs tracking-[0.25em] uppercase"
+            style={{ color: category.accent }}
+          >
+            {category.eyebrow}
+          </div>
+        </div>
+
+        <h3 className="text-primary text-2xl md:text-3xl leading-tight font-medium tracking-tight mb-3">
+          {category.name}{' '}
+          <span className="italic font-serif">{category.serifTail}</span>
+        </h3>
+
+        <p className="text-primary/65 text-sm md:text-base leading-relaxed max-w-md">
+          {category.description}
+        </p>
+
+        <div className="mt-6 flex items-center gap-4 text-primary/40 text-xs">
+          <span>{category.tools.length} tools</span>
+          <span className="h-px flex-1 bg-white/[0.05]" />
+          <span className="tracking-[0.2em]">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+        </div>
+      </div>
     </motion.div>
   )
 }
 
 export function Skills() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start start', 'end end'],
-  })
-
   return (
     <section
       id="skills"
-      ref={sectionRef}
-      className="relative bg-black"
-      style={{ height: '340vh' }}
+      className="relative bg-black py-24 md:py-32 px-6 md:px-10 overflow-hidden"
     >
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
-        {CATEGORIES.map((cat, i) => (
-          <CategoryBackdrop
-            key={`bg-${cat.name}`}
-            progress={scrollYProgress}
-            index={i}
-            rgb={HEX_TO_RGB[cat.accent] ?? '255, 255, 255'}
-          />
-        ))}
-        <div className="noise-overlay opacity-30 mix-blend-screen pointer-events-none" />
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse 70% 40% at 50% 0%, rgba(169, 233, 251, 0.06) 0%, transparent 65%)',
+        }}
+      />
+      <div className="noise-overlay opacity-20 mix-blend-screen pointer-events-none" />
 
-        <div className="relative z-10 h-full flex flex-col max-w-7xl mx-auto px-6 md:px-10">
-          <div className="pt-14 md:pt-20 pb-4">
-            <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-4">
-              <div>
-                <div className="text-primary/60 text-[10px] sm:text-xs tracking-[0.25em] uppercase mb-3">
-                  The stack I dream in
-                </div>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-[0.95] font-medium tracking-tight max-w-2xl">
-                  <WordsPullUpMultiStyle
-                    justify="start"
-                    segments={[
-                      { text: 'Tools I reach for', className: 'text-primary' },
-                      {
-                        text: 'when the problem is real.',
-                        className: 'italic font-serif text-primary',
-                      },
-                    ]}
-                  />
-                </h2>
-              </div>
-              <ProgressDots progress={scrollYProgress} />
-            </div>
+      <div className="relative max-w-6xl mx-auto">
+        <div className="mb-14 md:mb-20">
+          <div className="text-primary/60 text-[10px] sm:text-xs tracking-[0.25em] uppercase mb-4">
+            The stack I dream in
           </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[0.95] font-medium tracking-tight max-w-3xl">
+            <WordsPullUpMultiStyle
+              justify="start"
+              segments={[
+                { text: 'Tools I reach for', className: 'text-primary' },
+                {
+                  text: 'when the problem is real.',
+                  className: 'italic font-serif text-primary',
+                },
+              ]}
+            />
+          </h2>
+        </div>
 
-          <div className="relative flex-1 min-h-0">
-            {CATEGORIES.map((cat, i) => (
-              <CategoryLayer
-                key={cat.name}
-                progress={scrollYProgress}
-                index={i}
-              >
-                <div className="w-full h-full py-6 md:py-10">
-                  <CategoryPane
-                    category={cat}
-                    progress={scrollYProgress}
-                    index={i}
-                  />
-                </div>
-              </CategoryLayer>
-            ))}
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+          {CATEGORIES.map((cat, i) => (
+            <CategoryCard key={cat.name} category={cat} index={i} />
+          ))}
         </div>
       </div>
     </section>

@@ -104,7 +104,10 @@ export function Footer() {
     <footer ref={sectionRef} className="relative bg-black overflow-hidden pt-16 md:pt-24">
       <div className="relative px-6 md:px-10 pb-[38vw] md:pb-[26vw] lg:pb-[22vw]">
         <div className="max-w-6xl mx-auto relative z-10">
-          <div className="relative rounded-3xl overflow-hidden bg-[#0a0a0a] ring-1 ring-white/[0.08] shadow-[0_40px_80px_-30px_rgba(0,0,0,0.9)]">
+          <div
+            id="contact"
+            className="relative rounded-3xl overflow-hidden bg-[#0a0a0a] ring-1 ring-white/[0.08] shadow-[0_40px_80px_-30px_rgba(0,0,0,0.9)] scroll-mt-24"
+          >
             <div
               aria-hidden
               className="absolute inset-0"
@@ -188,7 +191,7 @@ export function Footer() {
                 <span className="italic font-serif">systems that think.</span>
               </h3>
               <p className="text-primary/70 text-sm md:text-base mt-4 max-w-md mx-auto leading-relaxed">
-                Infrastructure, agents, and data — from lakehouses to
+                Infrastructure, agents, and data - from lakehouses to
                 self-hostable runtimes. I take a small number of engagements a
                 year.
               </p>

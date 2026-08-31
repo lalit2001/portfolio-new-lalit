@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="c-glow" cx="50%" cy="115%" r="90%">
+      <stop offset="0%" stop-color="#FED792" stop-opacity="0.55"/>
+      <stop offset="30%" stop-color="#FED792" stop-opacity="0.2"/>
+      <stop offset="70%" stop-color="#FED792" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#0a0a0a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="c-tile" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#DEDBC8" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#DEDBC8" stop-opacity="0.02"/>
+    </linearGradient>
+    <linearGradient id="c-accent" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FED792" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#FED792" stop-opacity="0.05"/>
+    </linearGradient>
+    <filter id="c-noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.045 0"/>
+    </filter>
+  </defs>
+  <rect width="800" height="500" fill="#0a0a0a"/>
+  <rect width="800" height="500" fill="url(#c-glow)"/>
+  <g opacity="0.85" stroke="#FED792" fill="none">
+    <path d="M -20 130 Q 200 90 400 130 T 820 130" stroke-opacity="0.55" stroke-width="1.2"/>
+    <path d="M -20 200 Q 200 240 400 200 T 820 200" stroke-opacity="0.7" stroke-width="1.4"/>
+    <path d="M -20 270 Q 200 230 400 270 T 820 270" stroke-opacity="0.55" stroke-width="1.2"/>
+    <path d="M -20 340 Q 200 380 400 340 T 820 340" stroke-opacity="0.4" stroke-width="1.0"/>
+  </g>
+  <g fill="#FED792" opacity="0.75">
+    <circle cx="120" cy="128" r="4"/>
+    <circle cx="330" cy="118" r="3"/>
+    <circle cx="540" cy="132" r="4"/>
+    <circle cx="200" cy="220" r="4"/>
+    <circle cx="440" cy="204" r="5"/>
+    <circle cx="640" cy="212" r="3"/>
+    <circle cx="150" cy="268" r="3"/>
+    <circle cx="380" cy="280" r="4"/>
+    <circle cx="600" cy="264" r="4"/>
+  </g>
+  <text x="80" y="450" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" fill="#FED792" opacity="0.75">writing / mastering-cdc-with-hudi</text>
+  <rect width="800" height="500" filter="url(#c-noise)" opacity="0.75"/>
+</svg>
