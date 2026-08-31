@@ -47,6 +47,7 @@ const CATEGORIES: Category[] = [
       { slug: 'ecs', label: 'ECS' },
       { slug: 'ecr', label: 'ECR' },
       { slug: 'lambda', label: 'Lambda' },
+      { slug: 'kubernetes', label: 'Kubernetes' },
       { slug: 'api-gateway', label: 'API Gateway' },
       { slug: 'secrets-manager', label: 'Secrets' },
       { slug: 'glue', label: 'Glue' },
@@ -56,6 +57,9 @@ const CATEGORIES: Category[] = [
       { slug: 'terraform', label: 'Terraform' },
       { slug: 'github-actions', label: 'GitHub Actions' },
       { slug: 'gitlab-ci', label: 'GitLab CI' },
+      { slug: 'argo', label: 'Argo CD' },
+      { slug: 'grafana', label: 'Grafana' },
+      { slug: 'prometheus', label: 'Prometheus' },
     ],
   },
   {
@@ -73,7 +77,10 @@ const CATEGORIES: Category[] = [
       { slug: 'quarkus', label: 'Quarkus' },
       { slug: 'fastapi', label: 'FastAPI' },
       { slug: 'nextjs', label: 'Next.js' },
+      { slug: 'nodejs', label: 'Node.js' },
       { slug: 'go', label: 'Go' },
+      { slug: 'graphql', label: 'GraphQL' },
+      { slug: 'grpc', label: 'gRPC' },
       { slug: 'microservices', label: 'Microservices' },
       { slug: 'rest', label: 'REST' },
       { slug: 'eda', label: 'Event-Driven' },
@@ -98,8 +105,11 @@ const CATEGORIES: Category[] = [
       { slug: 'apache-paimon', label: 'Paimon' },
       { slug: 'kafka', label: 'Kafka' },
       { slug: 'flink', label: 'Flink' },
+      { slug: 'apache-spark', label: 'Spark' },
       { slug: 'apache-nifi', label: 'NiFi' },
+      { slug: 'debezium', label: 'Debezium' },
       { slug: 'airflow', label: 'Airflow' },
+      { slug: 'dbt', label: 'dbt' },
       { slug: 'apache-arrow', label: 'Arrow' },
       { slug: 'datafusion', label: 'DataFusion' },
       { slug: 'trino', label: 'Trino' },
@@ -119,11 +129,18 @@ const CATEGORIES: Category[] = [
       { slug: 'redshift', label: 'Redshift' },
       { slug: 'clickhouse', label: 'ClickHouse' },
       { slug: 'snowflake', label: 'Snowflake' },
-      { slug: 'mongo', label: 'MongoDB' },
+      { slug: 'apache-doris', label: 'Doris' },
+      { slug: 'duckdb', label: 'DuckDB' },
       { slug: 'postgres', label: 'PostgreSQL' },
+      { slug: 'mongo', label: 'MongoDB' },
       { slug: 'documentdb', label: 'DocumentDB' },
+      { slug: 'dynamodb', label: 'DynamoDB' },
+      { slug: 'cassandra', label: 'Cassandra' },
       { slug: 'redis', label: 'Redis' },
       { slug: 'neo4j', label: 'Neo4j' },
+      { slug: 'elasticsearch', label: 'Elasticsearch' },
+      { slug: 'qdrant', label: 'Qdrant' },
+      { slug: 'pinecone', label: 'Pinecone' },
     ],
   },
   {
@@ -141,13 +158,24 @@ const CATEGORIES: Category[] = [
       { slug: 'langchain', label: 'LangChain' },
       { slug: 'langgraph', label: 'LangGraph' },
       { slug: 'llamaindex', label: 'LlamaIndex' },
+      { slug: 'crewai', label: 'CrewAI' },
+      { slug: 'semantic-kernel', label: 'Semantic Kernel' },
       { slug: 'mcp', label: 'MCP' },
+      { slug: 'mcp-web', label: 'MCP Web' },
       { slug: 'a2a', label: 'A2A' },
-      { slug: 'aws-bedrock', label: 'AWS Bedrock' },
-      { slug: 'langfuse', label: 'Langfuse' },
       { slug: 'rag', label: 'RAG' },
       { slug: 'self-rag', label: 'Self-RAG' },
       { slug: 'nl2sql', label: 'NL2SQL' },
+      { slug: 'claude', label: 'Claude' },
+      { slug: 'anthropic', label: 'Anthropic' },
+      { slug: 'openai', label: 'OpenAI' },
+      { slug: 'gemini', label: 'Gemini' },
+      { slug: 'aws-bedrock', label: 'AWS Bedrock' },
+      { slug: 'vertex-ai', label: 'Vertex AI' },
+      { slug: 'azure-ai-studio', label: 'Azure AI' },
+      { slug: 'ollama', label: 'Ollama' },
+      { slug: 'huggingface', label: 'Hugging Face' },
+      { slug: 'langfuse', label: 'Langfuse' },
     ],
   },
 ]
@@ -208,7 +236,7 @@ function LayeredVisual({
   const bands = [
     {
       label: 'compute',
-      items: ['aws', 'ec2', 'ecs', 'lambda'].map(bySlug).filter(Boolean) as Tool[],
+      items: ['aws', 'ec2', 'ecs', 'lambda', 'kubernetes'].map(bySlug).filter(Boolean) as Tool[],
     },
     {
       label: 'storage & api',
@@ -216,7 +244,11 @@ function LayeredVisual({
     },
     {
       label: 'deploy · iac · ci',
-      items: ['docker', 'terraform', 'github-actions', 'gitlab-ci'].map(bySlug).filter(Boolean) as Tool[],
+      items: ['docker', 'terraform', 'github-actions', 'gitlab-ci', 'argo'].map(bySlug).filter(Boolean) as Tool[],
+    },
+    {
+      label: 'observe',
+      items: ['grafana', 'prometheus'].map(bySlug).filter(Boolean) as Tool[],
     },
   ]
   let index = 0
@@ -264,9 +296,9 @@ function LayeredVisual({
 
 function WindowVisual({ tools, accent }: { tools: Tool[]; accent: string }) {
   const windows = [
-    { top: '8%', left: '8%', width: '60%', tools: tools.slice(0, 4) },
-    { top: '32%', left: '32%', width: '58%', tools: tools.slice(4, 8) },
-    { top: '58%', left: '14%', width: '55%', tools: tools.slice(8, 11) },
+    { top: '6%', left: '6%', width: '62%', tools: tools.slice(0, 4) },
+    { top: '30%', left: '30%', width: '62%', tools: tools.slice(4, 8) },
+    { top: '54%', left: '10%', width: '60%', tools: tools.slice(8, tools.length) },
   ]
   let index = 0
   return (
@@ -314,11 +346,11 @@ function PipelineVisual({
   const cols = [
     {
       label: 'ingest',
-      items: ['kafka', 'apache-nifi'].map(bySlug).filter(Boolean) as Tool[],
+      items: ['kafka', 'apache-nifi', 'debezium'].map(bySlug).filter(Boolean) as Tool[],
     },
     {
       label: 'transform',
-      items: ['flink', 'airflow', 'apache-arrow', 'datafusion'].map(bySlug).filter(Boolean) as Tool[],
+      items: ['apache-spark', 'flink', 'airflow', 'dbt', 'apache-arrow', 'datafusion'].map(bySlug).filter(Boolean) as Tool[],
     },
     {
       label: 'store & serve',
@@ -370,48 +402,56 @@ function PipelineVisual({
 }
 
 function ShelvesVisual({ tools, accent }: { tools: Tool[]; accent: string }) {
+  const bySlug = (slug: string) => tools.find((t) => t.slug === slug)
   const rows = [
-    tools.slice(0, 3),
-    tools.slice(3, 6),
-    tools.slice(6, 8),
+    {
+      label: 'warehouse · olap',
+      items: ['redshift', 'clickhouse', 'snowflake', 'apache-doris', 'duckdb'].map(bySlug).filter(Boolean) as Tool[],
+    },
+    {
+      label: 'oltp · document',
+      items: ['postgres', 'mongo', 'documentdb', 'dynamodb'].map(bySlug).filter(Boolean) as Tool[],
+    },
+    {
+      label: 'cache · graph · wide',
+      items: ['redis', 'neo4j', 'cassandra'].map(bySlug).filter(Boolean) as Tool[],
+    },
+    {
+      label: 'search · vector',
+      items: ['elasticsearch', 'qdrant', 'pinecone'].map(bySlug).filter(Boolean) as Tool[],
+    },
   ]
   let index = 0
   return (
-    <>
-      <svg
-        viewBox="0 0 400 240"
-        preserveAspectRatio="none"
-        className="absolute inset-0 w-full h-full opacity-40"
-      >
-        <line x1="0" y1="70" x2="400" y2="70" stroke={accent} strokeOpacity="0.35" strokeWidth="0.5" />
-        <line x1="0" y1="140" x2="400" y2="140" stroke={accent} strokeOpacity="0.35" strokeWidth="0.5" />
-        <line x1="0" y1="210" x2="400" y2="210" stroke={accent} strokeOpacity="0.35" strokeWidth="0.5" />
-      </svg>
-      {rows.map((row, r) => (
+    <div className="absolute inset-0 flex flex-col gap-2 p-4">
+      {rows.map((row) => (
         <div
-          key={r}
-          className="absolute flex gap-2 items-center justify-center"
-          style={{
-            top: `${18 + r * 28}%`,
-            left: '50%',
-            transform: 'translateX(-50%)',
-          }}
+          key={row.label}
+          className="flex-1 rounded-xl bg-black/40 border border-white/[0.05] relative overflow-hidden"
         >
-          {row.map((t) => {
-            const idx = index++
-            return (
-              <IconTile
-                key={t.slug}
-                tool={t}
-                accent={accent}
-                size="sm"
-                index={idx}
-              />
-            )
-          })}
+          <div
+            className="absolute top-2 left-3 text-[9px] tracking-[0.25em] uppercase"
+            style={{ color: accent, opacity: 0.55 }}
+          >
+            {row.label}
+          </div>
+          <div className="absolute inset-0 pt-6 pl-3 pr-3 flex flex-wrap gap-1.5 items-center content-center">
+            {row.items.map((t) => {
+              const i = index++
+              return (
+                <IconTile
+                  key={t.slug}
+                  tool={t}
+                  accent={accent}
+                  size="sm"
+                  index={i}
+                />
+              )
+            })}
+          </div>
         </div>
       ))}
-    </>
+    </div>
   )
 }
 
@@ -426,13 +466,30 @@ function OrchestratorVisual({
   wide?: boolean
 }) {
   const bySlug = (slug: string) => tools.find((t) => t.slug === slug)
-  const framework = ['langchain', 'langgraph', 'llamaindex']
+  const framework = [
+    'langchain',
+    'langgraph',
+    'llamaindex',
+    'crewai',
+    'semantic-kernel',
+  ]
     .map(bySlug)
     .filter(Boolean) as Tool[]
-  const retrieval = ['rag', 'self-rag', 'nl2sql', 'mcp']
+  const retrieval = ['rag', 'self-rag', 'nl2sql', 'mcp', 'mcp-web', 'a2a']
     .map(bySlug)
     .filter(Boolean) as Tool[]
-  const runtime = ['aws-bedrock', 'a2a', 'langfuse']
+  const providers = [
+    'claude',
+    'anthropic',
+    'openai',
+    'gemini',
+    'aws-bedrock',
+    'vertex-ai',
+    'azure-ai-studio',
+    'ollama',
+    'huggingface',
+    'langfuse',
+  ]
     .map(bySlug)
     .filter(Boolean) as Tool[]
 
@@ -450,15 +507,15 @@ function OrchestratorVisual({
           startIndex={0}
         />
         <SatelliteGroup
-          label="retrieval"
+          label="retrieval · protocol"
           items={retrieval}
           accent={accent}
           startIndex={framework.length}
           highlight
         />
         <SatelliteGroup
-          label="runtime · observe"
-          items={runtime}
+          label="providers · observe"
+          items={providers}
           accent={accent}
           startIndex={framework.length + retrieval.length}
         />
