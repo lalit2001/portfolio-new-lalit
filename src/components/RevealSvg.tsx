@@ -71,13 +71,6 @@ function useFetchedSvg(src: string) {
         const cleaned = text
           .replace(/\swidth="[^"]+"/, ' width="100%"')
           .replace(/\sheight="[^"]+"/, ' height="100%"')
-          // "slice" (cover) crops landscape SVGs badly on narrow
-          // portrait containers - swap to "meet" (contain) so the whole
-          // SVG stays visible on all viewport widths.
-          .replace(
-            /preserveAspectRatio="[^"]*slice"/,
-            'preserveAspectRatio="xMidYMid meet"',
-          )
         setMarkup(cleaned)
       })
       .catch(() => {})

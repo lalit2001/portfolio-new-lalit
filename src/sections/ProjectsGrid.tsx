@@ -78,7 +78,7 @@ const PROJECTS: Project[] = [
   },
   {
     name: 'AI Newsletter',
-    tag: 'Signal from the frontier',
+    tag: '',
     href: 'https://ai-newsletter.omniquery.in/',
     screenshot: '/ai-newsletter.png',
     visual: 'newsletter',
