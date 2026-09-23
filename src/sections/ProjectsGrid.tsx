@@ -499,12 +499,12 @@ export function ProjectsGrid() {
           </h2>
         </div>
 
-        <div className="flex-1 max-w-7xl mx-auto w-full px-6 md:px-10 pt-6 pb-6 md:pb-10 min-h-0">
+        <div className="flex-1 max-w-7xl mx-auto w-full px-6 md:px-10 pt-6 pb-10 md:pb-10 min-h-0">
           <div className="grid grid-cols-1 md:grid-cols-5 md:grid-rows-2 gap-2 md:gap-3 h-full">
-            <div className="md:col-span-3 md:row-span-1 min-h-[220px] md:min-h-0">
+            <div className="md:col-span-3 md:row-span-1 min-h-[150px] md:min-h-0">
               <TextTile progress={scrollYProgress} />
             </div>
-            <div className="md:col-span-2 md:row-span-1 min-h-[220px] md:min-h-0">
+            <div className="md:col-span-2 md:row-span-1 min-h-[150px] md:min-h-0">
               <ConeTile
                 variant="gold"
                 eyebrow="Signal in"
@@ -513,10 +513,10 @@ export function ProjectsGrid() {
                 ordering="front"
               />
             </div>
-            <div className="md:col-span-3 md:row-span-1 min-h-[280px] md:min-h-0">
+            <div className="md:col-span-3 md:row-span-1 aspect-[1200/540] md:aspect-auto md:min-h-0">
               <ScreenshotTile progress={scrollYProgress} />
             </div>
-            <div className="md:col-span-2 md:row-span-1 min-h-[220px] md:min-h-0">
+            <div className="md:col-span-2 md:row-span-1 min-h-[150px] md:min-h-0">
               <ConeTile
                 variant="blue"
                 eyebrow="Answers out"
