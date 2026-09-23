@@ -1,0 +1,311 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-120 0 1200 540" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" role="img" aria-label="On cyan glass: natural language queries flow from data sources through an NL2SQL engine into dashboards, charts and embeddable outputs; a carousel of source and output icons cycles below">
+<style>
+text{font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+.mono{font-family:SFMono-Regular,Menlo,'Courier New',monospace}
+@keyframes dotp{50%{opacity:.35}}
+@keyframes cur{50%{opacity:0}}
+@keyframes rise{from{opacity:0;transform:translateY(16px);filter:blur(7px)}to{opacity:1;transform:none;filter:none}}
+@keyframes pop{from{opacity:0;transform:scale(.94);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+@keyframes fadein{to{opacity:1}}
+@keyframes draw{to{stroke-dashoffset:0}}
+.rise{opacity:0;transform-box:fill-box;animation:rise .7s cubic-bezier(.2,.7,.2,1) forwards}
+.pop{opacity:0;transform-box:fill-box;transform-origin:center;animation:pop .7s cubic-bezier(.2,.7,.2,1) forwards}
+.late{opacity:0;animation:fadein .7s ease forwards}
+.wire{stroke-dasharray:1;stroke-dashoffset:1;animation:draw .8s cubic-bezier(.4,0,.2,1) forwards}
+</style>
+<defs>
+<radialGradient id="cTR" cx="900" cy="20" r="400" gradientUnits="userSpaceOnUse">
+<stop offset="0" stop-color="#2fc9d6" stop-opacity=".5"/><stop offset=".5" stop-color="#127f8a" stop-opacity=".16"/><stop offset="1" stop-color="#0a2f3a" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="cBL" cx="60" cy="520" r="380" gradientUnits="userSpaceOnUse">
+<stop offset="0" stop-color="#2fc9d6" stop-opacity=".42"/><stop offset=".5" stop-color="#127f8a" stop-opacity=".14"/><stop offset="1" stop-color="#0a2f3a" stop-opacity="0"/>
+</radialGradient>
+<g id="bgfill">
+<rect x="-120" y="0" width="1200" height="540" fill="#020a0d"/>
+<rect x="-120" y="0" width="1200" height="540" fill="url(#cTR)"/>
+<rect x="-120" y="0" width="1200" height="540" fill="url(#cBL)"/>
+</g>
+<radialGradient id="blobA" cx=".5" cy=".5" r=".5">
+<stop offset="0" stop-color="#3fdcee" stop-opacity=".75"/><stop offset=".55" stop-color="#18a0b6" stop-opacity=".3"/><stop offset="1" stop-color="#0a2f3a" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="blobB" cx=".5" cy=".5" r=".5">
+<stop offset="0" stop-color="#2fe0c8" stop-opacity=".55"/><stop offset=".55" stop-color="#0f8f92" stop-opacity=".22"/><stop offset="1" stop-color="#06333c" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="blobC" cx=".5" cy=".5" r=".5">
+<stop offset="0" stop-color="#3a7bd5" stop-opacity=".42"/><stop offset=".6" stop-color="#1c4d86" stop-opacity=".12"/><stop offset="1" stop-color="#0a1f33" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="blobD" cx=".5" cy=".5" r=".5">
+<stop offset="0" stop-color="#eafcff" stop-opacity=".6"/><stop offset=".4" stop-color="#7deefb" stop-opacity=".3"/><stop offset="1" stop-color="#7deefb" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="edge" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#eafcff" stop-opacity=".75"/><stop offset=".45" stop-color="#9df2ff" stop-opacity=".22"/><stop offset="1" stop-color="#4edcf0" stop-opacity=".55"/>
+</linearGradient>
+<filter id="frost" x="-30%" y="-30%" width="160%" height="160%">
+<feGaussianBlur stdDeviation="26"/>
+<feColorMatrix type="matrix" values="1 0 0 0 .02  0 1 0 0 .05  0 0 1 0 .06  0 0 0 1 0"/>
+</filter>
+<filter id="soft" x="-50%" y="-200%" width="200%" height="500%"><feGaussianBlur stdDeviation="18"/></filter>
+<filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+<feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+</filter>
+<filter id="haze" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="34"/></filter>
+<g id="orbs">
+<g filter="url(#haze)">
+<ellipse cx="430" cy="200" rx="300" ry="220" fill="url(#blobA)">
+<animateTransform attributeName="transform" type="translate" values="0 0;42 26;-18 10;0 0" dur="26s" repeatCount="indefinite" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1"/>
+</ellipse>
+<ellipse cx="640" cy="340" rx="260" ry="190" fill="url(#blobB)">
+<animateTransform attributeName="transform" type="translate" values="0 0;-46 -22;14 -34;0 0" dur="32s" repeatCount="indefinite" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1"/>
+</ellipse>
+<ellipse cx="270" cy="400" rx="240" ry="170" fill="url(#blobC)">
+<animateTransform attributeName="transform" type="translate" values="0 0;30 -30;-26 12;0 0" dur="38s" repeatCount="indefinite" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1"/>
+</ellipse>
+<ellipse cx="490" cy="256" rx="130" ry="100" fill="url(#blobD)">
+<animateTransform attributeName="transform" type="translate" values="0 0;-14 18;20 -8;0 0" dur="21s" repeatCount="indefinite" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1"/>
+</ellipse>
+</g>
+</g>
+<clipPath id="glass">
+<rect x="102" y="58" width="76" height="76" rx="18"/>
+<rect x="102" y="162" width="76" height="76" rx="18"/>
+<rect x="102" y="266" width="76" height="76" rx="18"/>
+<rect x="102" y="370" width="76" height="76" rx="18"/>
+<rect x="782" y="58" width="76" height="76" rx="18"/>
+<rect x="782" y="162" width="76" height="76" rx="18"/>
+<rect x="782" y="266" width="76" height="76" rx="18"/>
+<rect x="782" y="370" width="76" height="76" rx="18"/>
+<rect x="380" y="150" width="200" height="240" rx="16"/>
+<rect x="300" y="446" width="360" height="48" rx="24"/>
+</clipPath>
+<clipPath id="pillclip"><rect x="303" y="443" width="354" height="54" rx="24"/></clipPath>
+<clipPath id="frame"><rect x="-120" width="1200" height="540"/></clipPath>
+
+<!-- carousel icons, drawn around (0,0) -->
+<g id="icoMag" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="-1.2" cy="-1.2" r="4.8"/><path d="M2.4 2.4 L6 6"/>
+</g>
+<g id="icoDb" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<ellipse cx="0" cy="-4.2" rx="5.4" ry="2"/><path d="M-5.4 -4.2v8.4c0 1.1 2.4 2 5.4 2s5.4-.9 5.4-2v-8.4"/><path d="M-5.4 0c0 1.1 2.4 2 5.4 2s5.4-.9 5.4-2"/>
+</g>
+<g id="icoLeaf" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M0 -6.6c2.5 2.2 4 5 2.9 8.1C2.2 3.5 1 5.1 0 6.2-1 5.1-2.2 3.5-2.9 1.5-4 -1.6-2.5 -4.4 0 -6.6z"/><path d="M0 6.2v-5"/>
+</g>
+<g id="icoChart" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M-6 6h12"/><path d="M-3.4 6V1.6M0 6v-8M3.4 6v-11"/>
+</g>
+<g id="icoGrid" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="-6.2" y="-6.2" width="5.4" height="7.2" rx="1.2"/><rect x="0.8" y="-6.2" width="5.4" height="4.2" rx="1.2"/><rect x="0.8" y="-0.4" width="5.4" height="6.6" rx="1.2"/><rect x="-6.2" y="2.6" width="5.4" height="3.6" rx="1.2"/>
+</g>
+
+<!-- one carousel chip -->
+<g id="chip">
+<circle r="15" fill="#ffffff" fill-opacity=".1" stroke="url(#edge)"/>
+</g>
+</defs>
+
+<g clip-path="url(#frame)">
+<use href="#bgfill"/>
+<ellipse cx="480" cy="502" rx="300" ry="24" fill="#3ecfe0" opacity=".3" filter="url(#soft)"/>
+<use href="#orbs"/>
+
+<!-- frosted glass panels -->
+<g class="late" style="animation-delay:.1s">
+<g clip-path="url(#glass)">
+<use href="#bgfill"/>
+<use href="#orbs" filter="url(#frost)"/>
+<rect x="-120" y="0" width="1200" height="540" fill="#02141a" fill-opacity=".28"/>
+</g>
+</g>
+
+<!-- connectors: draw in after tiles land -->
+<g fill="none" stroke="#ffffff" stroke-opacity=".13" stroke-width="1.6" stroke-linecap="round">
+<path class="wire" style="animation-delay:.9s" pathLength="1" d="M178 96 C 272 96, 288 210, 380 210"/>
+<path class="wire" style="animation-delay:1s" pathLength="1" d="M178 200 C 272 200, 288 248, 380 248"/>
+<path class="wire" style="animation-delay:1.1s" pathLength="1" d="M178 304 C 272 304, 288 292, 380 292"/>
+<path class="wire" style="animation-delay:1.2s" pathLength="1" d="M178 408 C 272 408, 288 330, 380 330"/>
+<path class="wire" style="animation-delay:1.15s" pathLength="1" d="M580 210 C 672 210, 688 96, 782 96"/>
+<path class="wire" style="animation-delay:1.25s" pathLength="1" d="M580 248 C 672 248, 688 200, 782 200"/>
+<path class="wire" style="animation-delay:1.35s" pathLength="1" d="M580 292 C 672 292, 688 304, 782 304"/>
+<path class="wire" style="animation-delay:1.45s" pathLength="1" d="M580 330 C 672 330, 688 408, 782 408"/>
+<path class="wire" style="animation-delay:1.55s" pathLength="1" d="M480 390 L480 446"/>
+</g>
+<g class="late" style="animation-delay:1.9s">
+<g fill="none" stroke="#4edcf0" stroke-opacity=".35" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="10 46" filter="url(#glow)">
+<path d="M178 96 C 272 96, 288 210, 380 210"><animate attributeName="stroke-dashoffset" from="112" to="0" dur="2.8s" repeatCount="indefinite"/></path>
+<path d="M178 200 C 272 200, 288 248, 380 248"><animate attributeName="stroke-dashoffset" from="112" to="0" dur="2.8s" begin="-.7s" repeatCount="indefinite"/></path>
+<path d="M178 304 C 272 304, 288 292, 380 292"><animate attributeName="stroke-dashoffset" from="112" to="0" dur="2.8s" begin="-1.4s" repeatCount="indefinite"/></path>
+<path d="M178 408 C 272 408, 288 330, 380 330"><animate attributeName="stroke-dashoffset" from="112" to="0" dur="2.8s" begin="-2.1s" repeatCount="indefinite"/></path>
+<path d="M580 210 C 672 210, 688 96, 782 96"><animate attributeName="stroke-dashoffset" from="112" to="0" dur="2.8s" begin="-.35s" repeatCount="indefinite"/></path>
+<path d="M580 248 C 672 248, 688 200, 782 200"><animate attributeName="stroke-dashoffset" from="112" to="0" dur="2.8s" begin="-1.05s" repeatCount="indefinite"/></path>
+<path d="M580 292 C 672 292, 688 304, 782 304"><animate attributeName="stroke-dashoffset" from="112" to="0" dur="2.8s" begin="-1.75s" repeatCount="indefinite"/></path>
+<path d="M580 330 C 672 330, 688 408, 782 408"><animate attributeName="stroke-dashoffset" from="112" to="0" dur="2.8s" begin="-2.45s" repeatCount="indefinite"/></path>
+</g>
+<!-- travelling pulses -->
+<g>
+<circle r="4" fill="#4edcf0" stroke="#eafcff" stroke-width="1.4" filter="url(#glow)"><animateMotion dur="5.6s" begin="0s" repeatCount="indefinite" path="M178 96 C 272 96, 288 210, 380 210" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".4 0 .2 1"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.08;.9;1" dur="5.6s" begin="0s" repeatCount="indefinite"/></circle>
+<circle r="4" fill="#4edcf0" stroke="#eafcff" stroke-width="1.4" filter="url(#glow)"><animateMotion dur="5.6s" begin="-1.4s" repeatCount="indefinite" path="M178 200 C 272 200, 288 248, 380 248" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".4 0 .2 1"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.08;.9;1" dur="5.6s" begin="-1.4s" repeatCount="indefinite"/></circle>
+<circle r="4" fill="#4edcf0" stroke="#eafcff" stroke-width="1.4" filter="url(#glow)"><animateMotion dur="5.6s" begin="-2.8s" repeatCount="indefinite" path="M178 304 C 272 304, 288 292, 380 292" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".4 0 .2 1"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.08;.9;1" dur="5.6s" begin="-2.8s" repeatCount="indefinite"/></circle>
+<circle r="4" fill="#4edcf0" stroke="#eafcff" stroke-width="1.4" filter="url(#glow)"><animateMotion dur="5.6s" begin="-4.2s" repeatCount="indefinite" path="M178 408 C 272 408, 288 330, 380 330" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".4 0 .2 1"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.08;.9;1" dur="5.6s" begin="-4.2s" repeatCount="indefinite"/></circle>
+<circle r="4" fill="#9df2ff" stroke="#eafcff" stroke-width="1.4" filter="url(#glow)"><animateMotion dur="5.6s" begin="-.7s" repeatCount="indefinite" path="M580 210 C 672 210, 688 96, 782 96" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".4 0 .2 1"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.08;.9;1" dur="5.6s" begin="-.7s" repeatCount="indefinite"/></circle>
+<circle r="4" fill="#9df2ff" stroke="#eafcff" stroke-width="1.4" filter="url(#glow)"><animateMotion dur="5.6s" begin="-2.1s" repeatCount="indefinite" path="M580 248 C 672 248, 688 200, 782 200" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".4 0 .2 1"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.08;.9;1" dur="5.6s" begin="-2.1s" repeatCount="indefinite"/></circle>
+<circle r="4" fill="#9df2ff" stroke="#eafcff" stroke-width="1.4" filter="url(#glow)"><animateMotion dur="5.6s" begin="-3.5s" repeatCount="indefinite" path="M580 292 C 672 292, 688 304, 782 304" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".4 0 .2 1"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.08;.9;1" dur="5.6s" begin="-3.5s" repeatCount="indefinite"/></circle>
+<circle r="4" fill="#9df2ff" stroke="#eafcff" stroke-width="1.4" filter="url(#glow)"><animateMotion dur="5.6s" begin="-4.9s" repeatCount="indefinite" path="M580 330 C 672 330, 688 408, 782 408" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".4 0 .2 1"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.08;.9;1" dur="5.6s" begin="-4.9s" repeatCount="indefinite"/></circle>
+</g>
+</g>
+
+<!-- column captions -->
+<g class="rise" style="animation-delay:1.05s"><text x="140" y="40" text-anchor="middle" font-size="11" fill="#ffffff" opacity=".5">data sources</text></g>
+<g class="rise" style="animation-delay:1.2s"><text x="820" y="40" text-anchor="middle" font-size="11" fill="#ffffff" opacity=".5">outputs</text></g>
+
+<!-- ================= left tiles ================= -->
+<g class="rise" style="animation-delay:.3s">
+<rect x="102" y="58" width="76" height="76" rx="18" fill="#fff" fill-opacity=".07"/>
+<rect x="102" y="58" width="76" height="76" rx="18" fill="none" stroke="url(#edge)"/>
+<svg x="125" y="80" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<ellipse cx="12" cy="5.5" rx="7" ry="2.8"/><path d="M5 5.5v13c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8v-13"/><path d="M5 12c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8"/>
+</svg>
+<text x="140" y="152" text-anchor="middle" font-size="11" fill="#ffffff" opacity=".55">postgres</text>
+</g>
+<g class="rise" style="animation-delay:.45s">
+<rect x="102" y="162" width="76" height="76" rx="18" fill="#fff" fill-opacity=".07"/>
+<rect x="102" y="162" width="76" height="76" rx="18" fill="none" stroke="url(#edge)"/>
+<svg x="125" y="184" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="4" y="4.5" width="16" height="15" rx="2"/><path d="M4 10h16M4 14.5h16M10 10v9.5M16 10v9.5"/>
+</svg>
+<text x="140" y="256" text-anchor="middle" font-size="11" fill="#ffffff" opacity=".55">mysql</text>
+</g>
+<g class="rise" style="animation-delay:.6s">
+<rect x="102" y="266" width="76" height="76" rx="18" fill="#fff" fill-opacity=".07"/>
+<rect x="102" y="266" width="76" height="76" rx="18" fill="none" stroke="url(#edge)"/>
+<svg x="125" y="288" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M12 3c3.4 3 5.4 6.9 4 11.2C15 17.5 13.2 19.6 12 21c-1.2-1.4-3-3.5-4-6.8C6.6 9.9 8.6 6 12 3z"/><path d="M12 21v-7"/>
+</svg>
+<text x="140" y="360" text-anchor="middle" font-size="11" fill="#ffffff" opacity=".55">mongodb</text>
+</g>
+<g class="rise" style="animation-delay:.75s">
+<rect x="102" y="370" width="76" height="76" rx="18" fill="#fff" fill-opacity=".07"/>
+<rect x="102" y="370" width="76" height="76" rx="18" fill="none" stroke="url(#edge)"/>
+<svg x="125" y="392" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<ellipse cx="12" cy="6.5" rx="7" ry="2.4"/><path d="M5 6.5l1.6 12a2.2 2.2 0 002.2 1.9h6.4a2.2 2.2 0 002.2-1.9L19 6.5"/>
+</svg>
+<text x="140" y="464" text-anchor="middle" font-size="11" fill="#ffffff" opacity=".55">s3 / minio</text>
+</g>
+
+<!-- ================= right tiles ================= -->
+<g class="rise" style="animation-delay:.55s">
+<rect x="782" y="58" width="76" height="76" rx="18" fill="#fff" fill-opacity=".07"/>
+<rect x="782" y="58" width="76" height="76" rx="18" fill="none" stroke="url(#edge)"/>
+<svg x="805" y="80" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="4" y="4" width="7" height="9" rx="1.5"/><rect x="13" y="4" width="7" height="5.5" rx="1.5"/><rect x="13" y="11.5" width="7" height="8.5" rx="1.5"/><rect x="4" y="15" width="7" height="5" rx="1.5"/>
+</svg>
+<text x="820" y="152" text-anchor="middle" font-size="11" fill="#ffffff" opacity=".55">dashboard</text>
+</g>
+<g class="rise" style="animation-delay:.7s">
+<rect x="782" y="162" width="76" height="76" rx="18" fill="#fff" fill-opacity=".07"/>
+<rect x="782" y="162" width="76" height="76" rx="18" fill="none" stroke="url(#edge)"/>
+<svg x="805" y="184" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M4 20h16"/><path d="M7 20v-6M12 20V9M17 20V4.5"/>
+</svg>
+<text x="820" y="256" text-anchor="middle" font-size="11" fill="#ffffff" opacity=".55">charts</text>
+</g>
+<g class="rise" style="animation-delay:.85s">
+<rect x="782" y="266" width="76" height="76" rx="18" fill="#fff" fill-opacity=".07"/>
+<rect x="782" y="266" width="76" height="76" rx="18" fill="none" stroke="url(#edge)"/>
+<svg x="805" y="288" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M3.5 8.5h17"/><path d="M9.5 12l-2.2 2.2 2.2 2.2M14.5 12l2.2 2.2-2.2 2.2"/>
+</svg>
+<text x="820" y="360" text-anchor="middle" font-size="11" fill="#ffffff" opacity=".55">iframe embed</text>
+</g>
+<g class="rise" style="animation-delay:1s">
+<rect x="782" y="370" width="76" height="76" rx="18" fill="#fff" fill-opacity=".07"/>
+<rect x="782" y="370" width="76" height="76" rx="18" fill="none" stroke="url(#edge)"/>
+<svg x="805" y="392" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M3.5 8.5h17"/><path d="M11.5 11.2l1.1 2.9 2.9 1.1-2.9 1.1-1.1 2.9-1.1-2.9-2.9-1.1 2.9-1.1z"/>
+</svg>
+<text x="820" y="464" text-anchor="middle" font-size="11" fill="#ffffff" opacity=".55">mcp app ui</text>
+</g>
+
+<!-- ================= center engine panel ================= -->
+<g class="pop" style="animation-delay:.12s">
+<rect x="380" y="150" width="200" height="240" rx="16" fill="#fff" fill-opacity=".06"/>
+<rect x="380" y="150" width="200" height="240" rx="16" fill="none" stroke="url(#edge)" stroke-width="1.2"/>
+<line x1="380" y1="178" x2="580" y2="178" stroke="#ffffff" stroke-opacity=".08"/>
+<circle cx="396" cy="164" r="3" fill="#ffffff" fill-opacity=".14"/>
+<circle cx="407" cy="164" r="3" fill="#ffffff" fill-opacity=".14"/>
+<circle cx="418" cy="164" r="3" fill="#ffffff" fill-opacity=".14"/>
+<text x="432" y="168" font-size="10.5" fill="#ffffff" opacity=".6" class="mono">nl2sql engine</text>
+<rect x="520" y="157" width="52" height="14" rx="7" fill="#4edcf0"/>
+<circle cx="529" cy="164" r="2.4" fill="#03161a" style="animation:dotp .9s ease-in-out infinite"/>
+<text x="535" y="167.5" font-size="8.5" fill="#03161a" class="mono">live</text>
+
+<g filter="url(#glow)">
+<circle cx="480" cy="216" r="20" fill="none" stroke="#4edcf0" stroke-opacity=".8" stroke-width="1.6" stroke-dasharray="6 7">
+<animateTransform attributeName="transform" type="rotate" from="0 480 216" to="360 480 216" dur="14s" repeatCount="indefinite"/>
+</circle>
+</g>
+<svg x="468" y="204" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M12 3l1.8 4.9L19 9.7l-5.2 1.8L12 16.4l-1.8-4.9L5 9.7l5.2-1.8z"/>
+</svg>
+
+<rect x="398" y="248" width="164" height="26" rx="13" fill="#ffffff" fill-opacity=".08"/>
+<text x="480" y="265" text-anchor="middle" font-size="10.5" fill="#ffffff" opacity=".85">“revenue by region?”</text>
+
+<path d="M480 278 L480 292 M475 287 L480 292 L485 287" fill="none" stroke="#4edcf0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+
+<rect x="398" y="298" width="164" height="52" rx="10" fill="#02161b" fill-opacity=".55"/>
+<rect x="398" y="298" width="164" height="52" rx="10" fill="none" stroke="#4edcf0" stroke-opacity=".3"/>
+<text x="410" y="316" font-size="9.5" class="mono" fill="#9df2ff">SELECT region, SUM(rev)</text>
+<text x="410" y="330" font-size="9.5" class="mono" fill="#9df2ff" opacity=".85">FROM sales GROUP BY 1</text>
+<text x="410" y="344" font-size="9.5" class="mono" fill="#9df2ff" opacity=".7">ORDER BY 2 DESC;<tspan fill="#eafcff" style="animation:cur 1s step-end infinite">▍</tspan></text>
+
+<text x="480" y="378" text-anchor="middle" font-size="10" fill="#ffffff" opacity=".45">schema-aware · validated · read-only</text>
+</g>
+
+<!-- ================= icon carousel pill ================= -->
+<g class="rise" style="animation-delay:1.35s">
+<rect x="300" y="446" width="360" height="48" rx="24" fill="#fff" fill-opacity=".07"/>
+<rect x="300" y="446" width="360" height="48" rx="24" fill="none" stroke="url(#edge)"/>
+<g clip-path="url(#pillclip)">
+<g>
+<animateTransform attributeName="transform" type="translate" dur="10s" begin="2s" repeatCount="indefinite" calcMode="spline"
+values="0 0;0 0;-60 0;-60 0;-120 0;-120 0;-180 0;-180 0;-240 0;-240 0;-300 0"
+keyTimes="0;.15;.2;.35;.4;.55;.6;.75;.8;.95;1"
+keySplines=".4 0 .2 1;.4 0 .2 1;.4 0 .2 1;.4 0 .2 1;.4 0 .2 1;.4 0 .2 1;.4 0 .2 1;.4 0 .2 1;.4 0 .2 1;.4 0 .2 1"/>
+<!-- filler chips (never centered) -->
+<g transform="translate(300,470)"><use href="#chip"/><use href="#icoLeaf"/></g>
+<g transform="translate(360,470)"><use href="#chip"/><use href="#icoChart"/></g>
+<g transform="translate(420,470)"><use href="#chip"/><use href="#icoGrid"/></g>
+<!-- chips that take the center, in order -->
+<g transform="translate(480,470)">
+<animateTransform attributeName="transform" type="scale" additive="sum" dur="10s" begin="2s" repeatCount="indefinite" values="1.33;1.33;1;1;1.33" keyTimes="0;.15;.2;.95;1"/>
+<use href="#chip"/><use href="#icoMag"/>
+</g>
+<g transform="translate(540,470)">
+<animateTransform attributeName="transform" type="scale" additive="sum" dur="10s" begin="2s" repeatCount="indefinite" values="1;1;1.33;1.33;1;1" keyTimes="0;.15;.2;.35;.4;1"/>
+<use href="#chip"/><use href="#icoDb"/>
+</g>
+<g transform="translate(600,470)">
+<animateTransform attributeName="transform" type="scale" additive="sum" dur="10s" begin="2s" repeatCount="indefinite" values="1;1;1.33;1.33;1;1" keyTimes="0;.35;.4;.55;.6;1"/>
+<use href="#chip"/><use href="#icoLeaf"/>
+</g>
+<g transform="translate(660,470)">
+<animateTransform attributeName="transform" type="scale" additive="sum" dur="10s" begin="2s" repeatCount="indefinite" values="1;1;1.33;1.33;1;1" keyTimes="0;.55;.6;.75;.8;1"/>
+<use href="#chip"/><use href="#icoChart"/>
+</g>
+<g transform="translate(720,470)">
+<animateTransform attributeName="transform" type="scale" additive="sum" dur="10s" begin="2s" repeatCount="indefinite" values="1;1;1.33;1.33;1" keyTimes="0;.75;.8;.95;1"/>
+<use href="#chip"/><use href="#icoGrid"/>
+</g>
+<!-- incoming duplicate of the first chip, scales up as it arrives -->
+<g transform="translate(780,470)">
+<animateTransform attributeName="transform" type="scale" additive="sum" dur="10s" begin="2s" repeatCount="indefinite" values="1;1;1.33" keyTimes="0;.95;1"/>
+<use href="#chip"/><use href="#icoMag"/>
+</g>
+<g transform="translate(840,470)"><use href="#chip"/><use href="#icoDb"/></g>
+<g transform="translate(900,470)"><use href="#chip"/><use href="#icoLeaf"/></g>
+<g transform="translate(960,470)"><use href="#chip"/><use href="#icoChart"/></g>
+</g>
+</g>
+</g>
+</g>
+</svg>

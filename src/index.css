@@ -279,3 +279,113 @@ body::before {
     );
   }
 }
+
+/* ------------------------------------------------------------------ */
+/* Syntax highlighting - custom theme for rehype-highlight / highlight.js */
+/* Palette threads the site accents (sky / mint / gold / pink / lavender)  */
+/* into token classes so code blocks feel native to the design.           */
+/* ------------------------------------------------------------------ */
+
+.prose-post pre code.hljs,
+.prose-post code.hljs {
+  padding: 0;
+  background: transparent;
+  color: rgba(222, 219, 200, 0.92);
+}
+
+.prose-post pre:has(code.hljs) {
+  padding-left: 1.2em;
+  border-left: 3px solid rgba(169, 233, 251, 0.18);
+}
+
+/* Comments + quotes - muted cream, italic */
+.prose-post .hljs-comment,
+.prose-post .hljs-quote,
+.prose-post .hljs-meta {
+  color: rgba(222, 219, 200, 0.4);
+  font-style: italic;
+}
+
+/* Keywords: def / class / if / return / import / async */
+.prose-post .hljs-keyword,
+.prose-post .hljs-selector-tag,
+.prose-post .hljs-section,
+.prose-post .hljs-tag {
+  color: #FCD7ED;
+  font-weight: 500;
+}
+
+/* Strings, docstrings, template literals */
+.prose-post .hljs-string,
+.prose-post .hljs-regexp,
+.prose-post .hljs-template-tag,
+.prose-post .hljs-template-variable,
+.prose-post .hljs-symbol,
+.prose-post .hljs-attr-string,
+.prose-post .hljs-addition {
+  color: #88E7C2;
+}
+
+/* Numbers + literals: true / false / null / None */
+.prose-post .hljs-number,
+.prose-post .hljs-literal,
+.prose-post .hljs-boolean {
+  color: #FED792;
+}
+
+/* Function / method / class names being defined */
+.prose-post .hljs-title,
+.prose-post .hljs-title.function_,
+.prose-post .hljs-title.class_,
+.prose-post .hljs-title.function_.invoke__,
+.prose-post .hljs-name {
+  color: #A9E9FB;
+  font-weight: 500;
+}
+
+/* Types / built-in modules / decorators */
+.prose-post .hljs-type,
+.prose-post .hljs-built_in,
+.prose-post .hljs-builtin-name,
+.prose-post .hljs-class .hljs-title {
+  color: #B8B4E0;
+}
+
+/* Variables, parameters, attributes */
+.prose-post .hljs-variable,
+.prose-post .hljs-params,
+.prose-post .hljs-attribute {
+  color: rgba(222, 219, 200, 0.85);
+}
+
+/* Property access / JSON keys */
+.prose-post .hljs-property,
+.prose-post .hljs-attr {
+  color: #A9E9FB;
+}
+
+/* Operators + punctuation */
+.prose-post .hljs-operator,
+.prose-post .hljs-punctuation {
+  color: rgba(222, 219, 200, 0.65);
+}
+
+/* Deletions (diff / patch blocks) */
+.prose-post .hljs-deletion {
+  color: #F5A79A;
+  background: rgba(245, 167, 154, 0.06);
+}
+
+/* Bold + emphasis inside code */
+.prose-post .hljs-strong {
+  font-weight: 600;
+}
+.prose-post .hljs-emphasis {
+  font-style: italic;
+}
+
+/* Links inside code (e.g. Markdown highlighter) */
+.prose-post .hljs-link {
+  text-decoration: underline;
+  color: #A9E9FB;
+}

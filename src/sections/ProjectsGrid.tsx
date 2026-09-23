@@ -1,7 +1,14 @@
-import { motion, useScroll, useTransform, MotionValue } from 'framer-motion'
-import { useRef, ReactNode } from 'react'
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionValueEvent,
+  MotionValue,
+} from 'framer-motion'
+import { useRef, useState, ReactNode } from 'react'
 import { ArrowUpRight } from 'lucide-react'
 import { WordsPullUpMultiStyle } from '../components/WordsPullUpMultiStyle'
+import { RevealSvg } from '../components/RevealSvg'
 
 interface LabelPos {
   label: string
@@ -14,6 +21,7 @@ interface Project {
   tag: string
   href: string
   screenshot: string
+  visual?: 'flow' | 'newsletter' | 'query'
   thesis: string
   sources: LabelPos[]
   actions: LabelPos[]
@@ -22,9 +30,10 @@ interface Project {
 const PROJECTS: Project[] = [
   {
     name: 'OmniQuery',
-    tag: 'Talk to your data',
+    tag: '',
     href: 'https://www.omniquery.in/',
     screenshot: '/omniquery.png',
+    visual: 'query',
     thesis: 'Your data lives in ten places. Ask it one question.',
     sources: [
       { label: 'Postgres', top: '20%', left: '20%' },
@@ -45,9 +54,10 @@ const PROJECTS: Project[] = [
   },
   {
     name: 'Agent Platform',
-    tag: 'Self-hostable agentic runtime',
+    tag: '',
     href: 'https://agent-dot.omniquery.in/',
     screenshot: '/agent-dot.png',
+    visual: 'flow',
     thesis: 'One container per connector. Every session, one pipe. Zero queueing.',
     sources: [
       { label: 'Skills', top: '20%', left: '22%' },
@@ -71,6 +81,7 @@ const PROJECTS: Project[] = [
     tag: 'Signal from the frontier',
     href: 'https://ai-newsletter.omniquery.in/',
     screenshot: '/ai-newsletter.png',
+    visual: 'newsletter',
     thesis: 'Forty feeds a day. Distilled into one weekly signal.',
     sources: [
       { label: 'arXiv', top: '22%', left: '22%' },
@@ -110,6 +121,21 @@ function useLayerOpacity(
     [start - fade, start + fade, end - fade, end + fade],
     [isFirst ? 1 : 0, 1, 1, isLast ? 1 : 0],
   )
+}
+
+/**
+ * Which project (by index) is currently "in the frame" based on scroll
+ * progress.  Used for the visual layer where we want a HARD SWAP - only
+ * one project's SVG mounted at a time - instead of a crossfade, so the
+ * previous project's SVG can't bleed through the incoming one.
+ */
+function useActiveIndex(progress: MotionValue<number>) {
+  const [active, setActive] = useState(0)
+  useMotionValueEvent(progress, 'change', (v: number) => {
+    const idx = Math.min(N - 1, Math.max(0, Math.floor(v * N)))
+    if (idx !== active) setActive(idx)
+  })
+  return active
 }
 
 function ProjectLayer({
@@ -322,7 +348,7 @@ function ScreenshotBadge({ project }: { project: Project }) {
           {project.tag}
         </div>
         <div className="text-white text-lg md:text-2xl leading-tight font-normal">
-          {project.name}
+          {/*{project.name}*/}
         </div>
       </div>
       <div className="shrink-0 w-9 h-9 md:w-10 md:h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white">
@@ -333,41 +359,106 @@ function ScreenshotBadge({ project }: { project: Project }) {
 }
 
 function ScreenshotTile({ progress }: { progress: MotionValue<number> }) {
+  // Hard-swap which project's visual is currently mounted.  A crossfade
+  // between two projects makes the previous SVG visible through the
+  // incoming SVG (both are partially transparent for the fade window);
+  // a hard swap eliminates that entirely at the cost of a small pop.
+  const activeIndex = useActiveIndex(progress)
   return (
     <div className="relative h-full bg-[#0a0a0a] ring-1 ring-white/[0.06] rounded-2xl overflow-hidden">
-      {PROJECTS.map((p, i) => (
-        <ProjectLayer key={`bg-${p.name}`} progress={progress} index={i}>
-          <img
-            src={p.screenshot}
-            alt=""
-            aria-hidden
-            className="absolute inset-0 w-full h-full object-cover object-top blur-3xl scale-125 opacity-75"
-          />
-        </ProjectLayer>
-      ))}
-
-      <div
-        aria-hidden
-        className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-black/85 pointer-events-none"
-      />
-      <div className="noise-overlay opacity-[0.12] mix-blend-overlay pointer-events-none" />
-
-      <div className="absolute top-4 left-6 text-[10px] tracking-[0.25em] uppercase text-white/60 z-20">
-        Shipped
-      </div>
-
-      {PROJECTS.map((p, i) => (
-        <ProjectLayer key={`sharp-${p.name}`} progress={progress} index={i}>
-          <div className="absolute inset-x-6 md:inset-x-10 top-14 bottom-24 flex items-center justify-center">
+      {PROJECTS.map((p, i) =>
+        // Skip the blurred PNG backdrop for projects with their own
+        // full-bleed visual - otherwise it bleeds through the SVG's
+        // transparent regions (e.g. the omniquery cyan shows up behind
+        // the agent-dot green SVG during the crossfade).
+        p.visual ? null : (
+          <ProjectLayer key={`bg-${p.name}`} progress={progress} index={i}>
             <img
               src={p.screenshot}
               alt=""
               aria-hidden
-              className="max-w-full max-h-full object-contain rounded-md shadow-[0_30px_60px_-10px_rgba(0,0,0,0.7),0_10px_30px_-5px_rgba(0,0,0,0.4)]"
+              className="absolute inset-0 w-full h-full object-cover object-top blur-3xl scale-125 opacity-75"
             />
+            <div
+              aria-hidden
+              className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-black/85 pointer-events-none"
+            />
+            <div className="noise-overlay opacity-[0.12] mix-blend-overlay pointer-events-none" />
+          </ProjectLayer>
+        ),
+      )}
+
+      <div className="absolute top-4 left-6 text-[10px] tracking-[0.25em] uppercase text-white/60 z-20">
+        {/*Shipped*/}
+      </div>
+
+      {(() => {
+        // Hard-swap: only mount the ACTIVE project's visual.  Previous
+        // projects fully unmount so their SVGs can never bleed through
+        // during a crossfade window.
+        const p = PROJECTS[activeIndex]
+        if (!p) return null
+        const fullBleed =
+          p.visual === 'flow' ||
+          p.visual === 'newsletter' ||
+          p.visual === 'query'
+        const { start, end } = segmentRange(activeIndex)
+        return (
+          <div
+            key={`active-${p.name}`}
+            className={
+              fullBleed
+                ? 'absolute inset-0'
+                : 'absolute inset-x-4 md:inset-x-8 top-12 bottom-24 flex items-center justify-center'
+            }
+          >
+            {p.visual === 'flow' ? (
+              <div
+                className="relative w-full h-full overflow-hidden"
+                style={{ background: '#030a06' }}
+              >
+                <RevealSvg
+                  src="/lib/agent-dot-glass-morphism.svg"
+                  ariaLabel="Agent Platform diagram"
+                  className="absolute inset-0 w-full h-full"
+                  progress={progress}
+                  activeStart={start}
+                  activeEnd={end}
+                />
+              </div>
+            ) : p.visual === 'query' ? (
+              <div
+                className="relative w-full h-full overflow-hidden"
+                style={{ background: '#020a0d' }}
+              >
+                <RevealSvg
+                  src="/lib/flow-chart.svg"
+                  ariaLabel="OmniQuery NL2SQL flow"
+                  className="absolute inset-0 w-full h-full"
+                  progress={progress}
+                  activeStart={start}
+                  activeEnd={end}
+                />
+              </div>
+            ) : p.visual === 'newsletter' ? (
+              <div className="relative h-full overflow-hidden rounded-2xl">
+                <img
+                  src="/lib/ai-news-letter.svg"
+                  alt="AI Signal research → code → blog pipeline"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              </div>
+            ) : (
+              <img
+                src={p.screenshot}
+                alt=""
+                aria-hidden
+                className="max-w-full max-h-full object-contain rounded-md shadow-[0_30px_60px_-10px_rgba(0,0,0,0.7),0_10px_30px_-5px_rgba(0,0,0,0.4)]"
+              />
+            )}
           </div>
-        </ProjectLayer>
-      ))}
+        )
+      })()}
 
       {PROJECTS.map((p, i) => (
         <ProjectLayer key={`badge-${p.name}`} progress={progress} index={i}>

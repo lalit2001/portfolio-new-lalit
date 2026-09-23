@@ -46,7 +46,7 @@ export function PostReader({ post, onBack }: Props) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 12 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="relative mx-auto max-w-3xl min-h-screen bg-[#0a0a0a] md:my-10 md:min-h-0 md:rounded-3xl md:ring-1 md:ring-white/[0.06] shadow-[0_60px_120px_-30px_rgba(0,0,0,0.9)] overflow-hidden"
+          className="relative mx-auto w-full max-w-5xl min-h-screen bg-[#0a0a0a] md:my-10 md:min-h-0 md:rounded-3xl md:ring-1 md:ring-white/[0.06] shadow-[0_60px_120px_-30px_rgba(0,0,0,0.9)] overflow-hidden"
         >
           <div className="sticky top-0 z-20 flex items-center justify-between gap-4 px-5 md:px-8 py-3 bg-[#0a0a0a]/85 backdrop-blur-md border-b border-white/[0.05]">
             <div className="text-primary/60 text-[10px] tracking-[0.25em] uppercase truncate">
@@ -85,7 +85,7 @@ export function PostReader({ post, onBack }: Props) {
             </div>
           )}
 
-          <header className="px-6 md:px-12 pt-10 md:pt-14 pb-8">
+          <header className="mx-auto max-w-3xl px-6 md:px-10 pt-10 md:pt-14 pb-8">
             <div className="text-primary/60 text-[10px] tracking-[0.25em] uppercase mb-4">
               {new Date(post.date).toLocaleDateString('en-US', {
                 year: 'numeric',
@@ -115,7 +115,7 @@ export function PostReader({ post, onBack }: Props) {
             )}
           </header>
 
-          <div className="px-6 md:px-12 pb-20 md:pb-28">
+          <div className="mx-auto max-w-3xl px-6 md:px-10 pb-20 md:pb-28">
             <div className="prose-post">
               {loading && (
                 <div className="flex items-center gap-2 text-primary/60 text-sm py-12">

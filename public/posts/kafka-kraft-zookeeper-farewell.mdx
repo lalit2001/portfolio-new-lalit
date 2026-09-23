@@ -18,7 +18,7 @@ sourceUrl: https://www.linkedin.com/pulse/zookeepers-farewell-apache-kafka-enter
 
 ### The ZooKeeper Era: A Trusted Sidekick 🦒
 
-ZooKeeper has been Kafka’s trusty companion since the beginning. If Kafka was the superhero of distributed streaming, ZooKeeper was the behind-the-scenes coordinator—keeping everything in sync. It handled critical tasks like:
+ZooKeeper has been Kafka’s trusty companion since the beginning. If Kafka was the superhero of distributed streaming, ZooKeeper was the behind-the-scenes coordinator-keeping everything in sync. It handled critical tasks like:
 
 **Cluster Metadata Management** : Storing info about brokers, topics, and partitions.**Leader Election** : Deciding which broker takes charge when things go sideways.**Configuration Sync** : Ensuring all nodes in the cluster stayed on the same page.
 
@@ -30,9 +30,9 @@ For years, this duo powered Kafka’s ability to process massive data streams wi
 
 ### Enter KRaft: Kafka’s Self-Sufficient Future 🌟
 
-Say hello to KRaft (Kafka Raft)—Kafka’s new way of doing things, built from the ground up to replace ZooKeeper. KRaft isn’t an outsider; it’s baked right into Kafka itself. Using the Raft consensus protocol, it takes over metadata management and cluster coordination without needing a separate service. Here’s why that’s a game-changer:
+Say hello to KRaft (Kafka Raft)-Kafka’s new way of doing things, built from the ground up to replace ZooKeeper. KRaft isn’t an outsider; it’s baked right into Kafka itself. Using the Raft consensus protocol, it takes over metadata management and cluster coordination without needing a separate service. Here’s why that’s a game-changer:
 
-**Simplified Architecture** : No more managing two systems—Kafka now runs solo!**Better Scalability** : KRaft can handle *millions*  of partitions without breaking a sweat.**Faster Recovery** : Controller shutdowns and restarts are quicker, meaning less downtime.**Future-Proof** : A streamlined setup paves the way for Kafka’s next big innovations.
+**Simplified Architecture** : No more managing two systems-Kafka now runs solo!**Better Scalability** : KRaft can handle *millions*  of partitions without breaking a sweat.**Faster Recovery** : Controller shutdowns and restarts are quicker, meaning less downtime.**Future-Proof** : A streamlined setup paves the way for Kafka’s next big innovations.
 
 The transition started back in 2020 with KIP-500, and after years of refinement, KRaft became production-ready in Kafka 3.3.1. With 3.9.0 as the last ZooKeeper-supported release (November 2024), Kafka 4.0 will be all-KRaft, all the time. 🎯
 
@@ -42,11 +42,11 @@ The transition started back in 2020 with KIP-500, and after years of refinement,
 
 ### Why Say Goodbye to ZooKeeper? 🤔
 
-ZooKeeper’s departure isn’t about it being “bad”—it’s about Kafka outgrowing its old clothes. Here’s what tipped the scales:
+ZooKeeper’s departure isn’t about it being “bad”-it’s about Kafka outgrowing its old clothes. Here’s what tipped the scales:
 
-**Operational Overhead** : Running ZooKeeper alongside Kafka meant extra setup, monitoring, and maintenance.**Single Point of Failure** : If ZooKeeper went down, Kafka couldn’t function—yikes!**Scalability Limits** : ZooKeeper struggled with clusters pushing beyond 100,000 partitions.
+**Operational Overhead** : Running ZooKeeper alongside Kafka meant extra setup, monitoring, and maintenance.**Single Point of Failure** : If ZooKeeper went down, Kafka couldn’t function-yikes!**Scalability Limits** : ZooKeeper struggled with clusters pushing beyond 100,000 partitions.
 
-KRaft solves these pain points by embedding coordination into Kafka’s core. It’s like Kafka learned to tie its own shoes—no more relying on a babysitter! 👟
+KRaft solves these pain points by embedding coordination into Kafka’s core. It’s like Kafka learned to tie its own shoes-no more relying on a babysitter! 👟
 
 ---
 
@@ -62,8 +62,8 @@ If you’re running Kafka, this shift might spark some questions. Here’s the l
 
 ### A Fond Farewell and a Bright Future 🌈
 
-ZooKeeper’s 14-year run with Kafka deserves a round of applause. 👏 It laid the foundation for Kafka to become the streaming giant it is today. But as they say, all good things evolve. KRaft isn’t just a replacement—it’s a leap forward, making Kafka more self-sufficient, scalable, and ready for the data demands of tomorrow.
+ZooKeeper’s 14-year run with Kafka deserves a round of applause. 👏 It laid the foundation for Kafka to become the streaming giant it is today. But as they say, all good things evolve. KRaft isn’t just a replacement-it’s a leap forward, making Kafka more self-sufficient, scalable, and ready for the data demands of tomorrow.
 
-So, here’s to ZooKeeper: thanks for the memories! And to KRaft: welcome to the driver’s seat. 🚗 What do you think about this transition? Are you excited to ditch ZooKeeper, or feeling nostalgic? Drop your thoughts below—I’d love to hear! ⬇️
+So, here’s to ZooKeeper: thanks for the memories! And to KRaft: welcome to the driver’s seat. 🚗 What do you think about this transition? Are you excited to ditch ZooKeeper, or feeling nostalgic? Drop your thoughts below-I’d love to hear! ⬇️
 
 *Happy streaming, everyone!*  ✨

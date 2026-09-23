@@ -5,7 +5,7 @@
  * copying public/posts/index.json) and emits dist/sitemap.xml pointing at:
  *
  *   - the homepage
- *   - each hash-anchored section (#about, #projects, #skills, #writing, #contact)
+ *   - each hash-anchored section (#about, #projects, #skills, #engagements, #writing, #contact)
  *   - each blog post as #post/<slug>
  *
  * Google crawls hash routes for JS-rendered SPAs and will follow these
@@ -66,7 +66,7 @@ function main() {
       changefreq: 'weekly',
       priority: '1.0',
     },
-    ...['about', 'projects', 'skills', 'writing', 'contact'].map((h) => ({
+    ...['about', 'projects', 'skills', 'engagements', 'writing', 'contact'].map((h) => ({
       loc: `${SITE_URL}/#${h}`,
       lastmod: today,
       changefreq: 'monthly',

@@ -2,6 +2,7 @@ import { useEffect, useState, ComponentType } from 'react'
 import { evaluate } from '@mdx-js/mdx'
 import * as runtime from 'react/jsx-runtime'
 import remarkGfm from 'remark-gfm'
+import rehypeHighlight from 'rehype-highlight'
 import { postUrl } from '../config/blog'
 import { readCache, writeCache } from '../lib/cache'
 import { parseFrontmatter } from '../lib/frontmatter'
@@ -42,6 +43,12 @@ export function useMdxPost(slug: string | null): State {
         const evaluated = await evaluate(content, {
           ...(runtime as unknown as Parameters<typeof evaluate>[1]),
           remarkPlugins: [remarkGfm],
+          rehypePlugins: [
+            [
+              rehypeHighlight,
+              { detect: true, ignoreMissing: true },
+            ],
+          ],
         })
         if (cancelled) return
         setState({

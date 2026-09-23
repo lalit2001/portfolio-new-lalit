@@ -2,6 +2,7 @@ import { Hero } from './sections/Hero'
 import { About } from './sections/About'
 import { ProjectsGrid } from './sections/ProjectsGrid'
 import { Skills } from './sections/Skills'
+import { Engagements } from './sections/Engagements'
 import { Writing } from './sections/Writing'
 import { Footer } from './sections/Footer'
 import { ScrollProgress } from './components/ScrollProgress'
@@ -14,6 +15,7 @@ export default function App() {
       <About />
       <ProjectsGrid />
       <Skills />
+      <Engagements />
       <Writing />
       <Footer />
     </main>
