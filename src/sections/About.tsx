@@ -3,7 +3,7 @@ import { useRef } from 'react'
 import { WordsPullUpMultiStyle } from '../components/WordsPullUpMultiStyle'
 
 const BODY =
-  "Over the last five-plus years, I have worked with Ernst & Young as a Senior Consultant in Data & AI - deploying Genome, a Life Sciences agents marketplace, and leading SMART, a multi-agentic social analytics platform for one of the world's largest automotive manufacturers. Before that, I led data engineering at ByteIQ Analytics on FinTech lakehouses powering bank underwriting decisions, and shipped agentic NL-to-SQL pipelines at InvoLead. Today I am CTO at StriveSteam and, on the side, building OmniQuery (a context-augmented data fabric you can talk to), the Agent Platform (a self-hostable, Claude-style runtime with git-versioned Skills and MCP connector pooling), and an AI research newsletter distilled from the LLM and agents frontier. Recognized as an AWS Community Builder in Data Engineering (2025), and an architecture advisor to open-source projects like Olake."
+  "Five-plus years shipping data and AI systems across Life Sciences, Automotive, FinTech and Insurtech - from lakehouses that power bank underwriting to multi-agentic platforms in production. Today I'm CTO at StriveSteam. On the side I'm building OmniQuery, a data fabric you can talk to, and the Agent Platform, a self-hostable Claude-style runtime with git-versioned Skills. AWS Community Builder in Data and AI, 2025 & 2026 ."
 
 function ProgressiveChar({
   char,
@@ -27,7 +27,7 @@ function ProgressiveBody({ progress }: { progress: MotionValue<number> }) {
   const start = 0.12
   const end = 0.92
   return (
-    <p className="text-[#DEDBC8] text-xs sm:text-sm md:text-base leading-relaxed">
+    <p className="text-[#DEDBC8] text-sm sm:text-base md:text-lg leading-relaxed">
       {chars.map((c, i) => {
         const charProgress =
           start + (end - start) * (i / Math.max(chars.length - 1, 1))
