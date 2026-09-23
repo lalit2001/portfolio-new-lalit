@@ -1,0 +1,75 @@
+---
+title: "The rise of single-node processing engines (and their distributed cousins)"
+date: 2025-01-28
+excerpt: "DuckDB, Polars, and Datafusion made single-node analytics fast again. Here is what that shift means for data platform design."
+tags: [duckdb, polars, olap]
+cover: /posts/images/single-node-processing-engines/cover-01.png
+source: linkedin
+sourceUrl: https://www.linkedin.com/pulse/rise-single-node-processing-engines-distributed-cousins-moharana-jko2c
+---
+
+*Published January 28, 2025*
+
+![Cover](/posts/images/single-node-processing-engines/cover-01.png)
+
+---
+
+### Introduction
+
+In the era of "bigger is better," the data engineering world is witnessing a counterintuitive shift. While distributed systems like Apache Spark once dominated discussions, 2025 marks the rise of a new paradigm: **single-node processing engines**  like DuckDB, Polars, and Apache DataFusion. These tools are redefining efficiency, cost, and simplicity in data workflows, especially for datasets under 10 TB, and challenging the assumption that distributed systems are always the answer.
+
+But what happens when your data outgrows a single machine? Enter **Ballista** , a distributed execution framework built for Apache DataFusion. This blog explores why single-node engines are gaining momentum, how they integrate with distributed systems like Ballista, and when to choose one over the other.
+
+---
+
+### Why Single-Node Engines Are Winning
+
+**The “Small Data” Movement**  Despite the hype around petabyte-scale analytics, most enterprise use cases real-time dashboards, ad-hoc analytics, and ML feature engineering operate on datasets under 10 TB. Single-node engines thrive here by eliminating the overhead of distributed clusters (e.g., Spark’s YARN/K8s management) while delivering sub-second latency.**Performance Breakthroughs**  Tools like **Apache DataFusion**  now outpace traditional engines in Parquet querying, even surpassing DuckDB and ClickHouse in benchmarks. Innovations like *StringView*  (reducing memory copies) and optimized Parquet readers have made single-node engines faster than ever.**Cost Efficiency**  Distributed systems require costly infrastructure and specialized expertise. Single-node tools like Polars or DuckDB run on commodity hardware, slashing cloud bills and democratizing access for SMEs.**Edge Computing Synergy**  With edge deployments growing (e.g., IoT, real-time fraud detection), lightweight engines like DuckDB align with localized processing needs. They avoid cloud dependency and reduce latency by keeping data closer to its source.
+
+---
+
+### Case Study: Apache DataFusion’s Dominance
+
+In November 2024, Apache DataFusion claimed the title of **fastest single-node engine for Parquet queries**  in ClickBench, outperforming DuckDB and ClickHouse. Key optimizations included:
+
+**Columnar Group Storage** : Reduced data copying by 50% for multi-column aggregations.**Dynamic Aggregation Bypass** : Skipping inefficient phases in high-cardinality queries.**Parquet Read Optimizations** : Parallel I/O, predicate pushdown, and bloom filters for millisecond latency.
+
+---
+
+### When to Choose Single-Node vs. Distributed (Ballista)
+
+![Article content](/posts/images/single-node-processing-engines/img-02.png)
+
+---
+
+### The Ballista Advantage: Scaling DataFusion
+
+Apache DataFusion’s distributed sibling, **Ballista** , provides a seamless path to scale beyond single-node limits:
+
+**Shared Execution Engine** : Ballista reuses DataFusion’s optimized query planner and Arrow-based execution, ensuring consistency between single-node and distributed workloads.**Rust-Native Performance** : Built in Rust, Ballista avoids GC pauses and leverages modern async runtimes for low-latency task scheduling.**Cost-Effective Scaling** : Teams can start with DataFusion for small datasets and incrementally adopt Ballista for larger workloads without rewriting code.
+
+**How It Works** :
+
+DataFusion processes queries locally on a single node.Ballista splits large queries into parallel tasks, distributes them across nodes, and merges results using Apache Arrow for zero-copy efficiency.
+
+---
+
+### Challenges and Limitations
+
+While single-node engines excel in many scenarios, they face inherent constraints:
+
+**CPU/Memory Bottlenecks** : Complex transformations (e.g., training large ML models) still require distributed systems like Ballista or Spark.**Stateful Stream Processing** : Tools like Flink or RisingWave dominate here due to distributed fault tolerance.**Skill Gaps** : Teams accustomed to Spark may need training to adopt Rust-based tools like DataFusion/Ballista.
+
+---
+
+### Key Takeaways
+
+**Avoid Over-Engineering** : Not every dataset needs Spark or Ballista. Start with DuckDB or DataFusion and scale only when necessary.**Leverage Open Source** : Communities like Apache DataFusion/Ballista prove that agility and innovation often outpace proprietary solutions.
+
+---
+
+**Final Thoughts**  The rise of single-node processing isn’t just a trend it’s a correction to years of overcomplicated infrastructure. By prioritizing simplicity, cost, and performance, tools like DataFusion and DuckDB are empowering teams to do more with less. And when you do need to scale? Ballista ensures you don’t sacrifice the efficiency gains of single-node design.
+
+*Ready to rethink your data stack? Share your thoughts below!*
+
+*#bigdata #aws #duckdb #datafusion #apachedatafusion #polars #daft #spark #pyspark #compute #processing #single-node*

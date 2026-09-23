@@ -1,0 +1,169 @@
+---
+title: "Knowledge graphs and AI: illuminating insights from PDFs"
+date: 2023-08-06
+excerpt: "Building a knowledge graph from unstructured PDFs and layering AI on top to surface answers."
+tags: [knowledge-graphs, ai, rag]
+cover: /posts/images/knowledge-graphs-ai-pdf-insights/cover-01.jpg
+source: linkedin
+sourceUrl: https://www.linkedin.com/pulse/navigating-nexus-knowledge-graphs-ai-illuminating-from-lalit-moharana
+---
+
+*Published August 6, 2023*
+
+![Cover](/posts/images/knowledge-graphs-ai-pdf-insights/cover-01.jpg)
+
+🌐 **Harnessing the Power of Knowledge Graphs and AI: A PDF-based Information Retrieval System**  📚
+
+In this comprehensive guide, we'll unveil an innovative application that seamlessly integrates knowledge graphs, Neo4j's graph database capabilities, and the transformative prowess of OpenAI's GPT-3. Our objective is to create an interactive system that extracts profound insights from PDF documents, strategically stores them within a knowledge graph, and dynamically crafts intelligent answers in response to user queries. Let's embark on an insightful journey through the intricate mechanics of this cutting-edge implementation.
+
+---
+
+### 1. Understanding the Components
+
+Our technological ensemble thrives on the synergy of diverse components:
+
+**Streamlit Interface** : A user-friendly web interface built using Streamlit, enabling users to upload PDFs and pose questions effortlessly.**PDF Text Extraction** : PyPDF2, a robust PDF processing library, is employed to extract textual content from uploaded PDF documents. These extracted text chunks serve as the fundamental units of knowledge.**Neo4j Knowledge Graph** : Neo4j, a powerful graph database, forms the backbone of our system. Extracted text chunks metamorphose into graph nodes, meticulously connected via relationships that mirror their intrinsic connections. Moreover, these chunks are empowered with semantic understanding through embeddings.**Semantic Text Embeddings** : "sentence-transformers," a library dedicated to text embeddings, is embraced to metamorphose our textual data into high-dimensional vectors. This nuanced transformation infuses each text chunk with contextual depth and meaning.**GDS Similarity Search** : The Neo4j Graph Data Science (GDS) library steps forward, facilitating similarity-based searches that unveil the most pertinent text chunks aligned with user queries.**GPT-3 Question Answering** : OpenAI's GPT-3 model takes the reins when it comes to question-answering. The dynamic interplay of graph-based retrieval and AI-generated answers culminates in an enlightening fusion.
+
+---
+
+### 2. Breaking Down the Code
+
+Let's immerse ourselves in the codebase, piece by piece, to comprehend its intricate workings.
+
+**Step 1: Initial Setup and Configuration**
+
+```
+from dotenv import load_doten
+import streamlit as st
+from PyPDF2 import PdfReader
+from langchain.text_splitter import CharacterTextSplitter
+from neo4j import GraphDatabase
+from langchain.embeddings import HuggingFaceEmbeddings
+import openai
+import os
+
+# Load environment variables
+load_dotenv()
+openai.api_key = os.getenv('openai_secret_key') 
+```
+
+In this section, we're importing the necessary libraries and tools. Notably, we're loading environment variables (such as OpenAI's API key) using **dotenv** .
+
+---
+
+**Step 2: Main Function and Model Setup**
+
+```
+def main()
+    st.set_page_config(page_title="Ask your PDF")
+    st.header("Ask your PDF 💬")
+
+    # Embeddings setup
+    model_name = "sentence-transformers/all-mpnet-base-v2"
+    model_kwargs = {'device': 'cpu'}
+    encode_kwargs = {'normalize_embeddings': False}
+    embeddings = HuggingFaceEmbeddings(
+        model_name=model_name,
+        model_kwargs=model_kwargs,
+        encode_kwargs=encode_kwargs
+    )
+
+    # Neo4j connection setup
+    neo4j_uri = "bolt://localhost:7687"  # Replace with your Neo4j URI
+    neo4j_user = ""  # Replace with your Neo4j username
+    neo4j_password = ""  # Replace with your Neo4j password
+    driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_password))
+
+:
+```
+
+The **main()**  function serves as the entry point for our Streamlit application. We're also configuring the page's appearance and setting up our semantic embeddings model.
+
+---
+
+**Step 3: Uploading and Extracting PDF Content**
+
+```
+# Upload PDF and submit butto
+pdf = st.file_uploader("Upload your PDF", type="pdf")
+submit = st.button("ADD PDF")
+
+# Extract text from PDF and split into chunks
+if submit:
+    pdf_reader = PdfReader(pdf)
+    text = ""
+    for page in pdf_reader.pages:
+        text += page.extract_text()
+
+    text_splitter = CharacterTextSplitter(
+        separator="\n",
+        chunk_size=1000,
+        chunk_overlap=200,
+        length_function=len
+    )
+    chunks = text_splitter.split_text(text)
+
+    # Store in Neo4j
+    with driver.session() as session:
+        document_node = \
+            session.run("CREATE (d:Document {text: $text, id: $id} ) RETURN d", text=text, id=pdf.name).single()[0]
+        for idx, chunk in enumerate(chunks):
+            embedding = embeddings.embed_query(chunk)
+            session.run("""MATCH (d:Document {id: $id})
+            CREATE (c:Chunk {embedding: $embedding, chunk: $ch})
+            CREATE (d)-[:HAS_EMBEDDING]->(c)""", embedding=embedding, id=pdf.name, ch=chunk)
+
+n
+```
+
+This section covers the PDF upload, text extraction, splitting into chunks, and the subsequent storage of the chunks in the Neo4j graph database.
+
+---
+
+**Step 4: User Interaction and Answer Generation**
+
+```
+# User input for questio
+user_question = st.text_input("Ask a question about your PDF:")
+
+# Answer generation
+if user_question:
+    # Query Neo4j for most similar chunk
+    with driver.session() as session:
+        result = session.run(
+            "MATCH (d:Document)-[:HAS_EMBEDDING]->(c:Chunk) "
+            "WITH c, gds.similarity.cosine(c.embedding, $user_embedding) AS similarity "
+            "RETURN c.chunk as Text ORDER BY similarity DESC LIMIT 2",
+            user_embedding=embeddings.embed_query(user_question)
+        )
+        most_similar_chunk = result.single()[0]
+
+    # Generate answer using GPT-3
+    with driver.session() as session:
+        doc_text = most_similar_chunk
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": 'You are a helpful assistant'},
+                {"role": "user", "content": f"question: {user_question}\ntext = {doc_text}"}
+            ],
+        )
+        qa_result = response["choices"][0]["message"]["content"]
+
+    st.write(f"Question: {user_question}")
+    st.write(f"Answer: {qa_result}")
+```
+
+This final section enables users to input questions, leverages Neo4j's GDS library to find the most similar text chunk, and employs OpenAI's GPT-3 to generate coherent and informative answers.
+
+---
+
+### 3. Embarking on Your Exploration
+
+As you dive into this innovative fusion of knowledge graphs, Neo4j, and AI, a realm of possibilities awaits. This system amplifies how we interact with information from tailored content recommendations to enriched semantic search.
+
+Join us in the next post as we venture further into the realms of data-driven innovation. Feel free to share your thoughts, inquiries, and aspirations.
+
+![No alt text provided for this image](/posts/images/knowledge-graphs-ai-pdf-insights/img-02.png)
+
+[hashtag#KnowledgeGraphs](https://www.linkedin.com/search/results/all/?keywords=%23knowledgegraphs&origin=HASH_TAG_FROM_FEED) [hashtag#Neo4j](https://www.linkedin.com/search/results/all/?keywords=%23neo4j&origin=HASH_TAG_FROM_FEED) [hashtag#GDS](https://www.linkedin.com/search/results/all/?keywords=%23gds&origin=HASH_TAG_FROM_FEED) [hashtag#AI](https://www.linkedin.com/search/results/all/?keywords=%23ai&origin=HASH_TAG_FROM_FEED) [hashtag#OpenAI](https://www.linkedin.com/search/results/all/?keywords=%23openai&origin=HASH_TAG_FROM_FEED) [hashtag#GPT3](https://www.linkedin.com/search/results/all/?keywords=%23gpt3&origin=HASH_TAG_FROM_FEED) [hashtag#PDFExtraction](https://www.linkedin.com/search/results/all/?keywords=%23pdfextraction&origin=HASH_TAG_FROM_FEED) [hashtag#SemanticEmbeddings](https://www.linkedin.com/search/results/all/?keywords=%23semanticembeddings&origin=HASH_TAG_FROM_FEED) [hashtag#InformationRetrieval](https://www.linkedin.com/search/results/all/?keywords=%23informationretrieval&origin=HASH_TAG_FROM_FEED) [hashtag#DataInsights](https://www.linkedin.com/search/results/all/?keywords=%23datainsights&origin=HASH_TAG_FROM_FEED) [hashtag#Innovation](https://www.linkedin.com/search/results/all/?keywords=%23innovation&origin=HASH_TAG_FROM_FEED) [hashtag#Streamlit](https://www.linkedin.com/search/results/all/?keywords=%23streamlit&origin=HASH_TAG_FROM_FEED) [hashtag#DataScience](https://www.linkedin.com/search/results/all/?keywords=%23datascience&origin=HASH_TAG_FROM_FEED) [hashtag#NaturalLanguageProcessing](https://www.linkedin.com/search/results/all/?keywords=%23naturallanguageprocessing&origin=HASH_TAG_FROM_FEED) [hashtag#EnrichedData](https://www.linkedin.com/search/results/all/?keywords=%23enricheddata&origin=HASH_TAG_FROM_FEED)

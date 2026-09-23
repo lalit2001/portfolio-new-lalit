@@ -1,0 +1,61 @@
+---
+title: "Demystifying Spark cluster configuration: a desi data engineer's guide"
+date: 2024-07-28
+excerpt: "Sizing executors, cores, and memory for Apache Spark - explained through the lens of Indian street food."
+tags: [spark, data-engineering]
+cover: /posts/images/spark-cluster-config-desi-guide/cover-01.jpg
+source: linkedin
+sourceUrl: https://www.linkedin.com/pulse/demystifying-spark-cluster-configuration-desi-data-guide-moharana-vbrfc
+---
+
+*Published July 28, 2024*
+
+![Cover](/posts/images/spark-cluster-config-desi-guide/cover-01.jpg)
+
+Hey there, data enthusiasts! 👋 Today, let's chat about something that often gives us headaches - configuring Spark clusters. Don't worry, I'll break it down in simple terms, desi style! 😉
+
+### 🧮 The Big Data Puzzle
+
+Imagine you're planning a big fat Indian wedding. You need to figure out how many cooks you need in the kitchen and how big the kitchen should be. That's exactly what we do when configuring a Spark cluster! 🍳👨🍳
+
+Let's say we have a mountain of data - 150 GB. Uff! That's a lot, right? 😅
+
+### 🔢 The Magic Numbers
+
+Before we dive in, let's set some ground rules:
+
+Data Growth: Our data might grow 3 times during processing. It's like inviting 100 guests and 300 show up! 😱Partition Size: We'll aim for 256 MB per partition. Think of it as the size of each cooking pot.Partitions per Core: We want 2-4 partitions per core. It's like assigning 2-4 pots to each cook.Memory Overhead: We'll add 20% extra memory for those unexpected guests (JVM and Spark operations).
+
+### 🧠 The Calculations
+
+Now, let's do some desi jugaad with these numbers:
+
+Total Data Size: Formula: Initial Data Size × Growth Factor, Calculation: 150 GB × 3 = 450 GB (Baap re! That's a lot of data!)Number of Partitions: Formula: Total Data Size ÷ Partition Size. Calculation: 450 GB ÷ 256 MB = 1,800 partitionsCores Needed: Formula: Number of Partitions ÷ Partitions per Core, Calculation: 1,800 partitions ÷ 4 partitions per core = 450 cores Memory per Executor: Formula: Base Memory × (1 + Overhead Percentage) Calculation: 8 GB + (8 GB × 20%) = 8 GB + 1.6 GB = 9.6 GB
+
+For memory, let's say we want about 8 GB per executor:
+
+### 🎯 The Final Recipe
+
+So, here's what our Spark kitchen looks like:
+
+Total Cores Needed: 450Cores per Executor: 5 (this is a common configuration, but can be adjusted)Number of Executors: 450 ÷ 5 = 90Memory per Executor: 9.6 GB (including 20% overhead)Total Memory Needed: Formula: Number of Executors × Memory per Executor Calculation: 90 × 9.6 GB = 864 GB
+
+Voila! We've got our Spark cluster config without worrying about specific node details. 🎉
+
+### 💡 Pro Tips
+
+[This section remains the same]
+
+### 🔬 Bonus: More Detailed Formulas
+
+For the math geeks out there (we see you! 🤓), here are some more detailed formulas:
+
+Number of Partitions = Round up(Total Data Size ÷ Partition Size)Total Cores = Round up(Number of Partitions ÷ Partitions per Core)Memory per Executor = Base Memory × (1 + Overhead Percentage) For example, with 20% overhead: Base Memory × 1.20Number of Executors = Round up(Total Cores ÷ Cores per Executor)Total Memory = Number of Executors × Memory per Executor
+
+Quick note: When we say "Round up", we mean always rounding up to the next whole number. For example, if you calculate 10.1 or 10.9, you'd round up to 11. This ensures we always have enough resources to handle our data.
+
+Remember, configuring Spark is more art than science. It takes practice, just like making the perfect round roti! 🫓
+
+What's your experience with Spark configuration? Drop your thoughts in the comments! Let's learn from each other and make our data processing as smooth as butter chicken! 🍗😋
+
+\#DataEngineering #ApacheSpark #BigData #TechTalk #DesiDataScience #hudi #iceberg

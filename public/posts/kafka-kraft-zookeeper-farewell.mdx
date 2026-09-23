@@ -1,0 +1,69 @@
+---
+title: "ZooKeeper's farewell: Apache Kafka enters a new era with KRaft"
+date: 2025-03-17
+excerpt: "Why Kafka is finally shedding ZooKeeper, what KRaft mode changes operationally, and how to plan a migration."
+tags: [kafka, kraft, infra]
+cover: /posts/images/kafka-kraft-zookeeper-farewell/cover-01.jpg
+source: linkedin
+sourceUrl: https://www.linkedin.com/pulse/zookeepers-farewell-apache-kafka-enters-new-era-kraft-lalit-moharana-uz9fc
+---
+
+*Published March 17, 2025*
+
+![Cover](/posts/images/kafka-kraft-zookeeper-farewell/cover-01.jpg)
+
+*March 17, 2025*  After over a decade of faithful service, ZooKeeper is officially stepping out of the Apache Kafka spotlight. Starting with Kafka 4.0 (set to drop soon!), ZooKeeper will no longer be part of the Kafka ecosystem. This marks a *huge*  milestone in Kafka’s evolution, and it’s all thanks to the rise of KRaft. 🎉 Let’s dive into what this means, why it’s happening, and how it’s shaping the future of real-time data streaming.
+
+---
+
+### The ZooKeeper Era: A Trusted Sidekick 🦒
+
+ZooKeeper has been Kafka’s trusty companion since the beginning. If Kafka was the superhero of distributed streaming, ZooKeeper was the behind-the-scenes coordinator—keeping everything in sync. It handled critical tasks like:
+
+**Cluster Metadata Management** : Storing info about brokers, topics, and partitions.**Leader Election** : Deciding which broker takes charge when things go sideways.**Configuration Sync** : Ensuring all nodes in the cluster stayed on the same page.
+
+For years, this duo powered Kafka’s ability to process massive data streams with reliability and scalability. But as Kafka grew (think millions of partitions!), ZooKeeper started showing its limits. Managing a separate system added complexity, and scalability bottlenecks began to creep in. 😓
+
+![Article content](/posts/images/kafka-kraft-zookeeper-farewell/img-02.jpg)
+
+---
+
+### Enter KRaft: Kafka’s Self-Sufficient Future 🌟
+
+Say hello to KRaft (Kafka Raft)—Kafka’s new way of doing things, built from the ground up to replace ZooKeeper. KRaft isn’t an outsider; it’s baked right into Kafka itself. Using the Raft consensus protocol, it takes over metadata management and cluster coordination without needing a separate service. Here’s why that’s a game-changer:
+
+**Simplified Architecture** : No more managing two systems—Kafka now runs solo!**Better Scalability** : KRaft can handle *millions*  of partitions without breaking a sweat.**Faster Recovery** : Controller shutdowns and restarts are quicker, meaning less downtime.**Future-Proof** : A streamlined setup paves the way for Kafka’s next big innovations.
+
+The transition started back in 2020 with KIP-500, and after years of refinement, KRaft became production-ready in Kafka 3.3.1. With 3.9.0 as the last ZooKeeper-supported release (November 2024), Kafka 4.0 will be all-KRaft, all the time. 🎯
+
+![Article content](/posts/images/kafka-kraft-zookeeper-farewell/img-03.jpg)
+
+---
+
+### Why Say Goodbye to ZooKeeper? 🤔
+
+ZooKeeper’s departure isn’t about it being “bad”—it’s about Kafka outgrowing its old clothes. Here’s what tipped the scales:
+
+**Operational Overhead** : Running ZooKeeper alongside Kafka meant extra setup, monitoring, and maintenance.**Single Point of Failure** : If ZooKeeper went down, Kafka couldn’t function—yikes!**Scalability Limits** : ZooKeeper struggled with clusters pushing beyond 100,000 partitions.
+
+KRaft solves these pain points by embedding coordination into Kafka’s core. It’s like Kafka learned to tie its own shoes—no more relying on a babysitter! 👟
+
+---
+
+### What Does This Mean for You? 💡
+
+If you’re running Kafka, this shift might spark some questions. Here’s the lowdown:
+
+**Migration Time** : If you’re on ZooKeeper (pre-4.0), you’ll need to migrate to KRaft. The good news? The Kafka community has been smoothing this path since 2.8, with detailed guides available. **Managed Services** : Using a cloud provider? Some (like Google Cloud) never used ZooKeeper, while others (like AWS MSK) support both Zookeeper and Kraft. Double-check your setup!**Benefits Ahead** : Once you’re on KRaft, expect simpler ops and better performance. It’s worth the effort. 😎
+
+![Article content](/posts/images/kafka-kraft-zookeeper-farewell/img-04.png)
+
+---
+
+### A Fond Farewell and a Bright Future 🌈
+
+ZooKeeper’s 14-year run with Kafka deserves a round of applause. 👏 It laid the foundation for Kafka to become the streaming giant it is today. But as they say, all good things evolve. KRaft isn’t just a replacement—it’s a leap forward, making Kafka more self-sufficient, scalable, and ready for the data demands of tomorrow.
+
+So, here’s to ZooKeeper: thanks for the memories! And to KRaft: welcome to the driver’s seat. 🚗 What do you think about this transition? Are you excited to ditch ZooKeeper, or feeling nostalgic? Drop your thoughts below—I’d love to hear! ⬇️
+
+*Happy streaming, everyone!*  ✨

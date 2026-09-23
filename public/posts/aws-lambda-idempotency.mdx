@@ -1,0 +1,152 @@
+---
+title: "AWS Lambda idempotency for Python devs, using Powertools"
+date: 2024-07-31
+excerpt: "Why every serverless workflow eventually needs idempotency, and how AWS Lambda Powertools makes it a decorator away."
+tags: [aws, lambda, python]
+cover: /posts/images/aws-lambda-idempotency/cover-01.png
+source: linkedin
+sourceUrl: https://www.linkedin.com/pulse/aws-lambda-idempotency-chai-time-chat-python-devs-using-moharana-dyiec
+---
+
+*Published July 31, 2024*
+
+![Cover](/posts/images/aws-lambda-idempotency/cover-01.png)
+
+Namaste, code warriors! 🙏 Grab your masala chai because we're about to dive deeper into the world of Lambda idempotency with Powertools. We'll explore how to add this magic at both the Lambda handler level and the function level. It's like learning to make both butter chicken and paneer tikka masala – two essential recipes for your serverless cookbook! 😉
+
+### 🎭 The Idempotency Drama: A Quick Recap
+
+Remember our biryani ordering scenario? Click once, get one biryani. Click thrice in impatience, get three biryanis! 😱 That's what happens without idempotency. But fear not! With Powertools, we'll make our Lambda as consistent as your dadi's pickle recipe.
+
+### 🦸♂️ Enter the Superhero: AWS Lambda Powertools
+
+AWS Lambda Powertools is like that Swiss Army knife you always wanted. It's packed with features, and today we're focusing on its idempotency superpowers!
+
+### 🐍 Python Powertools: Two Flavors of Idempotency
+
+We're going to whip up two dishes today:
+
+Idempotency at the Lambda Handler Level (Our main course)Idempotency at the Function Level (Our side dish, but equally important!)
+
+### 🧪 The Magic Potion (Code)
+
+Let's start cooking!
+
+### 1. Idempotency at the Lambda Handler Level
+
+This is like adding tadka to the entire dal - it covers everything!
+
+```
+import os
+from dataclasses import dataclass, field
+from uuid import uuid4
+from aws_lambda_powertools.utilities.idempotency import (
+    DynamoDBPersistenceLayer,
+    idempotent,
+)
+from aws_lambda_powertools.utilities.typing import LambdaContext
+
+table = os.getenv("IDEMPOTENCY_TABLE", "")
+persistence_layer = DynamoDBPersistenceLayer(table_name=table)
+
+@dataclass
+class Payment:
+    user_id: str
+    product_id: str
+    payment_id: str = field(default_factory=lambda: f"{uuid4()}")
+
+class PaymentError(Exception):
+    ...
+
+@idempotent(persistence_store=persistence_layer)
+def lambda_handler(event: dict, context: LambdaContext):
+    try:
+        payment: Payment = create_subscription_payment(event)
+        return {
+            "payment_id": payment.payment_id,
+            "message": "success",
+            "statusCode": 200,
+        }
+    except Exception as exc:
+        raise PaymentError(f"Error creating payment {str(exc)}")
+
+def create_subscription_payment(event: dict) -> Payment:
+    return Payment(**event)
+```
+
+### 2. Idempotency at the Function Level
+
+This is like adding idempotency to specific dishes in your thali:
+
+```
+import os
+from dataclasses import dataclass
+from aws_lambda_powertools.utilities.idempotency import (
+    DynamoDBPersistenceLayer,
+    IdempotencyConfig,
+    idempotent_function,
+)
+from aws_lambda_powertools.utilities.typing import LambdaContext
+
+table = os.getenv("IDEMPOTENCY_TABLE", "")
+dynamodb = DynamoDBPersistenceLayer(table_name=table)
+config = IdempotencyConfig(event_key_jmespath="order_id")
+
+@dataclass
+class OrderItem:
+    sku: str
+    description: str
+
+@dataclass
+class Order:
+    item: OrderItem
+    order_id: int
+
+@idempotent_function(data_keyword_argument="order", config=config, persistence_store=dynamodb)
+def process_order(order: Order):
+    return f"processed order {order.order_id}"
+
+def lambda_handler(event: dict, context: LambdaContext):
+    config.register_lambda_context(context)
+    order_item = OrderItem(sku="fake", description="sample")
+    order = Order(item=order_item, order_id=1)
+    return process_order(order=order)
+```
+
+### 🎬 Lights, Camera, Action!
+
+Let's break down these blockbuster codes like a Bollywood movie:
+
+### For Lambda Handler Level Idempotency:
+
+**The Import** : We bring in our star cast, including idempotent_function for handler-level idempotency.**The Setup** : We create a DynamoDBPersistenceLayer and IdempotencyConfig. It's like setting up the kitchen before cooking.**The Hero (Decorator)** : Our @idempotent decorator is the main hero, protecting the entire handler.**The Handler** : Your Lambda handler, now fully protected by the idempotency shield!**The Helper** : process_order function does the actual work, safely wrapped inside the idempotent handler.
+
+### For Function Level Idempotency:
+
+**The Import** : Similar star cast, but we use idempotent for function-level idempotency.**The Setup** : Same kitchen setup with DynamoDBPersistenceLayer and IdempotencyConfig.**The Handler** : Your Lambda handler calls the idempotent function but isn't idempotent itself.**The Hero (Decorator)** : Our @idempotent_function decorator protects the process_order function specifically.**The Star Function** : process_order is now idempotent, like a perfectly cooked dish every time!
+
+### 💡 Pro Tips (Because You're Smarter than the Average Bear 🐻)
+
+**Choose Wisely** : Use handler-level idempotency for blanket coverage, and function-level for more granular control.**Key Selection** : For handler-level, use a key from the event. For function-level, you can use function arguments.**Error Handling** : Powertools handles most errors, but add your own try-except for custom error handling.**Testing** : Test both success and error scenarios to ensure idempotency works in all cases.
+
+### 🚀 Why These Approaches Rock
+
+### Handler-Level Idempotency:
+
+Simplicity: One decorator to rule them all! Comprehensive: Covers all logic within the handler. Consistency: Ensures the entire Lambda execution is idempotent.
+
+### Function-Level Idempotency:
+
+Granular Control: Apply idempotency only where needed. Reusability: Idempotent functions can be used across multiple handlers. Flexibility: Different idempotency configs for different functions.
+
+### 🎉 The Grand Finale
+
+There you have it, folks! You've just mastered two ways to make your AWS Lambda functions idempotent with Powertools. It's like being able to cook both North Indian and South Indian cuisines – you're now a versatile serverless chef!
+
+Remember, whether you choose handler-level or function-level idempotency (or both!), you're adding a layer of reliability to your Lambdas that's as comforting as a warm cup of chai on a rainy day.
+
+Now, go forth and code! And don't forget to share your idempotency adventures in the comments. Did you prefer the handler-level or function-level approach? Or maybe you're using a mix of both like fusion cuisine? 😉 Let's learn from each other and make our Lambda functions as robust as a well-seasoned cast iron kadai! 🍳💪
+
+Happy coding, and may your functions be ever idempotent with Powertools! 🚀✨
+
+\#aws #lambda #aws_lambda #serverless #aws_serverless #developer #backend

@@ -1,0 +1,219 @@
+---
+title: "Setting up a 3-node Apache NiFi cluster"
+date: 2023-09-17
+excerpt: "Standing up a production-shaped 3-node Apache NiFi cluster - ZooKeeper, TLS, load balancing, and site-to-site."
+tags: [nifi, clustering, data-engineering]
+cover: /posts/images/apache-nifi-3-node-cluster/cover-01.jpg
+source: linkedin
+sourceUrl: https://www.linkedin.com/pulse/setting-up-3-node-apache-nifi-cluster-unleash-power-data-moharana
+---
+
+*Published September 17, 2023*
+
+![Cover](/posts/images/apache-nifi-3-node-cluster/cover-01.jpg)
+
+Are you ready to supercharge your data flow management? 🌊 Apache NiFi is here to save the day! In this blog post, I'll guide you through setting up a 3-node NiFi cluster, providing you with two options: one using Docker Compose and another using 3 EC2 Linux instances. Choose the setup that suits your needs and unlock the potential for scalable, resilient, and efficient data processing. 💪
+
+**Why a NiFi Cluster? 🤔**
+
+Apache NiFi is an incredible tool for data integration, transformation, and routing. However, as your data needs grow, a single NiFi instance may not cut it. That's where a cluster comes in! With multiple nodes, you gain:
+
+✨ **High Availability** : Ensure your data flows stay up and running, even if one node goes down.
+
+🚀 **Scalability** : Easily expand your cluster to handle more data and processing tasks.
+
+🌐 **Load Balancing** : Distribute data evenly across nodes for optimal performance.
+
+🔒 **Data Security** : NiFi clusters provide built-in security features for data protection.
+
+**Let's Get Started!**  🛠️
+
+### Option 1: Docker Compose 🐳
+
+### Step 1: Install Docker and Docker Compose
+
+Ensure you have Docker and Docker Compose installed on your system. You can follow the official Docker documentation for installation instructions: [**Docker Installation Guide**](https://docs.docker.com/get-docker/) and [**Docker Compose Installation Guide**](https://docs.docker.com/compose/install/).
+
+### Step 2: Create a Docker Compose File
+
+Create a file named docker-compose.yml and add the following content to define the services for ZooKeeper and the NiFi nodes:
+
+```
+version: "3"
+services:
+  zookeeper:
+    hostname: zookeeper
+    container_name: zookeeper
+    image: 'bitnami/zookeeper:latest'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      - nifinet
+  nifi01:
+    image: apache/nifi:latest
+    ports:
+      - 6980:8080
+    networks:
+      - nifinet
+    environment:
+      - NIFI_WEB_HTTP_PORT=8080
+      - NIFI_CLUSTER_IS_NODE=true
+      - NIFI_CLUSTER_NODE_PROTOCOL_PORT=8082
+      - NIFI_ZK_CONNECT_STRING=zookeeper:2181
+      - NIFI_ELECTION_MAX_WAIT=1 min
+      - NIFI_SENSITIVE_PROPS_KEY=MySuperSecretKey # Set your sensitive properties key here
+  nifi02:
+    image: apache/nifi:latest
+    ports:
+      - 6979:8080
+    networks:
+      - nifinet
+    environment:
+      - NIFI_WEB_HTTP_PORT=8080
+      - NIFI_CLUSTER_IS_NODE=true
+      - NIFI_CLUSTER_NODE_PROTOCOL_PORT=8082
+      - NIFI_ZK_CONNECT_STRING=zookeeper:2181
+      - NIFI_ELECTION_MAX_WAIT=1 min
+      - NIFI_SENSITIVE_PROPS_KEY=MySuperSecretKey # Set your sensitive properties key here
+  nifi03:
+    image: apache/nifi:latest
+    ports:
+      - 6978:8080
+    networks:
+      - nifinet
+    environment:
+      - NIFI_WEB_HTTP_PORT=8080
+      - NIFI_CLUSTER_IS_NODE=true
+      - NIFI_CLUSTER_NODE_PROTOCOL_PORT=8082
+      - NIFI_ZK_CONNECT_STRING=zookeeper:2181
+      - NIFI_ELECTION_MAX_WAIT=1 min
+      - NIFI_SENSITIVE_PROPS_KEY=MySuperSecretKey # Set your sensitive properties key here
+networks:
+  nifinet:
+    driver: bridge
+```
+
+### Step 3: Run the Docker Compose Setup
+
+Open your terminal, navigate to the directory containing the docker-compose.yml file, and run the following command to start the NiFi cluster:
+
+```
+docker-compose up -d
+```
+
+### Step 4: Access the NiFi UI
+
+Once the containers are up and running, you can access the NiFi UI for each node using their respective ports:
+
+NiFi Node 1: http://localhost:6980/nifiNiFi Node 2: http://localhost:6979/nifiNiFi Node 3: http://localhost:6978/nifi
+
+### Option 2: EC2 Linux Instances 🖥️
+
+### Step 1: Network Configuration
+
+Before diving into NiFi cluster setup, ensure that your EC2 instances can communicate with each other over the network. Here's what you need to do:
+
+**VPC Configuration** : Ensure that your EC2 instances are launched in the same Virtual Private Cloud (VPC) and that they have private IP addresses accessible within the VPC.Example: Assign private IP addresses like this:Instance 1: Private IP - 10.0.0.101Instance 2: Private IP - 10.0.0.102Instance 3: Private IP - 10.0.0.103**Security Group** : Configure the security group associated with each EC2 instance to allow inbound and outbound traffic on the necessary ports (e.g., NiFi's web UI and cluster communication ports).Example: Open ports 8080 (NiFi UI) and 2881-2883 (cluster communication) in your security group settings.
+
+### Step 2: Hosts Configuration
+
+To ensure that the EC2 instances can communicate with each other by hostname, edit the /etc/hosts file on each instance. Add entries for all three instances, mapping their private IP addresses to hostnames, and specify the ports for NiFi communication.
+
+Example /etc/hosts entries:
+
+```
+# Instance 1
+10.0.0.101  node1
+# Instance 2
+10.0.0.102  node2
+# Instance 3
+10.0.0.103  node3
+```
+
+### Step 3: Prerequisites
+
+With the network and hosts properly configured, you're ready to proceed with the cluster setup. Ensure you have:
+
+**Java** : Install Java on each EC2 instance. NiFi requires Java to run.Example: Use OpenJDK 11.**3 EC2 Instances** : Launch three EC2 instances with your preferred Linux distribution.Example: Use Amazon Linux 2.
+
+### Step 4: Update zookeeper.properties file
+
+To set up Zookeeper, edit **“/conf/** [**zookeeper.properties**](http://zookeeper.properties)**”** and add the following properties in all 3 nodes at end of the file
+
+```
+server.1=nifi1:2888:3888
+server.2=nifi2 2888:3888
+server.3=nifi3:2888:3888
+```
+
+The actual hostnames and zookeeper ports (2888 & 3888) of each server is referred. To know more about Zookeeper configuration, refer [**here**](https://zookeeper.apache.org/doc/r3.4.11/zookeeperStarted.html#sc_RunningReplicatedZooKeeper).
+
+### Step 5: Configure NiFi Properties
+
+Edit the nifi.properties file on each EC2 instance to configure properties like nifi.web.http.host, nifi.cluster.is.node, and more. Customize the properties to match your cluster setup.
+
+Here are some key NiFi properties to configure:
+
+```
+# Set the hostname or IP address that other nodes will use to communicate with this node
+nifi.remote.input.host=node1
+
+# Set the HTTP port for NiFi's web UI
+nifi.web.http.port=8080
+
+# Enable clustering
+nifi.cluster.is.node=true
+
+# Specify the address of the embedded ZooKeeper instance
+nifi.zookeeper.connect.string=node1:2181,node2:2181,node3:2181
+```
+
+**Step 6: Create** myid**File on Each Node**
+
+On each EC2 instance running ZooKeeper, you should create a myid file in the dataDir directory specified in zookeeper.properties. The myid file contains a single line with a unique identifier for each node, corresponding to its server number (e.g., 1, 2, 3).
+
+Here's an example of what the myid file might look like for each node:
+
+On node1 (myid file located in /path/to/zookeeper/data/myid):
+
+```
+1
+```
+
+On node2 (myid file located in /path/to/zookeeper/data/myid):
+
+```
+2
+```
+
+On node3 (myid file located in /path/to/zookeeper/data/myid):
+
+```
+3
+```
+
+Each myid file should contain the respective node's unique identifier.
+
+### Step 7: Start NiFi Nodes
+
+On each EC2 instance, start NiFi using the **bin/nifi.sh start**  command. Ensure you use the same configuration for each node.
+
+### Step 8: Data Flow Magic
+
+Now comes the fun part! Create data flows in NiFi to ingest, transform, and route your data. Watch as the cluster distributes and balances the workload across nodes.
+
+### Step 9: Monitor and Scale
+
+Use NiFi's built-in monitoring tools and metrics to keep an eye on your cluster's health. As your data needs grow, scale your cluster by adding more nodes.
+
+### Conclusion
+
+Congratulations! You've set up a 3-node Apache NiFi cluster using Docker Compose and on 3 EC2 Linux instances, unlocking the power of scalable and resilient data flow management. 🌟
+
+Choose the setup that fits your needs, and remember to explore NiFi's rich ecosystem of processors, integrations, and extensions to supercharge your data processing capabilities even further. 🛠️
+
+So, are you ready to dive into the world of NiFi clusters and transform the way you handle data? Let us know in the comments! Happy data flowing! 🌊🌐🚀
+
+You can also check out my other NiFi blog on **Custom Processors**  to further enhance your data processing capabilities and explore advanced data manipulation techniques. 🧰📊
+
+---

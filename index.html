@@ -4,56 +4,76 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#000000" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="format-detection" content="telephone=no" />
 
     <title>Lalit Moharana - Builder of systems that think</title>
 
     <meta
       name="description"
-      content="Independent engineer & CTO at StriveSteam. I turn messy, unstructured, real-world data - emails, PDFs, SAP exports, social streams - into agentic infrastructure that scales. Building OmniQuery, the Agent Platform, and an AI research newsletter."
+      content="Independent engineer & CTO at StriveSteam building agentic AI, data infrastructure, and cloud-native systems. I turn messy, real-world data - emails, PDFs, SAP exports, social streams - into runtimes that scale. Creator of OmniQuery, the Agent Platform, and an AI research newsletter. AWS Community Builder in Data Engineering."
     />
     <meta name="author" content="Lalit Moharana" />
     <meta
       name="keywords"
-      content="Lalit Moharana, agentic AI, data engineering, LLM infrastructure, RAG, NL2SQL, MCP, LangChain, OmniQuery, StriveSteam, CTO, AWS Community Builder, Gurugram"
+      content="Lalit Moharana, agentic AI, LLM infrastructure, RAG, Self-RAG, NL2SQL, MCP, Model Context Protocol, LangChain, LangGraph, LlamaIndex, data engineering, Apache Hudi, Iceberg, Paimon, Kafka, Flink, Spark, dbt, Trino, ClickHouse, Snowflake, DuckDB, Doris, Redis, Neo4j, Pinecone, Qdrant, AWS, Kubernetes, Terraform, Vertex AI, Bedrock, OmniQuery, StriveSteam, CTO, AWS Community Builder 2025, Gurugram India"
     />
-    <link rel="canonical" href="https://lalitmoharana.com/" />
+    <link rel="canonical" href="https://lalitm.in/" />
+    <link rel="alternate" hreflang="en" href="https://lalitm.in/" />
+    <link rel="alternate" hreflang="x-default" href="https://lalitm.in/" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Lalit Moharana" />
-    <meta property="og:url" content="https://lalitmoharana.com/" />
+    <meta property="og:url" content="https://lalitm.in/" />
     <meta
       property="og:title"
       content="Lalit Moharana - Builder of systems that think"
     />
     <meta
       property="og:description"
-      content="Independent engineer & CTO. Agentic AI, data engineering, and cloud-native systems for messy, real-world data."
+      content="Independent engineer & CTO. Agentic AI, LLM infrastructure, and data engineering for messy, real-world data. Creator of OmniQuery, the Agent Platform, and an AI research newsletter."
     />
-    <meta property="og:image" content="https://lalitmoharana.com/og.png" />
+    <meta property="og:image" content="https://lalitm.in/og.png" />
+    <meta property="og:image:secure_url" content="https://lalitm.in/og.png" />
+    <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Lalit Moharana - builder of agentic AI systems" />
     <meta property="og:locale" content="en_US" />
+    <meta property="profile:first_name" content="Lalit" />
+    <meta property="profile:last_name" content="Moharana" />
+    <meta property="profile:username" content="moharanalalit" />
+    <meta property="profile:gender" content="male" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@moharanalalit" />
     <meta name="twitter:creator" content="@moharanalalit" />
+    <meta name="twitter:url" content="https://lalitm.in/" />
     <meta
       name="twitter:title"
       content="Lalit Moharana - Builder of systems that think"
     />
     <meta
       name="twitter:description"
-      content="Independent engineer & CTO. Agentic AI, data engineering, and cloud-native systems for messy, real-world data."
+      content="Independent engineer & CTO. Agentic AI, LLM infrastructure, and data engineering for messy, real-world data."
     />
-    <meta name="twitter:image" content="https://lalitmoharana.com/og.png" />
+    <meta name="twitter:image" content="https://lalitm.in/og.png" />
+    <meta name="twitter:image:alt" content="Lalit Moharana portfolio - agentic AI + data infrastructure" />
 
-    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow, max-image-preview:large" />
+    <meta name="bingbot" content="index, follow" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="rating" content="general" />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="64x64" href="/favicon-64.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="mask-icon" href="/favicon.svg" color="#DEDBC8" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -65,28 +85,95 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "Person",
+        "@type": "WebSite",
+        "@id": "https://lalitm.in/#website",
+        "url": "https://lalitm.in/",
         "name": "Lalit Moharana",
+        "description": "Independent engineer & CTO building agentic AI, LLM infrastructure, and data-native systems.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://lalitm.in/#person" },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://lalitm.in/#writing?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "@id": "https://lalitm.in/#person",
+        "name": "Lalit Moharana",
+        "givenName": "Lalit",
+        "familyName": "Moharana",
         "jobTitle": "CTO, StriveSteam",
-        "url": "https://lalitmoharana.com/",
-        "image": "https://lalitmoharana.com/og.png",
+        "description": "Independent engineer building agentic AI, LLM infrastructure, and data-native platforms for messy, real-world data.",
+        "url": "https://lalitm.in/",
+        "image": "https://lalitm.in/og.png",
+        "email": "mailto:lalit.moharana@ticketwhiz.com",
         "sameAs": [
           "https://github.com/lalit2001",
           "https://www.linkedin.com/in/lalit-moharana-987516191",
-          "https://x.com/moharanalalit"
+          "https://x.com/moharanalalit",
+          "https://medium.com/@lalitmaharana2001"
         ],
         "worksFor": {
           "@type": "Organization",
           "name": "StriveSteam"
         },
+        "alumniOf": [
+          { "@type": "Organization", "name": "Ernst & Young" },
+          { "@type": "Organization", "name": "ByteIQ Analytics" },
+          { "@type": "Organization", "name": "InvoLead" }
+        ],
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Gurugram",
+          "addressCountry": "IN"
+        },
         "knowsAbout": [
           "Agentic AI",
-          "Data Engineering",
-          "Cloud-native architecture",
           "LLM Infrastructure",
-          "RAG",
-          "NL2SQL"
-        ]
+          "Retrieval-Augmented Generation",
+          "NL2SQL",
+          "Model Context Protocol",
+          "Data Engineering",
+          "Apache Hudi",
+          "Apache Iceberg",
+          "Apache Kafka",
+          "Apache Flink",
+          "Apache Spark",
+          "Trino",
+          "Snowflake",
+          "ClickHouse",
+          "AWS",
+          "Kubernetes",
+          "Cloud-native architecture"
+        ],
+        "award": "AWS Community Builder - Data Engineering (2025)"
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "@id": "https://lalitm.in/#service",
+        "name": "Lalit Moharana - Independent Engineering",
+        "provider": { "@id": "https://lalitm.in/#person" },
+        "areaServed": "Worldwide",
+        "serviceType": [
+          "Agentic AI systems",
+          "LLM infrastructure",
+          "Data engineering",
+          "Cloud-native architecture consulting"
+        ],
+        "url": "https://lalitm.in/#contact"
       }
     </script>
   </head>

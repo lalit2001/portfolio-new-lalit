@@ -1,0 +1,116 @@
+---
+title: "Harnessing Amazon S3 Tables with PySpark locally"
+date: 2024-12-06
+excerpt: "Running PySpark against Amazon S3 Tables from your laptop - configuration, catalog setup, and gotchas."
+tags: [aws, s3, spark]
+cover: /posts/images/s3-tables-pyspark-local/cover-01.png
+source: linkedin
+sourceUrl: https://www.linkedin.com/pulse/harnessing-power-amazon-s3-tables-pyspark-locally-lalit-moharana-bd4wc
+---
+
+*Published December 6, 2024*
+
+![Cover](/posts/images/s3-tables-pyspark-local/cover-01.png)
+
+Integrating Amazon S3 Tables with Apache Spark locally empowers developers to process and analyze data efficiently without the overhead of managing a full-fledged cluster. In this guide, we'll walk through setting up an S3 bucket, configuring your local environment, and executing PySpark code to interact with S3 Tables. Let's get started! 🚀
+
+### Step 1: Create an S3 Bucket
+
+Before diving into PySpark, you need an S3 bucket to store your data. Here's how to create one using the AWS CLI:
+
+**Install the AWS CLI** : If you haven't already, download and install the AWS CLI from the [official website](https://aws.amazon.com/cli/).**Configure the AWS CLI** : Set up your AWS credentials by running:
+
+```
+aws configure
+```
+
+Provide your AWS Access Key ID, Secret Access Key, default region name, and output format when prompted.
+
+3. **Create the S3 Bucket and get ARN** : Execute the following command, replacing < your-unique-bucket-name >with a globally unique bucket name and us-west-2 with your desired AWS region:
+
+```
+aws s3api create-bucket --bucket your-unique-bucket-name --region us-west-2
+```
+
+### Step 2: Set Up Your Local PySpark Environment
+
+To interact with S3 Tables using PySpark locally, follow these steps:
+
+**Install PySpark** : Use pip to install PySpark:
+
+```
+pip install pyspark
+```
+
+2.**Download Necessary Packages** : You'll need the Iceberg Spark runtime and the S3 Tables catalog for Iceberg. Start PySpark with the required packages:
+
+```
+pyspark --num-executors 3 --driver-memory 4g --executor-memory 2g \
+    --packages org.apache.iceberg:iceberg-spark-runtime-3.5_2.12:1.6.1,software.amazon.s3tables:s3-tables-catalog-for-iceberg:0.1.0 
+```
+
+### Step 3: Initialize SparkSession and Configure Catalog
+
+With the environment set up, configure the SparkSession to interact with your S3 Tables:
+
+```
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder.appName('iceberg_lab') \
+    .config('spark.sql.defaultCatalog', 's3tables') \
+    .config('spark.sql.catalog.s3tables', 'org.apache.iceberg.spark.SparkCatalog') \
+    .config('spark.sql.catalog.s3tables.client.region', 'us-west-2') \
+    .config('spark.sql.catalog.s3tables.warehouse', <'arn:aws:s3tables:us-west-2:124355647883:bucket/your-unique-bucket-name'>) \
+    .config('spark.sql.catalog.s3tables.catalog-impl', 'software.amazon.s3tables.iceberg.S3TablesCatalog') \
+    .getOrCreate() 
+```
+
+Replace 'us-west-2' with your bucket's region and 'arn:aws:s3tables:us-west-2:124355647883:bucket/your-unique-bucket-name' with your bucket's ARN.
+
+### Step 4: Create Namespace and Table
+
+Now, create a namespace and a table within your S3 bucket:
+
+**Create Namespace** :
+
+```
+spark.sql("CREATE NAMESPACE IF NOT EXISTS s3tables.test_namespace")
+```
+
+2. **Create Table** :
+
+```
+spark.sql("""
+CREATE TABLE IF NOT EXISTS s3tables.test_namespace.your-unique-bucket-name' (
+    id INT,
+    name STRING,
+    value INT
+) USING iceberg
+""")
+```
+
+This sets up a structured table within your S3 bucket using the Iceberg format.
+
+### Step 5: Insert and Query Data
+
+With the table in place, insert data and perform queries:
+
+**Insert Data** :
+
+```
+spark.sql("""
+INSERT INTO s3tables.test_namespace.your-unique-bucket-name' VALUES
+    (1, 'ABC', 100),
+    (2, 'XYZ', 200)
+""")
+```
+
+2. **Query Data** :
+
+```
+spark.sql("SELECT * FROM s3tables.test_namespace.your-unique-bucket-name'").show()
+```
+
+This will display the inserted data, confirming that your setup is functioning correctly.
+
+By following this guide, you can effectively harness the power of Amazon S3 Tables with PySpark locally, enabling efficient data processing and analysis. Happy coding! 🎉

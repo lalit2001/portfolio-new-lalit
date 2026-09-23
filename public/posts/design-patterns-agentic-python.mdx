@@ -1,25 +1,30 @@
 ---
-title: Complete Guide to All 23 Design Patterns in Agentic Python Systems
+title: "Complete Guide to All 23 Design Patterns in Agentic Python Systems"
 date: 2026-04-23
-excerpt: A field guide to Gang-of-Four design patterns applied to AI agent backends - creational, structural, and behavioral, with Python examples pulled straight from production code.
-tags: [llm, design-patterns, genai, software-development, agentic-ai]
-cover: /posts/images/design-patterns-cover.svg
-source: medium
-sourceUrl: https://medium.com/@lalitmaharana2001/complete-guide-to-all-23-design-patterns-in-agentic-python-systems-ef207898f685
+excerpt: "A field guide to Gang-of-Four design patterns applied to AI agent backends - creational, structural, and behavioral - with Python examples pulled straight from production code."
+tags: [design-patterns, agents, python, llm]
+cover: /posts/images/design-patterns-agentic-python/cover-01.png
+source: linkedin
+sourceUrl: https://www.linkedin.com/pulse/complete-guide-all-23-design-patterns-agentic-python-systems-lalit-xcb5c
 ---
 
-*Comprehensive examples of every Gang of Four pattern applied to AI agent backends*
+*Published April 23, 2026*
 
-### Introduction: Why Design Patterns Matter for Agentic AI
+![Cover](/posts/images/design-patterns-agentic-python/cover-01.png)
 
-![](/posts/images/design-patterns-agentic-python-hero.png)
+---
 
-### The Problem: Building Without Patterns
+*Comprehensive examples of every Gang of Four pattern applied to AI agent backends*
 
-Imagine you’re building an AI agent backend. You start simple:
+---
 
-``` python
+### Introduction: Why Design Patterns Matter for Agentic AI
 
+### The Problem: Building Without Patterns
+
+Imagine you’re building an AI agent backend. You start simple:
+
+```
 # Week 1: Single database, single LLM
 if db_type == "postgres":
     # postgres code
@@ -32,126 +37,100 @@ elif llm == "anthropic":
     # anthropic code
 ```
 
-Fast forward 6 months… Now you have:
+Fast forward 6 months… Now you have:
 
-- 5 different databases (PostgreSQL, MongoDB, Redis, Pinecone, Elasticsearch)
-- 4 LLM providers (OpenAI, Anthropic, Ollama, Azure OpenAI)
-- Conversation history, memory management, vector embeddings
-- Logging, caching, rate limiting, error handling
-- Agent coordination, state management, event handling
+5 different databases (PostgreSQL, MongoDB, Redis, Pinecone, Elasticsearch)4 LLM providers (OpenAI, Anthropic, Ollama, Azure OpenAI)Conversation history, memory management, vector embeddingsLogging, caching, rate limiting, error handlingAgent coordination, state management, event handling
 
-Your codebase is now **spaghetti code** with:
+Your codebase is now **spaghetti code**  with:
 
-- ❌ Duplicated logic across files
-- ❌ Tight coupling making changes risky
-- ❌ No clear architecture to follow
-- ❌ Impossible to test components independently
-- ❌ Onboarding new developers takes weeks
-- ❌ Adding new databases/LLMs requires rewriting core logic
+❌ Duplicated logic across files❌ Tight coupling making changes risky❌ No clear architecture to follow❌ Impossible to test components independently❌ Onboarding new developers takes weeks❌ Adding new databases/LLMs requires rewriting core logic
 
 **Design patterns solve these problems.**
 
+---
+
 ### What Are Design Patterns?
 
-Design patterns are **proven, reusable solutions to common programming problems**. They’re like architectural blueprints that show:
+Design patterns are **proven, reusable solutions to common programming problems** . They’re like architectural blueprints that show:
 
-- **What** — The core problem being solved
-- **How** — The structure and relationships of objects
-- **When** — Situations where the pattern applies
-- **Why** — Benefits and trade-offs
+**What**  — The core problem being solved**How**  — The structure and relationships of objects**When**  — Situations where the pattern applies**Why**  — Benefits and trade-offs
 
-Think of them like recipes in cooking:
+Think of them like recipes in cooking:
 
-- A recipe is a proven way to make a dish
-- You adapt it to your ingredients and taste
-- You don’t reinvent recipes from scratch each time
+A recipe is a proven way to make a dishYou adapt it to your ingredients and tasteYou don’t reinvent recipes from scratch each time
 
-Design patterns are to software what recipes are to cooking.
+Design patterns are to software what recipes are to cooking.
 
-### Why You NEED Design Patterns for Agentic Systems
+---
+
+### Why You NEED Design Patterns for Agentic Systems
 
 ### 1. Multiple Integrations are Inevitable
 
 Agentic systems are inherently complex:
 
-- **Multiple databases**: Structured (PostgreSQL), document (MongoDB), vector (Pinecone), cache (Redis)
-- **Multiple LLMs**: OpenAI, Anthropic, Ollama, local models, future models
-- **Multiple platforms**: Cloud, local, Docker, Kubernetes
-- **Multiple interfaces**: REST API, WebSocket, CLI, web UI
+**Multiple databases** : Structured (PostgreSQL), document (MongoDB), vector (Pinecone), cache (Redis)**Multiple LLMs** : OpenAI, Anthropic, Ollama, local models, future models**Multiple platforms** : Cloud, local, Docker, Kubernetes**Multiple interfaces** : REST API, WebSocket, CLI, web UI
 
-Without patterns, each new integration means rewriting core logic.
+Without patterns, each new integration means rewriting core logic.
 
-**With patterns**: Add a new database in one file, add a new LLM in one file.
+**With patterns** : Add a new database in one file, add a new LLM in one file.
 
 ### 2. Agents Need Flexibility
 
-Users want to:
+Users want to:
 
-- Switch LLMs based on cost/performance
-- Scale to different databases
-- Deploy on different platforms
-- Enable different features (logging, caching, etc.)
+Switch LLMs based on cost/performanceScale to different databasesDeploy on different platformsEnable different features (logging, caching, etc.)
 
-Without patterns, each change requires code modifications and testing.
+Without patterns, each change requires code modifications and testing.
 
-**With patterns**: Configuration files determine behavior. Zero code changes needed.
+**With patterns** : Configuration files determine behavior. Zero code changes needed.
 
-### 3. Agentic Systems Are Complex
+### 3. Agentic Systems Are Complex
 
-AI agents involve:
+AI agents involve:
 
-- State management (idle, thinking, responding, error)
-- Task coordination (sequential, parallel, hierarchical)
-- Event handling (user input, response generation, errors)
-- Memory management (conversation history, context, embeddings)
-- Resource sharing (LLM instances, database connections)
+State management (idle, thinking, responding, error)Task coordination (sequential, parallel, hierarchical)Event handling (user input, response generation, errors)Memory management (conversation history, context, embeddings)Resource sharing (LLM instances, database connections)
 
-Without patterns, complexity becomes **exponential**.
+Without patterns, complexity becomes **exponential** .
 
-**With patterns**: Each pattern handles one aspect cleanly.
+**With patterns** : Each pattern handles one aspect cleanly.
 
 ### 4. Testing and Debugging Become Nightmare
 
-When everything is tightly coupled:
+When everything is tightly coupled:
 
-``` python
-
+```
 # ❌ Can't test agent logic without real database
 # ❌ Can't test database logic without real LLM
 # ❌ Can't test LLM without paying for API calls
 # ❌ Finding bugs means debugging across multiple files
 ```
 
-**With patterns**: Mock implementations allow testing in isolation.
+**With patterns** : Mock implementations allow testing in isolation.
 
 ### 5. Team Scalability
 
 Without patterns:
 
-- Every developer has their own approach
-- Code review takes forever (inconsistent style)
-- Onboarding is painful (no standard structure)
-- Integration conflicts are common
+Every developer has their own approachCode review takes forever (inconsistent style)Onboarding is painful (no standard structure)Integration conflicts are common
 
-**With patterns**: Everyone follows the same blueprint.
+**With patterns** : Everyone follows the same blueprint.
 
-### How to Use Design Patterns
+---
 
-### Step 1: Identify Your Problem
+### How to Use Design Patterns
 
-Look at your codebase and ask:
+### Step 1: Identify Your Problem
 
-- **Is there duplicated logic?** → Use patterns to extract common behavior
-- **Are objects tightly coupled?** → Use patterns to decouple them
-- **Is code hard to test?** → Use patterns to isolate concerns
-- **Will this need to scale?** → Use patterns that allow extension
+Look at your codebase and ask:
+
+**Is there duplicated logic?**  → Use patterns to extract common behavior**Are objects tightly coupled?**  → Use patterns to decouple them**Is code hard to test?**  → Use patterns to isolate concerns**Will this need to scale?**  → Use patterns that allow extension
 
 ### Step 2: Find the Right Pattern(s)
 
-Use this decision guide:
+Use this decision guide:
 
-``` python
-
+```
 Problem Type        Solution Pattern(s)
 ────────────────────────────────────────
 Multiple object types → Factory Method, Abstract Factory
@@ -174,10 +153,9 @@ Define skeleton → Template Method
 Transform structures → Visitor
 ```
 
-### Step 3: Implement the Pattern
+### Step 3: Implement the Pattern
 
-``` python
-
+```
 # 1. Identify the abstraction (interface)
 class DatabaseConnection(ABC):
     @abstractmethod
@@ -201,10 +179,9 @@ db.save(data)  # Works with any database
 
 ### Step 4: Extend Without Modification
 
-Adding a new database is now trivial:
+Adding a new database is now trivial:
 
-``` python
-
+```
 # Just add one new class
 class Elasticsearch(DatabaseConnection):
     def save(self, data): # elasticsearch specific code
@@ -214,10 +191,9 @@ DatabaseFactory.register("elasticsearch", Elasticsearch)
 # Your agent code doesn't change at all!
 ```
 
-### Step 5: Test with Mocks
+### Step 5: Test with Mocks
 
-``` python
-
+```
 # Create mock for testing
 class MockDatabase(DatabaseConnection):
     def save(self, data):
@@ -230,14 +206,15 @@ agent.process("test")
 assert db.saved_data == "test"
 ```
 
-### Advantages of Design Patterns
+---
+
+### Advantages of Design Patterns
 
 ### 1. Code Reusability 🔄
 
 Without patterns:
 
-``` python
-
+```
 # Database logic scattered everywhere
 class Agent1:
     def __init__(self):
@@ -253,8 +230,7 @@ class Agent2:
 
 With patterns:
 
-``` python
-
+```
 class Agent:
     def __init__(self, db):
         self.db = db  # Reuse same DB logic
@@ -264,14 +240,13 @@ agent1 = Agent(db)
 agent2 = Agent(db)  # Both use same database
 ```
 
-**Benefit**: Less code, fewer bugs, easier maintenance.
+**Benefit** : Less code, fewer bugs, easier maintenance.
 
 ### 2. Flexibility and Extensibility 🔧
 
 Without patterns:
 
-``` python
-
+```
 # Adding new LLM requires changing core agent code
 if llm_type == "openai":
     response = openai.generate(prompt)
@@ -283,8 +258,7 @@ elif llm_type == "ollama":  # Need to modify this file
 
 With patterns:
 
-``` python
-
+```
 # Adding new LLM is just implementing an interface
 class NewLLM(LLMStrategy):
     def generate(self, prompt): return ...
@@ -293,32 +267,25 @@ class NewLLM(LLMStrategy):
 agent = Agent(llm=LLMFactory.create("newllm"))
 ```
 
-**Benefit**: Add features without touching existing code (Open/Closed Principle).
+**Benefit** : Add features without touching existing code (Open/Closed Principle).
 
 ### 3. Maintainability 📚
 
 Without patterns:
 
-- 10 different files all accessing database differently
-- Changing database logic means editing 10 files
-- Easy to miss spots and introduce bugs
-- Code review is a nightmare
+10 different files all accessing database differentlyChanging database logic means editing 10 filesEasy to miss spots and introduce bugsCode review is a nightmare
 
 With patterns:
 
-- Database logic in one place
-- Change it once, applies everywhere
-- Single source of truth
-- Code review is quick and focused
+Database logic in one placeChange it once, applies everywhereSingle source of truthCode review is quick and focused
 
-**Benefit**: Modifications are safe and efficient.
+**Benefit** : Modifications are safe and efficient.
 
-### 4. Testing ✅
+### 4. Testing ✅
 
 Without patterns:
 
-``` python
-
+```
 # ❌ How do you test this?
 class Agent:
     def __init__(self):
@@ -334,8 +301,7 @@ class Agent:
 
 With patterns:
 
-``` python
-
+```
 # ✅ Easy to test
 class Agent:
     def __init__(self, db, llm):
@@ -349,14 +315,13 @@ agent = Agent(mock_db, mock_llm)
 # Tests run in milliseconds!
 ```
 
-**Benefit**: Fast, reliable testing without external dependencies.
+**Benefit** : Fast, reliable testing without external dependencies.
 
 ### 5. Scalability 📈
 
 Without patterns:
 
-``` python
-
+```
 Team grows → Code becomes messy
 More features → Complex interactions
 New databases → Rewrite core logic
@@ -365,40 +330,32 @@ Different platforms → Separate codebases
 
 With patterns:
 
-``` python
-
+```
 Team grows → Everyone uses same patterns
 More features → Clean separation of concerns
 New databases → Implement interface, register
 Different platforms → Works everywhere
 ```
 
-**Benefit**: Code scales with the team and product.
+**Benefit** : Code scales with the team and product.
 
 ### 6. Onboarding & Team Efficiency 👥
 
 Without patterns:
 
-- New developer takes 2–3 weeks to understand codebase
-- Questions like “where does database logic live?”
-- Everyone has different style
-- Code reviews are subjective
+New developer takes 2–3 weeks to understand codebaseQuestions like “where does database logic live?”Everyone has different styleCode reviews are subjective
 
 With patterns:
 
-- New developer takes 1–2 days to understand architecture
-- “It uses Factory Pattern for databases”
-- Everyone follows same style
-- Code reviews focus on logic, not structure
+New developer takes 1–2 days to understand architecture“It uses Factory Pattern for databases”Everyone follows same styleCode reviews focus on logic, not structure
 
-**Benefit**: Faster onboarding, better collaboration.
+**Benefit** : Faster onboarding, better collaboration.
 
 ### 7. Future-Proofing 🔮
 
 Without patterns:
 
-``` python
-
+```
 New LLM provider released → Rewrite core logic
 Database goes out of fashion → Migrate everything
 Platform changes → Start over
@@ -406,21 +363,19 @@ Platform changes → Start over
 
 With patterns:
 
-``` python
-
+```
 New LLM provider → Implement interface in new file
 Database needs replacing → Swap one implementation
 Platform changes → Add new adapter
 ```
 
-**Benefit**: Your code adapts to change instead of breaking.
+**Benefit** : Your code adapts to change instead of breaking.
 
 ### 8. Reduced Complexity 🧠
 
 Without patterns:
 
-``` python
-
+```
 # 500 line Agent class doing everything
 class Agent:
     def __init__(self):
@@ -438,8 +393,7 @@ class Agent:
 
 With patterns:
 
-``` python
-
+```
 # 50 line Agent class using patterns
 class Agent:
     def __init__(self, db, llm, memory, state, events):
@@ -450,25 +404,21 @@ class Agent:
 # Each pattern is simple, Agent stays simple
 ```
 
-**Benefit**: Code is easier to understand and modify.
+**Benefit** : Code is easier to understand and modify.
 
 ### 9. Proven Solutions ✨
 
-You’re not guessing anymore:
+You’re not guessing anymore:
 
-- Patterns are battle-tested across thousands of projects
-- They solve specific problems in specific ways
-- Trade-offs are well-known
-- Best practices are documented
+Patterns are battle-tested across thousands of projectsThey solve specific problems in specific waysTrade-offs are well-knownBest practices are documented
 
-**Benefit**: “This is how the best developers solve this problem.”
+**Benefit** : “This is how the best developers solve this problem.”
 
 ### 10. Communication 💬
 
 Without patterns:
 
-``` python
-
+```
 Developer A: "We need to decouple the database layer"
 Developer B: "What does that even mean?"
 [30 minutes of explanation]
@@ -476,21 +426,21 @@ Developer B: "What does that even mean?"
 
 With patterns:
 
-``` python
-
+```
 Developer A: "Let's use the Adapter pattern"
 Developer B: "Oh, I know exactly what that is"
 [5 minutes of discussion]
 ```
 
-**Benefit**: Common vocabulary makes communication clearer.
+**Benefit** : Common vocabulary makes communication clearer.
 
-### Real-World Impact: Before vs After
+---
 
-### Before Patterns (Actual Example)
+### Real-World Impact: Before vs After
 
-``` python
+### Before Patterns (Actual Example)
 
+```
 # agent.py - 2000 lines
 class Agent:
     def __init__(self, db_type, db_config, llm_type, llm_config):
@@ -546,19 +496,11 @@ def test_agent():
 
 **Problems:**
 
-- ❌ Tightly coupled
-- ❌ Hard to test
-- ❌ Duplicated logic
-- ❌ Difficult to extend
-- ❌ Slow tests
-- ❌ Expensive tests
-- ❌ Single file too large
-- ❌ Hard to understand
+❌ Tightly coupled❌ Hard to test❌ Duplicated logic❌ Difficult to extend❌ Slow tests❌ Expensive tests❌ Single file too large❌ Hard to understand
 
 ### After Patterns
 
-``` python
-
+```
 # database.py - 200 lines total
 class DatabaseConnection(ABC):
     @abstractmethod
@@ -610,133 +552,99 @@ def test_agent():
 
 **Benefits:**
 
-- ✅ Loosely coupled
-- ✅ Easy to test
-- ✅ No duplicated logic
-- ✅ Simple to extend
-- ✅ Fast tests
-- ✅ Free tests
-- ✅ Code organized by concern
-- ✅ Easy to understand
+✅ Loosely coupled✅ Easy to test✅ No duplicated logic✅ Simple to extend✅ Fast tests✅ Free tests✅ Code organized by concern✅ Easy to understand
 
 **Time Saved:**
 
-- Development: -20%
-- Testing: -50%
-- Debugging: -40%
-- Onboarding: -60%
-- Future maintenance: -70%
+Development: -20%Testing: -50%Debugging: -40%Onboarding: -60%Future maintenance: -70%
 
-### When NOT to Use Patterns
+---
 
-Patterns aren’t always necessary. Don’t use them if:
+### When NOT to Use Patterns
 
-1.  **Project is tiny** (\< 500 lines)
+Patterns aren’t always necessary. Don’t use them if:
 
-- Small scripts don’t need patterns
-- Patterns add unnecessary complexity
+**Project is tiny**  (< 500 lines)
+
+Small scripts don’t need patternsPatterns add unnecessary complexity
 
 **2. No future extensibility needed**
 
-- One LLM, one database, one use case
-- Patterns trade complexity now for flexibility later
+One LLM, one database, one use casePatterns trade complexity now for flexibility later
 
-**3. Performance is critical**
+**3. Performance is critical**
 
-- Some patterns add overhead
-- But this is rarely the bottleneck
+Some patterns add overheadBut this is rarely the bottleneck
 
 **4. Over-engineering**
 
-- Using 10 patterns for a 3-pattern problem
-- More patterns ≠ better design
+Using 10 patterns for a 3-pattern problemMore patterns ≠ better design
 
-**Rule of thumb**: Use patterns when you see duplication or anticipate change.
+**Rule of thumb** : Use patterns when you see duplication or anticipate change.
+
+---
 
 ### Your Pattern Implementation Roadmap
 
-### Phase 1: Essential Patterns (Start Here)
+### Phase 1: Essential Patterns (Start Here)
 
-1.  **Factory Method** — Multiple implementations
-2.  **Abstract Factory** — Families of objects
-3.  **Decorator** — Add features dynamically
-4.  **Strategy** — Interchangeable algorithms
+**Factory Method**  — Multiple implementations**Abstract Factory**  — Families of objects**Decorator**  — Add features dynamically**Strategy**  — Interchangeable algorithms
 
-### Phase 2: Intermediate Patterns (After Phase 1)
+### Phase 2: Intermediate Patterns (After Phase 1)
 
-1.  **Adapter** — Incompatible interfaces
-2.  **Facade** — Simplify complex subsystems
-3.  **Observer** — Event-driven architecture
-4.  **State** — Manage object behavior
+**Adapter**  — Incompatible interfaces**Facade**  — Simplify complex subsystems**Observer**  — Event-driven architecture**State**  — Manage object behavior
 
-### Phase 3: Advanced Patterns (When Needed)
+### Phase 3: Advanced Patterns (When Needed)
 
-1.  **Composite** — Hierarchical structures
-2.  **Mediator** — Complex interactions
-3.  **Visitor** — Operate on structures
-4.  All others (based on specific needs)
+**Composite**  — Hierarchical structures**Mediator**  — Complex interactions**Visitor**  — Operate on structuresAll others (based on specific needs)
+
+---
 
 ### Key Takeaways
 
 ✅ Design patterns are **proven solutions to recurring problems**
 
-✅ They make code **flexible, maintainable, and testable**
+✅ They make code **flexible, maintainable, and testable**
 
-✅ They enable **smooth scaling** as projects grow
+✅ They enable **smooth scaling**  as projects grow
 
-✅ They provide **common vocabulary** for teams
+✅ They provide **common vocabulary**  for teams
 
-✅ They reduce **cognitive load** through familiar structures
+✅ They reduce **cognitive load**  through familiar structures
 
-✅ They’re **not just theory** — they’re practical tools
+✅ They’re **not just theory**  — they’re practical tools
 
-✅ Start simple, add patterns as needs emerge
+✅ Start simple, add patterns as needs emerge
 
-✅ Each pattern solves a **specific problem** (use the right one)
+✅ Each pattern solves a **specific problem**  (use the right one)
 
-### Table of Contents
+---
 
-### Creational Patterns (5)
+### Table of Contents
 
-1.  Factory Method
-2.  Abstract Factory
-3.  Builder
-4.  Prototype
-5.  Singleton
+### Creational Patterns (5)
 
-### Structural Patterns (7)
+Factory MethodAbstract FactoryBuilderPrototypeSingleton
 
-1.  Adapter
-2.  Bridge
-3.  Composite
-4.  Decorator
-5.  Facade
-6.  Flyweight
-7.  Proxy
+### Structural Patterns (7)
 
-### Behavioral Patterns (11)
+AdapterBridgeCompositeDecoratorFacadeFlyweightProxy
 
-1.  Chain of Responsibility
-2.  Command
-3.  Iterator
-4.  Mediator
-5.  Memento
-6.  Observer
-7.  State
-8.  Strategy
-9.  Template Method
-10. Visitor
+### Behavioral Patterns (11)
+
+Chain of ResponsibilityCommandIteratorMediatorMementoObserverStateStrategyTemplate MethodVisitor
+
+---
 
 ### CREATIONAL PATTERNS
 
-### 1. Factory Method Pattern
+### 1. Factory Method Pattern
 
-**Purpose:** Create objects without specifying exact classes, allowing subclasses to decide.
+**Purpose:**  Create objects without specifying exact classes, allowing subclasses to decide.
 
-**Agentic Use Case:** Different task types create different handlers
+**Agentic Use Case:**  Different task types create different handlers
 
-``` python
-
+```
 from abc import ABC, abstractmethod
 
 # ============================================
@@ -818,14 +726,15 @@ result = processor.process_task("code", {"language": "python", "description": "f
 result = processor.process_task("email", {"recipient": "user@example.com", "subject": "Meeting reminder"})
 ```
 
-### 2. Abstract Factory Pattern
+---
 
-**Purpose:** Create families of related objects without specifying concrete classes.
+### 2. Abstract Factory Pattern
 
-**Agentic Use Case:** Different LLM + Database + Memory combinations (already covered in previous article, showing extended version)
+**Purpose:**  Create families of related objects without specifying concrete classes.
 
-``` python
+**Agentic Use Case:**  Different LLM + Database + Memory combinations (already covered in previous article, showing extended version)
 
+```
 # ============================================
 # ABSTRACT FACTORY - AGENT ECOSYSTEM
 # ============================================
@@ -944,14 +853,15 @@ anthropic_agent = Agent(AnthropicAgentFactory())
 anthropic_agent.run("What is AI?")
 ```
 
-### 3. Builder Pattern
+---
 
-**Purpose:** Construct complex objects step by step.
+### 3. Builder Pattern
 
-**Agentic Use Case:** Build complex agent configurations
+**Purpose:**  Construct complex objects step by step.
 
-``` python
+**Agentic Use Case:**  Build complex agent configurations
 
+```
 # ============================================
 # BUILDER PATTERN - AGENT CONFIGURATION
 # ============================================
@@ -1032,14 +942,15 @@ coding_agent = (AgentPromptBuilder()
 print(coding_agent)
 ```
 
+---
+
 ### 4. Prototype Pattern
 
-**Purpose:** Create objects by cloning an existing object rather than creating from scratch.
+**Purpose:**  Create objects by cloning an existing object rather than creating from scratch.
 
-**Agentic Use Case:** Clone agent configurations for variants
+**Agentic Use Case:**  Clone agent configurations for variants
 
-``` python
-
+```
 # ============================================
 # PROTOTYPE PATTERN - AGENT CLONING
 # ============================================
@@ -1092,14 +1003,15 @@ print(f"Base agent tools: {base_agent.tools}")
 print(f"Research agent tools: {research_agent.tools}")
 ```
 
+---
+
 ### 5. Singleton Pattern
 
-**Purpose:** Ensure only one instance of a class exists globally.
+**Purpose:**  Ensure only one instance of a class exists globally.
 
-**Agentic Use Case:** Global agent configuration manager, event bus
+**Agentic Use Case:**  Global agent configuration manager, event bus
 
-``` python
-
+```
 # ============================================
 # SINGLETON PATTERN - GLOBAL RESOURCES
 # ============================================
@@ -1183,16 +1095,17 @@ bus2 = EventBus()
 print(f"Same bus: {bus1 is bus2}")  # True
 ```
 
+---
+
 ### STRUCTURAL PATTERNS
 
-### 6. Adapter Pattern
+### 6. Adapter Pattern
 
-**Purpose:** Convert interface of a class to another clients expect.
+**Purpose:**  Convert interface of a class to another clients expect.
 
-**Agentic Use Case:** Adapt different LLM APIs to common interface (already covered, showing extended)
+**Agentic Use Case:**  Adapt different LLM APIs to common interface (already covered, showing extended)
 
-``` python
-
+```
 # ============================================
 # ADAPTER PATTERN - LLM API ADAPTATION
 # ============================================
@@ -1267,14 +1180,15 @@ agent3 = UniversalAgent(ollama_adapted)
 print(agent3.process("What is AI?"))
 ```
 
-### 7. Bridge Pattern
+---
 
-**Purpose:** Decouple abstraction from implementation so they can vary independently.
+### 7. Bridge Pattern
 
-**Agentic Use Case:** Decouple agent behavior from execution platform
+**Purpose:**  Decouple abstraction from implementation so they can vary independently.
 
-``` python
+**Agentic Use Case:**  Decouple agent behavior from execution platform
 
+```
 # ============================================
 # BRIDGE PATTERN - ABSTRACTION & IMPLEMENTATION
 # ============================================
@@ -1345,14 +1259,15 @@ api_agent_cloud = APIIntegrationAgent(CloudExecution())
 print(api_agent_cloud.perform_task())
 ```
 
+---
+
 ### 8. Composite Pattern
 
-**Purpose:** Compose objects into tree structures to represent hierarchies.
+**Purpose:**  Compose objects into tree structures to represent hierarchies.
 
-**Agentic Use Case:** Composite tasks and sub-tasks
+**Agentic Use Case:**  Composite tasks and sub-tasks
 
-``` python
-
+```
 # ============================================
 # COMPOSITE PATTERN - HIERARCHICAL TASKS
 # ============================================
@@ -1428,14 +1343,15 @@ print(research_project.execute())
 print(f"\nTotal duration: {research_project.get_duration()} hours")
 ```
 
+---
+
 ### 9. Decorator Pattern
 
-**Purpose:** Attach additional responsibilities to an object dynamically.
+**Purpose:**  Attach additional responsibilities to an object dynamically.
 
-**Agentic Use Case:** Add features to agent responses (validation, logging, caching, etc.)
+**Agentic Use Case:**  Add features to agent responses (validation, logging, caching, etc.)
 
-``` python
-
+```
 # ============================================
 # DECORATOR PATTERN - AGENT RESPONSE ENHANCEMENT
 # ============================================
@@ -1489,7 +1405,21 @@ class ValidationDecorator(ResponseHandler):
         self.handler = handler
     
     def handle(self, prompt: str) -> str:
-        if not prompt or len(prompt)  str:
+        if not prompt or len(prompt) < 3:
+            raise ValueError("Prompt too short")
+        
+        response = self.handler.handle(prompt)
+        
+        if not response:
+            raise ValueError("Empty response")
+        
+        return response
+
+class TimingDecorator(ResponseHandler):
+    def __init__(self, handler: ResponseHandler):
+        self.handler = handler
+    
+    def handle(self, prompt: str) -> str:
         start = time.time()
         response = self.handler.handle(prompt)
         duration = time.time() - start
@@ -1529,14 +1459,15 @@ print("\n---\n")
 print(handler.handle("delete everything"))  # Blocked by safety
 ```
 
-### 10. Facade Pattern
+---
 
-**Purpose:** Provide unified interface to complex subsystems.
+### 10. Facade Pattern
 
-**Agentic Use Case:** Simple interface for complex agent operations
+**Purpose:**  Provide unified interface to complex subsystems.
 
-``` python
+**Agentic Use Case:**  Simple interface for complex agent operations
 
+```
 # ============================================
 # FACADE PATTERN - SIMPLIFIED AGENT INTERFACE
 # ============================================
@@ -1635,14 +1566,15 @@ result = agent.process_query("What is AI?")  # Uses cache
 print(f"Result: {result}")
 ```
 
+---
+
 ### 11. Flyweight Pattern
 
-**Purpose:** Share common state between multiple objects to reduce memory.
+**Purpose:**  Share common state between multiple objects to reduce memory.
 
-**Agentic Use Case:** Shared LLM instances across agents
+**Agentic Use Case:**  Shared LLM instances across agents
 
-``` python
-
+```
 # ============================================
 # FLYWEIGHT PATTERN - SHARED RESOURCES
 # ============================================
@@ -1703,14 +1635,15 @@ print(agent2.process("Write Python code"))
 print(agent3.process("Create a story"))
 ```
 
-### 12. Proxy Pattern
+---
 
-**Purpose:** Control access to another object.
+### 12. Proxy Pattern
 
-**Agentic Use Case:** Control access to expensive LLM calls
+**Purpose:**  Control access to another object.
 
-``` python
+**Agentic Use Case:**  Control access to expensive LLM calls
 
+```
 # ============================================
 # PROXY PATTERN - CONTROLLED ACCESS
 # ============================================
@@ -1791,16 +1724,17 @@ for i in range(5):
     print(proxy.generate(f"Query {i}"))
 ```
 
+---
+
 ### BEHAVIORAL PATTERNS
 
 ### 13. Chain of Responsibility Pattern
 
-**Purpose:** Pass request along a chain of handlers.
+**Purpose:**  Pass request along a chain of handlers.
 
-**Agentic Use Case:** Agent handling escalation chain
+**Agentic Use Case:**  Agent handling escalation chain
 
-``` python
-
+```
 # ============================================
 # CHAIN OF RESPONSIBILITY - HANDLER CHAIN
 # ============================================
@@ -1905,14 +1839,15 @@ for query in queries:
     print(f"Response: {response}\n")
 ```
 
-### 14. Command Pattern
+---
 
-**Purpose:** Encapsulate requests as objects.
+### 14. Command Pattern
 
-**Agentic Use Case:** Undo/Redo operations, task queuing
+**Purpose:**  Encapsulate requests as objects.
 
-``` python
+**Agentic Use Case:**  Undo/Redo operations, task queuing
 
+```
 # ============================================
 # COMMAND PATTERN - ENCAPSULATED REQUESTS
 # ============================================
@@ -2027,14 +1962,15 @@ queue.undo()
 print(f"\nAfter undo, memory: {agent.memory}")
 ```
 
-### 15. Iterator Pattern
+---
 
-**Purpose:** Access elements sequentially without exposing structure.
+### 15. Iterator Pattern
 
-**Agentic Use Case:** Iterate through conversation history, knowledge base
+**Purpose:**  Access elements sequentially without exposing structure.
 
-``` python
+**Agentic Use Case:**  Iterate through conversation history, knowledge base
 
+```
 # ============================================
 # ITERATOR PATTERN - SEQUENTIAL ACCESS
 # ============================================
@@ -2075,7 +2011,18 @@ class ConversationIterator(Iterator):
         self.index = 0
     
     def __next__(self) -> Message:
-        if self.index  Message:
+        if self.index < len(self.messages):
+            message = self.messages[self.index]
+            self.index += 1
+            return message
+        raise StopIteration
+
+class ReverseConversationIterator(Iterator):
+    def __init__(self, messages: List[Message]):
+        self.messages = messages
+        self.index = len(messages) - 1
+    
+    def __next__(self) -> Message:
         if self.index >= 0:
             message = self.messages[self.index]
             self.index -= 1
@@ -2111,14 +2058,15 @@ for message in history.filter_by_role("user"):
     print(f"  {message}")
 ```
 
-### 16. Mediator Pattern
+---
 
-**Purpose:** Define object that encapsulates how objects interact.
+### 16. Mediator Pattern
 
-**Agentic Use Case:** Multiple agents coordinating through mediator
+**Purpose:**  Define object that encapsulates how objects interact.
 
-``` python
+**Agentic Use Case:**  Multiple agents coordinating through mediator
 
+```
 # ============================================
 # MEDIATOR PATTERN - AGENT COORDINATION
 # ============================================
@@ -2202,14 +2150,15 @@ for log in mediator.message_log:
     print(f"  {log['from']} -> {log['to']}: {log['message'][:40]}...")
 ```
 
-### 17. Memento Pattern
+---
 
-**Purpose:** Capture and externalize object state without breaking encapsulation.
+### 17. Memento Pattern
 
-**Agentic Use Case:** Save and restore agent state
+**Purpose:**  Capture and externalize object state without breaking encapsulation.
 
-``` python
+**Agentic Use Case:**  Save and restore agent state
 
+```
 # ============================================
 # MEMENTO PATTERN - STATE SNAPSHOTS
 # ============================================
@@ -2327,16 +2276,17 @@ print("\nAll snapshots:")
 caretaker.list_snapshots()
 ```
 
-### 18. Observer Pattern
+---
 
-(Already covered in previous article — extended example)
+### 18. Observer Pattern
 
-**Purpose:** Define one-to-many dependency between objects.
+(Already covered in previous article — extended example)
 
-**Agentic Use Case:** Event-driven agent system
+**Purpose:**  Define one-to-many dependency between objects.
 
-``` python
+**Agentic Use Case:**  Event-driven agent system
 
+```
 # ============================================
 # OBSERVER PATTERN - EVENT SYSTEM (EXTENDED)
 # ============================================
@@ -2435,14 +2385,15 @@ print()
 metrics.show_metrics()
 ```
 
-### 19. State Pattern
+---
 
-(Already covered in previous article — extended example)
+### 19. State Pattern
 
-**Purpose:** Allow object to alter behavior when state changes.
+(Already covered in previous article — extended example)
 
-``` python
+**Purpose:**  Allow object to alter behavior when state changes.
 
+```
 # ============================================
 # STATE PATTERN - AGENT WORKFLOW (EXTENDED)
 # ============================================
@@ -2560,14 +2511,15 @@ result = agent.process("quit")
 print(f"Result: {result}\n")
 ```
 
-### 20. Strategy Pattern
+---
 
-(Already covered — showing extended with multiple variations)
+### 20. Strategy Pattern
 
-**Purpose:** Define family of algorithms and make them interchangeable.
+(Already covered — showing extended with multiple variations)
 
-``` python
+**Purpose:**  Define family of algorithms and make them interchangeable.
 
+```
 # ============================================
 # STRATEGY PATTERN - RESPONSE STRATEGIES
 # ============================================
@@ -2621,14 +2573,15 @@ for name, strategy in strategies:
     print()
 ```
 
-### 21. Template Method Pattern
+---
 
-**Purpose:** Define skeleton of algorithm, let subclasses override steps.
+### 21. Template Method Pattern
 
-**Agentic Use Case:** Common agent workflow with customizable steps
+**Purpose:**  Define skeleton of algorithm, let subclasses override steps.
 
-``` python
+**Agentic Use Case:**  Common agent workflow with customizable steps
 
+```
 # ============================================
 # TEMPLATE METHOD PATTERN - AGENT WORKFLOW
 # ============================================
@@ -2737,14 +2690,15 @@ for agent in agents:
     print()
 ```
 
-### 22. Visitor Pattern
+---
 
-**Purpose:** Represent operation to perform on elements of structure without changing structure.
+### 22. Visitor Pattern
 
-**Agentic Use Case:** Analyze or transform conversation history
+**Purpose:**  Represent operation to perform on elements of structure without changing structure.
 
-``` python
+**Agentic Use Case:**  Analyze or transform conversation history
 
+```
 # ============================================
 # VISITOR PATTERN - ANALYZE CONVERSATIONS
 # ============================================
@@ -2852,14 +2806,15 @@ conversation.accept(TopicExtractor())
 conversation.accept(StatisticsCollector())
 ```
 
+---
+
 ### 23. Interpreter Pattern (Bonus Behavioral)
 
-**Purpose:** Define grammar and interpreter for language.
+**Purpose:**  Define grammar and interpreter for language.
 
-**Agentic Use Case:** Parse and execute agent commands
+**Agentic Use Case:**  Parse and execute agent commands
 
-``` python
-
+```
 # ============================================
 # INTERPRETER PATTERN - COMMAND LANGUAGE
 # ============================================
@@ -2960,16 +2915,17 @@ for cmd in commands:
     print(f"  Result: {result}\n")
 ```
 
+---
+
 ### PATTERN COMPARISON CHART
 
-![](/posts/images/design-patterns-agentic-python-fig1.png)
+---
 
-### When to Use Each Pattern
+### When to Use Each Pattern
 
-### Quick Decision Tree
+### Quick Decision Tree
 
-``` python
-
+```
 Need to CREATE objects?
 ├─ How many variations? 
 │  ├─ One method per type → Factory Method
@@ -2979,8 +2935,7 @@ Need to CREATE objects?
 │  └─ Single global instance → Singleton
 ```
 
-``` python
-
+```
 Need to COMPOSE objects?
 ├─ Different interfaces?
 │  ├─ Adapt incompatible interfaces → Adapter
@@ -2992,8 +2947,7 @@ Need to COMPOSE objects?
 │  └─ Control access → Proxy
 ```
 
-``` python
-
+```
 Need to DEFINE algorithms/interactions?
 ├─ Objects communicate?
 │  ├─ Pass along chain → Chain of Responsibility
@@ -3008,30 +2962,18 @@ Need to DEFINE algorithms/interactions?
 │  └─ Perform on elements → Visitor
 ```
 
+---
+
 ### Conclusion
 
-You now have practical examples of **all 23 Gang of Four design patterns** applied to agentic Python applications. Key takeaways:
+You now have practical examples of **all 23 Gang of Four design patterns**  applied to agentic Python applications. Key takeaways:
 
-1.  **Creational patterns** handle flexible object creation
-2.  **Structural patterns** organize complex object relationships
-3.  **Behavioral patterns** manage object communication and responsibilities
+**Creational patterns**  handle flexible object creation**Structural patterns**  organize complex object relationships**Behavioral patterns**  manage object communication and responsibilities
 
-Start with the most relevant patterns for your use case and build from there. Overusing patterns creates complexity; using them judiciously creates elegant systems.
+Start with the most relevant patterns for your use case and build from there. Overusing patterns creates complexity; using them judiciously creates elegant systems.
 
 Happy designing! 🎨
 
-*Share your favorite pattern combination in the comments below.*
+---
 
-#DesignPatterns #SoftwareArchitecture #Python #AI #BackendDevelopment #SoftwareEngineering #ArtificialIntelligence
-#AgenticAI
-#LLM
-#CodingTips
-#DeveloperCommunity
-#TechBlog
-#Programming #TechLeadership
-#EngineeringBestPractices
-#CareerGrowth
-#LearningToCode
-#TechCommunity
-
-![](https://medium.com/_/stat?event=post.clientViewed&amp;referrerSource=full_rss&amp;postId=ef207898f685)
+*Share your favorite pattern combination in the comments below.*

@@ -1,0 +1,55 @@
+---
+title: "Introducing Project Nessie: revolutionizing data lake management"
+date: 2024-05-11
+excerpt: "Git-like versioning, branching, and merging for your data lake - what Project Nessie changes about how we think about lakehouse governance."
+tags: [nessie, lakehouse, data-engineering]
+cover: /posts/images/project-nessie-data-lake/cover-01.jpg
+source: linkedin
+sourceUrl: https://www.linkedin.com/pulse/introducing-project-nessie-revolutionizing-data-lake-lalit-moharana-jq88c
+---
+
+*Published May 11, 2024*
+
+![Cover](/posts/images/project-nessie-data-lake/cover-01.jpg)
+
+Project Nessie is an open-source service and library that aims to revolutionize data management in Data Lakes by incorporating Git-like version control features for tables. It enables users to maintain multiple versions of their data and leverage branches, tags, and commits, similar to how Git manages source code repositories.
+
+### 🤔 Why Project Nessie Matters
+
+Project Nessie addresses several key challenges in data lake management:
+
+**Consistent data views across all tables** **Independent and isolated data changes** **Automated data file tracking and maintenance** **Simplified data lake usage across different environments**
+
+By incorporating these features, Nessie streamlines data management tasks and enhances collaboration among data teams.
+
+### 🏗️ Architecture of Project Nessie
+
+Nessie is built on Java and Quarkus for scalability and performance. It utilizes a pluggable storage backend that supports various databases, including Amazon's DynamoDB, Google BigTable, Apache Cassandra, ScyllaDB, PostgreSQL (including Cockroach), and local storage using RocksDB. The architecture features a lightweight REST API server that enables atomic transactions, ensuring data consistency and integrity[.](https://projectnessie.org/guides/)
+
+### 🌟 Advantages of Project Nessie
+
+**Branching, tagging, and merging of data changes** **Multi-table transactions and access control rules** **Cloud-managed catalog through services like Dremio Arctic** **Compatibility with compute engines that support the Nessie catalog, such as Dremio, Spark, Flink, Presto, and Trino**
+
+These features empower data teams to collaborate more effectively, maintain data provenance, and ensure data quality throughout the data lake lifecycle.
+
+### 🔍 Comparison with Traditional Catalogs
+
+While traditional catalogs like Hive focus on making tables discoverable, Project Nessie goes beyond that by enabling "Data-as-Code" patterns similar to those used in software development. Nessie maintains a commit history of the entire catalog, allowing users to branch, tag, merge, and roll back changes, similar to Git. This approach offers several advantages over traditional catalogs:
+
+**Isolation of ETL processes on separate branches** **Executing queries on multiple tables simultaneously** **Rolling back the entire catalog to a previous state** **Establishing access control rules that travel with the catalog, not the engine**
+
+### 🤖 Disadvantages and Limitations
+
+While Project Nessie offers many benefits, it also has some limitations:
+
+**Currently lacks the ability to squash commits** **Limited support for certain features compared to traditional catalogs**
+
+As an open-source project, Nessie is actively developed, and these limitations may be addressed in future releases.
+
+### 🌐 Getting Started with Project Nessie
+
+Project Nessie is developed as a consensus-driven open-source project under the Apache 2.0 license. To get started, you can join the project's Zulip Chat, subscribe to the Google Groups mailing list, or contribute to the project via GitHub issues and pull requests[.](https://projectnessie.org/community/)
+
+### 🚀 Conclusion
+
+Project Nessie stands out as a game-changer in the realm of data lake management, providing advanced version control capabilities akin to Git for data tables. Its architecture, features, and benefits make it a valuable asset for data engineers and architects seeking efficient and reliable data management solutions. By incorporating Git-like workflows and cross-table transactions, Nessie empowers data teams to collaborate more effectively, maintain data provenance, and ensure data quality throughout the data lake lifecycle. As the project continues to evolve, we can expect to see even more exciting developments in the world of data lake management.

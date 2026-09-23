@@ -1,0 +1,139 @@
+---
+title: "Streamlining Machine Learning Operations: a guide to MLOps processes"
+date: 2023-05-12
+excerpt: "A pragmatic guide to the MLOps lifecycle - versioning, CI/CD for models, monitoring drift, and rolling back safely."
+tags: [mlops, ml, ci-cd]
+cover: /posts/images/mlops-processes-guide/cover-01.png
+source: linkedin
+sourceUrl: https://www.linkedin.com/pulse/streamlining-machine-learning-operations-guide-mlops-lalit-moharana
+---
+
+*Published May 12, 2023*
+
+![Cover](/posts/images/mlops-processes-guide/cover-01.png)
+
+## Streamlining Machine Learning Operations: A Guide to MLOps Processes
+
+MLOps stands for **Machine Learning Operations.**  MLOps is a core function of Machine Learning engineering, focused on streamlining the process of taking machine learning models to production and then maintaining and monitoring them.
+
+**MLOps:- ML system development + ML system operation (Ops)**
+
+MLOps are used for automation and monitoring at all steps of ML system construction, including integration, testing, releasing, deployment, and infrastructure management.
+
+Building an integrated ML system and continuously operate it in production.
+
+![No alt text provided for this image](/posts/images/mlops-processes-guide/img-02.png)
+
+*Elements for ML systems*
+
+**Figure 1.**  Elements for ML systems
+
+**MLOps vs DevOps**
+
+ML systems differ from other software systems in the following ways:
+
+Team skills: -data scientists or ML researchers.Development: ML is experimental in nature.Testing: data validation, trained model quality evaluation, and model validation.Deployment: Deploy a multi-step pipeline to automatically retrain and deploy model.Production: As the data is constantly changing, the performance may be degraded. so we need to track summary statistics of our data and monitor the online performance of your model to send notifications or roll back when values deviate from your expectations.
+
+**Continuous Integration** -merging all working copies to a shared mainline several times a day that triggers automated build with testing.-testing and validating data, data schemas, and models.
+
+**Continuous Delivery** -produce software in short cycles, allowing for more incremental updates without doing so manually system (an ML training pipeline) that should automatically deploy another service (model prediction service).
+
+**Continuous training** -automatically retraining and serving the models.
+
+## Data science steps for ML(manually or automatic pipeline.)
+
+Data extractionData analysis-(EDA-analysing dataset using statistical graphs and visualization)Data preparation-data cleaning, split the data into training, validation, and test sets.Model training-training+hyperparameter tuningModel evaluation-model is evaluated on data in the test data set which is never been used in trainingModel validation-adequate for deploymentModel serving:-(Types of model serving)
+
+Microservices with a REST API to serve online predictions.An embedded model to an edge or mobile device.Part of a batch prediction system.
+
+8. Model monitoring-model predictive performance is monitored to potentially invoke a new iteration in the ML process.
+
+## MLOps level 0: Manual process
+
+-Basic level
+
+In level 0, you deploy a trained model as a prediction service to production.
+
+![No alt text provided for this image](/posts/images/mlops-processes-guide/img-03.png)
+
+*Manual ML steps to serve the model as a prediction service.*
+
+**Figure 2** . Manual ML steps to serve the model as a prediction service.
+
+**Characteristics-**
+
+A manual, script-driven, and interactive process-Every step manual, including data analysis, data preparation, model training, and validation. It requires manual execution of each step and manual transition from one step to another.Disconnection between ML and operations- training model and deployment on API infrastructure are two different tasks done by data scientists and data engineers.Infrequent release iterations-(don’t change frequently)A new model version is deployed only a couple of times per year.No CI: Because few implementation changes are assumed, CI is ignored.No CD: Because there aren’t frequent model version deployments, CD isn’t considered.Deployment refers to the prediction service: The process is concerned only with deploying the trained model as a prediction service (for example, a microservice with a REST API), rather than deploying the entire ML system.Lack of active performance monitoring: The process needs to track the model predictions and actions, in order to detect model performance degradation and other model behavioral drifts.
+
+Before the model is promoted to serve all the prediction request traffic production deployment of a new version of an ML model usually goes through A/B testing or online experiments.
+
+**CHALLENGES**
+
+This level is sufficient when models are rarely changed but often break when deployed to the real world. The models fail to adapt to changes in the dynamics of the environment, to maintain the accuracy of the model we need-
+
+Actively monitor the quality of your model in production-(manually)
+
+2. Frequently retrain your production models-retrain with recent data
+
+3. Continuously experiment with new implementations to produce the model-To control or make use of the latest ideas and advances in technology, try out new implementations.
+
+To address these challenges of manual processes, CI/CD and CT are helpful.
+
+## MLOps level 1: ML pipeline automation
+
+Goal-to perform continuous training of the model by automating the ML pipeline, continuously delivery of model prediction service, and introducing automated data and model validation steps to the pipeline.
+
+![No alt text provided for this image](/posts/images/mlops-processes-guide/img-04.png)
+
+*ML pipeline automation for CT.*
+
+**Figure 3** . ML pipeline automation for CT.
+
+**Characteristics** -
+
+Rapid experiment-(automated)CT of the model in production-automatically trained in production using fresh dataExperimental-operational symmetry-The pipeline implementation is a key aspect of MLOps practice for unifying DevOps.Modularized code for components and pipelines-To construct ML pipelines, components need to be reusable, composable, and potentially shareable across ML pipelines.
+
+Decouple the execution environment from the custom code runtime.Make code reproducible between development and production environments.Isolate each component in the pipeline. Components can have their own version of the runtime environment and have different languages and libraries.
+
+5. Continuous delivery of models: An ML pipeline in production continuously delivers prediction services to new models that are trained on new data.
+
+6. Pipeline deployment: In level 1, you deploy a whole training pipeline, which automatically and recurrently runs to serve the trained model as the prediction service.
+
+**ADDITIONAL COMPONENTS-**
+
+Data and model validation-This step is required before model training to decide whether we should retrain the model or stop execution. This decision is made by-Data schema skews- Downstream pipeline steps, including data processing and model training, receive data that doesn’t comply with the expected schema. Schema skews include receiving unexpected features, not receiving all the expected features, or receiving features with unexpected values.Data values skews-These skews are significant changes in the statistical properties of data, which means that data patterns are changing, and you need to trigger retraining of the model to capture these changes.Feature score-We evaluates and validate the model before it’s promoted to production. A feature store is a centralized repository where you standardize the definition, storage, and access of features for training and serving.
+
+-Metadata management-Information about each execution of the ML pipeline is recorded in order to help with data and artifacts lineage, reproducibility, and comparisons. It also helps you debug errors and anomalies. Each time you execute the pipeline, the ML metadata store records the following metadata:
+
+-ML pipeline Triggers-We can automate the ML production pipelines to retrain the models with new data, depending
+
+On-demandOn a scheduleOn the availability of new training dataOn-model performance degradationOn significant changes in the data distributions
+
+**Challenges**
+
+try new ML ideas and rapidly deploy new implementations of the ML componentsA CI/CD setup is needed to automate the build, test, and deployment of ML pipelines.
+
+## MLOps level 2: CI/CD pipeline automation
+
+![No alt text provided for this image](/posts/images/mlops-processes-guide/img-05.png)
+
+*CI/CD and automated ML pipeline.*
+
+**Figure 4** . CI/CD and automated ML pipeline.
+
+This MLOps setup includes the following components:
+
+Source controlTest and build servicesDeployment servicesModel registryFeature storeML metadata storeML pipeline orchestrator
+
+**Stages of CI/CD automated ML pipelines**
+
+![No alt text provided for this image](/posts/images/mlops-processes-guide/img-06.png)
+
+*Stages of the CI/CD automated ML pipeline*
+
+**Figure 5** . Stages of the CI/CD automated ML pipeline.
+
+Development and experimentation: try out new ML algorithms and new modeling where the experiment steps are orchestrated. Output is a source code and then pushed to a source repository.Pipeline continuous integration: outputs of this stage are pipeline components (packages, executables, and artifacts)Pipeline continuous delivery: The output of this stage is a deployed pipeline with the new implementation of the model.Automated triggering: The pipeline is automatically executed and the output of this stage is a trained model that is pushed to the model registry.Model continuous delivery: serve the trained model as a prediction service for the predictions. The output of this stage is a deployed model prediction service.Monitoring: collect statistics on the model performance based on live data. The output of this stage is a trigger to execute the pipeline or to execute a new experiment cycle.
+
+Reference - https://cloud.google.com/architecture/mlops-continuous-delivery-and-automation-pipelines-in-machine-learning
+
+[hashtag#mlops](https://www.linkedin.com/search/results/all/?keywords=%23mlops&origin=HASH_TAG_FROM_FEED) [hashtag#ml](https://www.linkedin.com/search/results/all/?keywords=%23ml&origin=HASH_TAG_FROM_FEED) [hashtag#pipeline](https://www.linkedin.com/search/results/all/?keywords=%23pipeline&origin=HASH_TAG_FROM_FEED) [hashtag#flow](https://www.linkedin.com/search/results/all/?keywords=%23flow&origin=HASH_TAG_FROM_FEED) [hashtag#architecture](https://www.linkedin.com/search/results/all/?keywords=%23architecture&origin=HASH_TAG_FROM_FEED) [hashtag#design](https://www.linkedin.com/search/results/all/?keywords=%23design&origin=HASH_TAG_FROM_FEED) [hashtag#databasemanagement](https://www.linkedin.com/search/results/all/?keywords=%23databasemanagement&origin=HASH_TAG_FROM_FEED) [hashtag#data](https://www.linkedin.com/search/results/all/?keywords=%23data&origin=HASH_TAG_FROM_FEED) [hashtag#database](https://www.linkedin.com/search/results/all/?keywords=%23database&origin=HASH_TAG_FROM_FEED) [hashtag#machinelearning](https://www.linkedin.com/search/results/all/?keywords=%23machinelearning&origin=HASH_TAG_FROM_FEED) [hashtag#deeplearning](https://www.linkedin.com/search/results/all/?keywords=%23deeplearning&origin=HASH_TAG_FROM_FEED) [hashtag#ai](https://www.linkedin.com/search/results/all/?keywords=%23ai&origin=HASH_TAG_FROM_FEED) [hashtag#artificialintelligence](https://www.linkedin.com/search/results/all/?keywords=%23artificialintelligence&origin=HASH_TAG_FROM_FEED)

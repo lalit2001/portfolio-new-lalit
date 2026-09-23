@@ -1,0 +1,103 @@
+---
+title: "DuckDB Unleashed: distributed data processing with SmallPond"
+date: 2025-03-03
+excerpt: "How SmallPond turns embedded DuckDB into a distributed compute engine - and where that pattern is going next."
+tags: [duckdb, smallpond, olap]
+cover: /posts/images/duckdb-smallpond-distributed/cover-01.png
+source: linkedin
+sourceUrl: https://www.linkedin.com/pulse/duckdb-unleashed-powering-distributed-data-processing-lalit-moharana-4kjuc
+---
+
+*Published March 3, 2025*
+
+![Cover](/posts/images/duckdb-smallpond-distributed/cover-01.png)
+
+### Overview
+
+SmallPond appears to be a promising tool for handling large-scale data, particularly for AI applications. It’s built to be efficient and scalable, using technologies like DuckDB for fast data processing and 3FS for distributed storage. This makes it suitable for tasks like AI model training, where large datasets are common. However, as a relatively new framework, it may require users to adapt to its specific ecosystem, and community resources might be less developed compared to more established options.
+
+### Components and Functionality
+
+The framework likely includes DuckDB as its compute engine, known for high performance in analytical tasks, and 3FS, a distributed file system optimized for AI workloads. It also offers a Python API for easy data loading, processing with SQL queries, and saving results, making it accessible for developers familiar with Python.
+
+### Advantages and Disadvantages
+
+Research suggests SmallPond offers strong performance, scalability for petabyte-scale data, and is lightweight, reducing deployment complexity. However, it may depend on specific technologies, potentially limiting compatibility, and its newness could mean fewer community resources compared to alternatives like Apache Spark.
+
+---
+
+### Survey Note: Detailed Analysis of DeepSeek-AI's SmallPond Framework
+
+In the rapidly evolving field of artificial intelligence and big data processing, DeepSeek-AI has introduced SmallPond, a lightweight distributed data processing framework that has garnered attention for its potential to handle large-scale datasets efficiently. Launched as part of DeepSeek-AI's open-source initiative on February 28, 2025, during their #OpenSourceWeek, SmallPond is designed to address the needs of AI training and inference workloads, leveraging DuckDB and 3FS. This survey note provides a comprehensive exploration of SmallPond, covering its overview, inner components, functionality, advantages, and disadvantages, based on available documentation and analyses.
+
+### Overview of SmallPond
+
+SmallPond is described as a lightweight, distributed data processing framework, built on DuckDB, an in-process SQL database known for its high performance in analytical workloads, and 3FS, a high-performance distributed file system optimized for AI tasks. It is designed to handle petabyte-scale data without memory bottlenecks, making it particularly suitable for AI and big data applications. The framework was open-sourced recently, with its GitHub repository ([A lightweight data processing framework built on DuckDB and 3FS](https://github.com/deepseek-ai/smallpond)) providing code examples and benchmarks, such as sorting 110.5 TiB of data in 30 minutes and 14 seconds, achieving an average throughput of 3.66 TiB/min in the GraySort benchmark.
+
+Its integration with 3FS, also open-sourced by DeepSeek-AI, enhances its capability for distributed storage, with 3FS offering features like high aggregate read throughput (up to 6.6 TiB/s in a 180-node cluster) and optimization for random read speeds, crucial for AI model training ([DeepSeek Open-Sources 3FS and Smallpond to Redefine AI Infrastructure](https://www.ctol.digital/news/deepseek-open-sources-3fs-smallpond-ai-infrastructure/)). This makes SmallPond a compelling choice for organizations dealing with large datasets, especially in AI contexts.
+
+### Inner Components
+
+The architecture of SmallPond comprises several key components, each contributing to its distributed processing capabilities:
+
+**DuckDB** : Serving as the compute engine, DuckDB is an in-process analytical database that runs within the application's process, known for its speed and efficiency. In SmallPond, each compute node runs a separate DuckDB instance, processing partitioned data in parallel, extending DuckDB's single-node capabilities to distributed environments ([smallpond — smallpond documentation](https://deepseek-ai.github.io/smallpond/)).**3FS (Fire-Flyer File System)** : This is a high-performance distributed file system designed specifically for AI training and inference workloads. It leverages modern SSDs and RDMA networks, prioritizing random read speeds and offering strong consistency, as detailed in its GitHub repository ([A high-performance distributed file system designed to address the challenges of AI training and inference workloads](https://github.com/deepseek-ai/3FS)). It acts as the storage layer, storing data in Parquet format for efficient access.**Python API** : SmallPond provides a user-friendly Python interface for initializing sessions, loading data, processing it with SQL queries, and saving results. For example, the documentation shows how to initialize a session with sp = smallpond.init(), load data with sp.read_parquet("prices.parquet"), and process it using methods like repartition and partial_sql for SQL queries ([smallpond/README.md at main · deepseek-ai/smallpond](https://github.com/deepseek-ai/smallpond/blob/main/README.md)).
+
+This component-based approach ensures that SmallPond can leverage the strengths of each technology, providing a cohesive framework for distributed data processing.
+
+### How It Works
+
+SmallPond operates in a distributed computing environment, typically requiring a cluster setup. It uses Ray Core for task distribution, where each task runs a separate DuckDB instance on a partition of the data, enabling parallel execution. The workflow can be broken down as follows:
+
+**Data Storage** : Data is stored in Parquet format on 3FS, which can handle petabyte-scale datasets across multiple storage nodes. This distributed file system ensures efficient data access, particularly for AI workloads requiring random reads.**Data Processing** : Compute nodes, each running SmallPond, process data in parallel. SmallPond supports multiple partitioning strategies, such as hash, even, and random shuffle, to distribute data across nodes. For instance, the repartition(3, hash_by="ticker") method partitions data based on the "ticker" column, as seen in example code ([DuckDB goes distributed? DeepSeek’s smallpond takes on Big Data](https://mehdio.substack.com/p/duckdb-goes-distributed-deepseeks)).**SQL-based Processing** : Users can execute SQL queries on the distributed data using the partial_sql method, which distributes the query execution across nodes, leveraging DuckDB's performance for analytical tasks.**Task Coordination** : SmallPond uses a DAG-based execution model with lazy evaluation, meaning computations are only performed when necessary, enhancing efficiency. It requires managing a Ray cluster, which can be set up on platforms like AWS, GCP, or Kubernetes, or through managed services like Anyscale ([DuckDB goes distributed? DeepSeek’s smallpond takes on Big Data](https://mehdio.substack.com/p/duckdb-goes-distributed-deepseeks)).
+
+This distributed approach allows SmallPond to handle large datasets efficiently, with benchmarks like the GraySort test demonstrating its capability to sort 110.5 TiB of data in under 31 minutes, highlighting its performance for big data tasks.
+
+### Advantages
+
+SmallPond offers several advantages that make it appealing for data processing, particularly in AI contexts:
+
+**High Performance** : By leveraging DuckDB, SmallPond delivers native-level performance for analytical workloads, as evidenced by its GraySort benchmark results, achieving 3.66 TiB/min throughput ([GitHub - deepseek-ai/smallpond: A lightweight data processing framework built on DuckDB and 3FS](https://github.com/deepseek-ai/smallpond)).**Scalability** : It can handle petabyte-scale data without memory bottlenecks, thanks to 3FS's distributed storage capabilities, making it suitable for large-scale AI training and inference ([smallpond — smallpond documentation](https://deepseek-ai.github.io/smallpond/)).**Lightweight and Easy to Deploy** : Unlike some big data frameworks that require complex, long-running services, SmallPond is designed to be lightweight, with no need for extensive infrastructure, simplifying deployment and maintenance ([DeepSeek Open-Sources 3FS and Smallpond to Redefine AI Infrastructure](https://www.ctol.digital/news/deepseek-open-sources-3fs-smallpond-ai-infrastructure/)).**Cost-effectiveness** : As an open-source framework, it reduces operational costs, especially when compared to proprietary solutions, and its efficient use of resources can lower computing expenses ([DeepSeek #OpenSourceWeek Day 5: Launch of 3FS and Smallpond Framework](https://www.analyticsvidhya.com/blog/2025/02/deepseek-3fs-and-smallpond-framework/)).
+
+These advantages position SmallPond as a competitive option for organizations looking to optimize their data processing workflows, particularly for AI-driven tasks.
+
+### Disadvantages
+
+Despite its strengths, SmallPond has some potential drawbacks that users should consider:
+
+**Dependency on Specific Technologies** : SmallPond relies on DuckDB and 3FS, which may limit compatibility with existing systems not supporting these technologies. For instance, 3FS requires self-deployment and is optimized for AI workloads, potentially restricting its use in other domains ([DuckDB goes distributed? DeepSeek’s smallpond takes on Big Data](https://mehdio.substack.com/p/duckdb-goes-distributed-deepseeks)).**Learning Curve** : Users need familiarity with DuckDB and SQL for data processing, which could pose a barrier for those accustomed to other frameworks like Apache Spark. Additionally, managing a Ray cluster for distribution adds another layer of complexity ([Definite: Understanding smallpond and 3FS: A Clear Guide](https://www.definite.app/blog/smallpond)).**Limited Community Support** : As a relatively new framework, launched in February 2025, SmallPond may have limited community resources and third-party tools compared to more established frameworks like Spark or Flink, potentially affecting adoption and support ([DeepSeek Open-Sources 3FS and Smallpond to Redefine AI Infrastructure](https://www.ctol.digital/news/deepseek-open-sources-3fs-smallpond-ai-infrastructure/)).
+
+These disadvantages suggest that while SmallPond is promising, it may require additional effort to integrate and may not yet have the maturity of longer-standing alternatives.
+
+### Comparative Context
+
+While direct comparisons with Apache Spark are limited due to SmallPond's newness, it can be positioned as a simpler, more focused alternative. Spark offers a broader ecosystem with libraries for streaming, machine learning, and more, but SmallPond's use of DuckDB and 3FS is tailored for AI workloads, with benchmarks showing impressive performance. This makes SmallPond potentially more suitable for specific use cases, especially where SQL-based processing and AI data access are priorities, though it may lack Spark's extensive community and feature set.
+
+### Example Usage and Getting Started
+
+To illustrate how SmallPond can be used, consider the following Python code snippet from its documentation:
+
+```
+import smallpond
+
+# Initialize session
+sp = smallpond.init()
+
+# Load data
+df = sp.read_parquet("prices.parquet")
+
+# Process data
+df = df.repartition(3, hash_by="ticker")
+df = sp.partial_sql("SELECT ticker, min(price), max(price) FROM {0} GROUP BY ticker", df)
+
+# Save results
+df.write_parquet("output/")
+
+# Show results
+print(df.to_pandas())
+```
+
+This example demonstrates initializing a session, loading data from a Parquet file, partitioning it by the "ticker" column, processing with a SQL query to find minimum and maximum prices, saving the results, and displaying them as a pandas DataFrame. This simplicity aligns with SmallPond's design philosophy, making it accessible for developers familiar with Python and SQL.
+
+### Conclusion
+
+SmallPond represents a significant advancement in distributed data processing, particularly for AI and big data workloads. Its integration of DuckDB's performance and 3FS's scalable storage offers a compelling solution for organizations seeking efficient, cost-effective data processing. However, its reliance on specific technologies and relative newness suggest it may require additional adaptation and may not yet match the community support of more established frameworks. As it continues to develop, SmallPond has the potential to redefine how AI infrastructure handles large-scale data, making it a framework worth watching for data professionals in 2025 and beyond.

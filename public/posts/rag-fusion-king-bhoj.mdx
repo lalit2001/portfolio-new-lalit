@@ -1,0 +1,148 @@
+---
+title: "RAG Fusion: overcoming RAG limitations with the wisdom of King Bhoj's court"
+date: 2024-09-25
+excerpt: "Why single-query RAG breaks down at retrieval time, and how RAG Fusion multiplexes queries to catch what single-shot misses."
+tags: [rag, llm, retrieval]
+cover: /posts/images/rag-fusion-king-bhoj/cover-01.png
+source: linkedin
+sourceUrl: https://www.linkedin.com/pulse/rag-fusion-overcoming-limitations-wisdom-king-bhojs-court-moharana-uxa2c
+---
+
+*Published September 25, 2024*
+
+![Cover](/posts/images/rag-fusion-king-bhoj/cover-01.png)
+
+In the ever-evolving landscape of artificial intelligence, Retrieval Augmented Generation (RAG) has emerged as a powerful technique. However, like any technology, it has its limitations. Enter RAG Fusion - a method that addresses these challenges by drawing inspiration from the wisdom of the past. Let's explore this concept through the lens of King Bhoj's legendary court of scholars.
+
+### The Tale of King Bhoj and His Court of Scholars
+
+In ancient India, King Bhoj was renowned not just for his rule, but for his patronage of knowledge. His court was home to the Navratnas (Nine Jewels) - scholars of diverse expertise, from astronomy to literature, medicine to mathematics.
+
+When faced with complex problems, King Bhoj would consult these scholars. Each would offer insights from their specialized field. However, the king soon realized that while individual opinions were valuable, the true power lay in synthesizing these diverse perspectives into a cohesive solution.
+
+This ancient wisdom mirrors the evolution from RAG to RAG Fusion in our modern AI landscape.
+
+### Understanding RAG and Its Limitations
+
+Retrieval Augmented Generation (RAG) enhances language models by retrieving relevant information from a knowledge base before generating responses. However, it faces several challenges:
+
+**Limited Perspective** : Traditional RAG often relies on a single retrieval method, potentially missing valuable information.**Inconsistency** : Different queries about the same topic might retrieve inconsistent information.**Lack of Context** : RAG may struggle with nuanced queries requiring a broader understanding.**Bias Amplification** : If the knowledge base or retrieval method is biased, RAG can perpetuate or amplify these biases.**Hallucination** : When relevant information isn't found, language models might generate plausible but incorrect responses.
+
+### Introducing RAG Fusion: The Court of AI Scholars
+
+RAG Fusion addresses these limitations by emulating King Bhoj's approach. Instead of relying on a single retrieval method, it combines multiple techniques - much like consulting various scholars. This fusion of methods offers several advantages:
+
+**Comprehensive Coverage** : By using multiple retrieval methods, RAG Fusion captures a broader range of relevant information.**Increased Accuracy** : The fusion of different perspectives helps in cross-verification and reduces inconsistencies.**Contextual Understanding** : Diverse retrieval methods provide a more holistic context for complex queries.**Bias Mitigation** : Combining multiple sources and methods can help balance out individual biases.**Reduced Hallucination** : With more comprehensive information retrieval, the language model is less likely to generate unfounded responses.
+
+### The RAG Fusion Formula
+
+At its core, RAG Fusion follows this general formula:
+
+**Query Expansion** : Generate multiple variations of the original query.**Multi-Method Retrieval** : Apply different retrieval methods to these queries.**Result Aggregation** : Combine and rank the retrieved results.**Context Preparation** : Prepare a context from the top-ranked results.**Response Generation** : Use an LLM to generate the final response based on the prepared context.
+
+### Implementing RAG Fusion: A Python Example
+
+Let's implement a simplified version of RAG Fusion using Python, integrating OpenAI's GPT-3.5 for query expansion and response generation:
+
+```
+import numpy as np
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sentence_transformers import SentenceTransformer
+from openai import OpenAI
+
+class RAGFusion:
+    def __init__(self, documents, openai_api_key):
+        self.documents = documents
+        self.tfidf = TfidfVectorizer().fit(documents)
+        self.semantic_model = SentenceTransformer('all-MiniLM-L6-v2')
+        self.semantic_embeddings = self.semantic_model.encode(documents)
+        self.client = OpenAI(
+    api_key=openai_api_key,
+)
+
+    def keyword_search(self, query, top_k=5):
+        query_vec = self.tfidf.transform([query])
+        scores = np.dot(query_vec, self.tfidf.transform(self.documents).T).toarray()[0]
+        top_indices = scores.argsort()[-top_k:][::-1]
+        return [(self.documents[i], scores[i]) for i in top_indices]
+
+    def semantic_search(self, query, top_k=5):
+        query_embedding = self.semantic_model.encode([query])[0]
+        scores = np.dot(self.semantic_embeddings, query_embedding)
+        top_indices = scores.argsort()[-top_k:][::-1]
+        return [(self.documents[i], scores[i]) for i in top_indices]
+
+    def expand_query(self, query):
+        response = self.client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant that generates query variations."},
+                {"role": "user", "content": f"Generate 3 variations of the following query: {query}"}
+            ]
+        )
+        # print(response)
+        variations = response.choices[0].message.content.split('\n')
+        return [query] + variations  # Include original query
+
+    def fuse_results(self, query, top_k=5):
+        expanded_queries = self.expand_query(query)
+        print(expanded_queries)
+        all_results = []
+        for q in expanded_queries:
+            all_results.extend(self.keyword_search(q, top_k))
+            all_results.extend(self.semantic_search(q, top_k))
+        
+        # Simple fusion strategy: combine and re-rank
+        unique_results = list(set(doc for doc, _ in all_results))
+        final_scores = [sum(score for d, score in all_results if d == doc) for doc in unique_results]
+        
+        sorted_results = sorted(zip(unique_results, final_scores), key=lambda x: x[1], reverse=True)
+        return sorted_results[:top_k]
+
+    def generate_response(self, query, retrieved_docs):
+        context = " ".join(retrieved_docs)
+        response = self.client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant that answers questions based on the given context."},
+                {"role": "user", "content": f"Context: {context}\n\nQuestion: {query}\n\nAnswer:"}
+            ]
+        )
+        return response.choices[0].message.content.strip()
+
+# Usage
+documents = [
+    "King Bhoj was known for his court of nine scholars called Navratnas.",
+    "The Navratnas of King Bhoj's court had expertise in diverse fields.",
+    "RAG Fusion combines multiple retrieval methods for better results.",
+    "Traditional RAG systems often rely on a single retrieval method.",
+    "Artificial intelligence is revolutionizing information retrieval and synthesis."
+]
+
+rag_fusion = RAGFusion(documents, "api-key")
+query = "How does King Bhoj's court relate to modern AI techniques?"
+results = rag_fusion.fuse_results(query)
+
+retrieved_docs = [doc for doc, _ in results]
+response = rag_fusion.generate_response(query, retrieved_docs)
+print(f"Query: {query}")
+print(f"Response: {response}")
+```
+
+This implementation demonstrates the key components of RAG Fusion:
+
+Query expansion using GPT-3.5Multiple retrieval methods (keyword and semantic search)Result fusion and rankingResponse generation using GPT-3.5
+
+### The Future of AI: Learning from Ancient Wisdom
+
+As we advance in the field of AI, the story of King Bhoj and his court reminds us of the timeless value of diverse perspectives. RAG Fusion, much like the king's approach, doesn't rely on a single source of knowledge but synthesizes insights from various methods.
+
+By embracing this approach, we're not just building more accurate AI systems; we're creating digital courts of wisdom that can navigate the complexities of information with the discernment of an ancient king and his scholars.
+
+As we continue to innovate, let's remember that sometimes, the path to cutting-edge technology is illuminated by the wisdom of the past. In the fusion of ancient principles and modern techniques, we find the true power of artificial intelligence.
+
+Reference:
+
+RAG-FUSION: A NEW TAKE ON RETRIEVAL-AUGMENTED GENERATION
+
+\#genai #llm #rag #rag-fusion #llamaindex #langchian

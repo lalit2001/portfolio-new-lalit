@@ -3,40 +3,254 @@
     "slug": "design-patterns-agentic-python",
     "title": "Complete Guide to All 23 Design Patterns in Agentic Python Systems",
     "date": "2026-04-23",
-    "excerpt": "A field guide to Gang-of-Four design patterns applied to AI agent backends - creational, structural, and behavioral, with Python examples pulled straight from production code.",
-    "tags": ["design-patterns", "agents", "python", "llm"],
-    "cover": "/posts/images/design-patterns-cover.svg"
+    "excerpt": "A field guide to Gang-of-Four design patterns applied to AI agent backends - creational, structural, and behavioral - with Python examples pulled straight from production code.",
+    "tags": [
+      "design-patterns",
+      "agents",
+      "python",
+      "llm"
+    ],
+    "cover": "/posts/images/design-patterns-agentic-python/cover-01.png"
+  },
+  {
+    "slug": "kafka-kraft-zookeeper-farewell",
+    "title": "ZooKeeper's farewell: Apache Kafka enters a new era with KRaft",
+    "date": "2025-03-17",
+    "excerpt": "Why Kafka is finally shedding ZooKeeper, what KRaft mode changes operationally, and how to plan a migration.",
+    "tags": [
+      "kafka",
+      "kraft",
+      "infra"
+    ],
+    "cover": "/posts/images/kafka-kraft-zookeeper-farewell/cover-01.jpg"
+  },
+  {
+    "slug": "duckdb-smallpond-distributed",
+    "title": "DuckDB Unleashed: distributed data processing with SmallPond",
+    "date": "2025-03-03",
+    "excerpt": "How SmallPond turns embedded DuckDB into a distributed compute engine - and where that pattern is going next.",
+    "tags": [
+      "duckdb",
+      "smallpond",
+      "olap"
+    ],
+    "cover": "/posts/images/duckdb-smallpond-distributed/cover-01.png"
+  },
+  {
+    "slug": "single-node-processing-engines",
+    "title": "The rise of single-node processing engines (and their distributed cousins)",
+    "date": "2025-01-28",
+    "excerpt": "DuckDB, Polars, and Datafusion made single-node analytics fast again. Here is what that shift means for data platform design.",
+    "tags": [
+      "duckdb",
+      "polars",
+      "olap"
+    ],
+    "cover": "/posts/images/single-node-processing-engines/cover-01.png"
+  },
+  {
+    "slug": "s3-tables-pyspark-local",
+    "title": "Harnessing Amazon S3 Tables with PySpark locally",
+    "date": "2024-12-06",
+    "excerpt": "Running PySpark against Amazon S3 Tables from your laptop - configuration, catalog setup, and gotchas.",
+    "tags": [
+      "aws",
+      "s3",
+      "spark"
+    ],
+    "cover": "/posts/images/s3-tables-pyspark-local/cover-01.png"
+  },
+  {
+    "slug": "flink-paimon-realtime-lake",
+    "title": "Building real-time data lakes with Apache Flink and Apache Paimon",
+    "date": "2024-10-25",
+    "excerpt": "A hands-on guide to streaming CDC into an Apache Paimon lakehouse with Flink SQL - including changelog semantics, compaction, and query patterns.",
+    "tags": [
+      "flink",
+      "paimon",
+      "data-engineering"
+    ],
+    "cover": "/posts/images/flink-paimon-realtime-lake/cover-01.jpg"
+  },
+  {
+    "slug": "rag-fusion-king-bhoj",
+    "title": "RAG Fusion: overcoming RAG limitations with the wisdom of King Bhoj's court",
+    "date": "2024-09-25",
+    "excerpt": "Why single-query RAG breaks down at retrieval time, and how RAG Fusion multiplexes queries to catch what single-shot misses.",
+    "tags": [
+      "rag",
+      "llm",
+      "retrieval"
+    ],
+    "cover": "/posts/images/rag-fusion-king-bhoj/cover-01.png"
+  },
+  {
+    "slug": "python-lambda-api-gateway-resolver",
+    "title": "Simplifying serverless: multiple endpoints in one Python Lambda with APIGatewayRestResolver",
+    "date": "2024-09-13",
+    "excerpt": "How AWS Lambda Powertools' APIGatewayRestResolver turns one Python Lambda into a full mini-API - routes, decorators, validation.",
+    "tags": [
+      "aws",
+      "lambda",
+      "python"
+    ],
+    "cover": "/posts/images/python-lambda-api-gateway-resolver/cover-01.png"
   },
   {
     "slug": "mastering-cdc-with-hudi",
     "title": "Mastering CDC with Hudi: managing trains at an Indian railway station",
     "date": "2024-08-10",
     "excerpt": "A field metaphor - Indian railway stations - for wrapping your head around Change Data Capture on Apache Hudi.",
-    "tags": ["data-engineering", "hudi", "cdc"],
-    "cover": "/posts/images/mastering-cdc-with-hudi-cover.svg"
+    "tags": [
+      "data-engineering",
+      "hudi",
+      "cdc"
+    ],
+    "cover": "/posts/images/mastering-cdc-with-hudi/cover-01.png"
+  },
+  {
+    "slug": "aws-lambda-idempotency",
+    "title": "AWS Lambda idempotency for Python devs, using Powertools",
+    "date": "2024-07-31",
+    "excerpt": "Why every serverless workflow eventually needs idempotency, and how AWS Lambda Powertools makes it a decorator away.",
+    "tags": [
+      "aws",
+      "lambda",
+      "python"
+    ],
+    "cover": "/posts/images/aws-lambda-idempotency/cover-01.png"
+  },
+  {
+    "slug": "spark-cluster-config-desi-guide",
+    "title": "Demystifying Spark cluster configuration: a desi data engineer's guide",
+    "date": "2024-07-28",
+    "excerpt": "Sizing executors, cores, and memory for Apache Spark - explained through the lens of Indian street food.",
+    "tags": [
+      "spark",
+      "data-engineering"
+    ],
+    "cover": "/posts/images/spark-cluster-config-desi-guide/cover-01.jpg"
+  },
+  {
+    "slug": "project-nessie-data-lake",
+    "title": "Introducing Project Nessie: revolutionizing data lake management",
+    "date": "2024-05-11",
+    "excerpt": "Git-like versioning, branching, and merging for your data lake - what Project Nessie changes about how we think about lakehouse governance.",
+    "tags": [
+      "nessie",
+      "lakehouse",
+      "data-engineering"
+    ],
+    "cover": "/posts/images/project-nessie-data-lake/cover-01.jpg"
   },
   {
     "slug": "migrate-data-airbyte",
     "title": "Migrate data like a boss with Airbyte",
     "date": "2024-04-21",
     "excerpt": "Setting up Airbyte with Docker Compose and building a pipeline to migrate between two Postgres databases.",
-    "tags": ["airbyte", "docker", "postgres"],
-    "cover": "/posts/images/migrate-data-airbyte-cover.svg"
+    "tags": [
+      "airbyte",
+      "docker",
+      "postgres"
+    ],
+    "cover": "/posts/images/migrate-data-airbyte/cover-01.jpg"
   },
   {
     "slug": "aws-neptune-vector-similarity",
     "title": "Vector similarity on AWS Neptune Analytics",
     "date": "2024-03-11",
     "excerpt": "Combining property graphs with vector embeddings on Neptune Analytics to surface hidden connections.",
-    "tags": ["aws", "neptune", "vector-search"],
-    "cover": "/posts/images/aws-neptune-vector-similarity-cover.svg"
+    "tags": [
+      "aws",
+      "neptune",
+      "vector-search"
+    ],
+    "cover": "/posts/images/aws-neptune-vector-similarity/cover-01.jpg"
+  },
+  {
+    "slug": "containerize-fastapi-and-react",
+    "title": "A beginner's guide to containerizing FastAPI + React with Docker",
+    "date": "2023-10-30",
+    "excerpt": "A step-by-step walkthrough for wrapping a FastAPI backend and a React frontend into Docker containers and orchestrating them locally.",
+    "tags": [
+      "docker",
+      "fastapi",
+      "react"
+    ],
+    "cover": "/posts/images/containerize-fastapi-and-react/cover-01.png"
+  },
+  {
+    "slug": "apache-nifi-3-node-cluster",
+    "title": "Setting up a 3-node Apache NiFi cluster",
+    "date": "2023-09-17",
+    "excerpt": "Standing up a production-shaped 3-node Apache NiFi cluster - ZooKeeper, TLS, load balancing, and site-to-site.",
+    "tags": [
+      "nifi",
+      "clustering",
+      "data-engineering"
+    ],
+    "cover": "/posts/images/apache-nifi-3-node-cluster/cover-01.jpg"
+  },
+  {
+    "slug": "custom-nifi-processors-docker",
+    "title": "Creating custom NiFi processors and Dockerizing them",
+    "date": "2023-09-02",
+    "excerpt": "A step-by-step guide to writing your own Apache NiFi processor in Java and shipping it inside a Docker image.",
+    "tags": [
+      "nifi",
+      "docker",
+      "java"
+    ],
+    "cover": "/posts/images/custom-nifi-processors-docker/cover-01.jpg"
+  },
+  {
+    "slug": "knowledge-graphs-ai-pdf-insights",
+    "title": "Knowledge graphs and AI: illuminating insights from PDFs",
+    "date": "2023-08-06",
+    "excerpt": "Building a knowledge graph from unstructured PDFs and layering AI on top to surface answers.",
+    "tags": [
+      "knowledge-graphs",
+      "ai",
+      "rag"
+    ],
+    "cover": "/posts/images/knowledge-graphs-ai-pdf-insights/cover-01.jpg"
   },
   {
     "slug": "python-lambda-jenkins",
     "title": "Deploying a Python model to AWS Lambda with Jenkins",
-    "date": "2023-05-21",
+    "date": "2023-05-22",
     "excerpt": "A minimal CI pipeline that packages a Python model, zips its dependencies, and deploys to AWS Lambda on every merge.",
-    "tags": ["aws", "lambda", "jenkins", "ci-cd"],
-    "cover": "/posts/images/python-lambda-jenkins-cover.svg"
+    "tags": [
+      "aws",
+      "lambda",
+      "jenkins",
+      "ci-cd"
+    ],
+    "cover": "/posts/images/python-lambda-jenkins/cover-01.jpg"
+  },
+  {
+    "slug": "mlops-processes-guide",
+    "title": "Streamlining Machine Learning Operations: a guide to MLOps processes",
+    "date": "2023-05-12",
+    "excerpt": "A pragmatic guide to the MLOps lifecycle - versioning, CI/CD for models, monitoring drift, and rolling back safely.",
+    "tags": [
+      "mlops",
+      "ml",
+      "ci-cd"
+    ],
+    "cover": "/posts/images/mlops-processes-guide/cover-01.png"
+  },
+  {
+    "slug": "cdc-debezium-postgres-docker",
+    "title": "Change Data Capture with Debezium and Postgres using Docker Compose",
+    "date": "2023-05-02",
+    "excerpt": "Spinning up a full CDC pipeline - Postgres, Debezium, and Kafka - end-to-end with Docker Compose.",
+    "tags": [
+      "cdc",
+      "debezium",
+      "postgres",
+      "docker"
+    ],
+    "cover": "/posts/images/cdc-debezium-postgres-docker/cover-01.jpg"
   }
 ]

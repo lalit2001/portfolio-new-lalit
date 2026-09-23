@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { X, ExternalLink, Loader2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useMdxPost } from '../hooks/useMdxPost'
+import { usePostSeo } from '../hooks/usePostSeo'
 import { BlogPostMeta, postUrl } from '../config/blog'
 
 interface Props {
@@ -11,6 +12,8 @@ interface Props {
 
 export function PostReader({ post, onBack }: Props) {
   const { Content, loading, error } = useMdxPost(post.slug)
+
+  usePostSeo(post)
 
   useEffect(() => {
     const prev = document.body.style.overflow
@@ -24,14 +27,6 @@ export function PostReader({ post, onBack }: Props) {
       window.removeEventListener('keydown', onKey)
     }
   }, [onBack])
-
-  useEffect(() => {
-    const prev = document.title
-    document.title = `${post.title} — Lalit Moharana`
-    return () => {
-      document.title = prev
-    }
-  }, [post.title])
 
   return (
     <AnimatePresence>

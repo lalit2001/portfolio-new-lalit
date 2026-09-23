@@ -1,0 +1,71 @@
+{
+  "id": "/",
+  "name": "Lalit Moharana - Builder of systems that think",
+  "short_name": "Lalit M.",
+  "description": "Portfolio of Lalit Moharana - independent engineer and CTO at StriveSteam. Building agentic AI runtimes, LLM infrastructure, and data-native platforms. Deep dives on MCP connector pooling, Self-RAG in production, NL2SQL at enterprise scale, Apache Hudi CDC, and the tools I reach for when the problem is real.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "any",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": [
+    "productivity",
+    "developer",
+    "education",
+    "business"
+  ],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/favicon-32.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon-64.png",
+      "sizes": "64x64",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Writing",
+      "short_name": "Writing",
+      "description": "Long-form notes on agentic AI, LLM infra, and data engineering",
+      "url": "/#writing",
+      "icons": [{ "src": "/favicon-64.png", "sizes": "64x64" }]
+    },
+    {
+      "name": "Projects",
+      "short_name": "Work",
+      "description": "OmniQuery, the Agent Platform, and the AI newsletter",
+      "url": "/#projects",
+      "icons": [{ "src": "/favicon-64.png", "sizes": "64x64" }]
+    },
+    {
+      "name": "Contact",
+      "short_name": "Contact",
+      "description": "Get in touch about agentic AI or data engineering work",
+      "url": "/#contact",
+      "icons": [{ "src": "/favicon-64.png", "sizes": "64x64" }]
+    }
+  ]
+}
