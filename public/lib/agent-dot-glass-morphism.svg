@@ -11,11 +11,16 @@
 <filter id="frost" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="26"/><feColorMatrix type="matrix" values="1 0 0 0 .03  0 1 0 0 .05  0 0 1 0 .03  0 0 0 1 0"/></filter>
 <filter id="soft" x="-50%" y="-200%" width="200%" height="500%"><feGaussianBlur stdDeviation="18"/></filter>
 <filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="sphereSoft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="8"/></filter>
 <filter id="halo" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="22"/></filter>
 <g id="orbs">
- <circle cx="480" cy="262" r="190" fill="#3ee06b" opacity=".35" filter="url(#halo)"/>
- <g><animateTransform attributeName="transform" type="translate" values="0 0;0 -7;0 0" dur="8s" repeatCount="indefinite" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1"/>
-  <circle cx="480" cy="262" r="150" fill="url(#sphere)"/></g>
+ <!-- drifting gradient sphere: lower-left -> top-right, low opacity, soft edge -->
+ <g>
+  <animateTransform attributeName="transform" type="translate" values="-330 170;330 -170" dur="16s" repeatCount="indefinite" calcMode="spline" keyTimes="0;1" keySplines=".45 0 .55 1"/>
+  <animate attributeName="opacity" values="0;.55;.55;0" keyTimes="0;.2;.8;1" dur="16s" repeatCount="indefinite"/>
+  <circle cx="480" cy="262" r="210" fill="#3ee06b" opacity=".22" filter="url(#halo)"/>
+  <circle cx="480" cy="262" r="150" fill="url(#sphere)" opacity=".5" filter="url(#sphereSoft)"/>
+ </g>
 </g>
 <clipPath id="glass"><rect transform="translate(0 14)" x="290" y="140" width="380" height="240" rx="14"/><rect transform="translate(0 14)" x="444" y="36" width="72" height="72" rx="18"/><rect transform="translate(0 14)" x="134" y="156" width="72" height="72" rx="18"/><rect transform="translate(0 14)" x="754" y="156" width="72" height="72" rx="18"/><rect transform="translate(0 14)" x="300" y="404" width="360" height="42" rx="21"/></clipPath>
 <linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4ef07e" stop-opacity=".45"/><stop offset="1" stop-color="#4ef07e" stop-opacity=".02"/></linearGradient>
