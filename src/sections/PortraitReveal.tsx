@@ -274,8 +274,6 @@ function Word({
   const reduce = useReducedMotion()
   const opacity = useTransform(progress, range, [0.12, 1])
   const y = useTransform(progress, range, reduce ? [0, 0] : [6, 0])
-  // Small blur radius keeps the paint cost per word affordable across
-  // 80+ spans; larger values (7-14px) tank frame rate on Retina.
   const blur = useTransform(progress, range, reduce ? [0, 0] : [4, 0])
   const filter = useMotionTemplate`blur(${blur}px)`
   return (
