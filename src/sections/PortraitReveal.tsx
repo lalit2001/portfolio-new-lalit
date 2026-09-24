@@ -73,7 +73,11 @@ export function PortraitReveal({
   const filter = useMotionTemplate`grayscale(${gray}) contrast(${contrast})`
   const radius = useTransform(p, [0, 0.55], [14, 28])
   const glow = useTransform(p, [0.3, 0.7], [0, 1])
-  const shadow = useMotionTemplate`0 40px 90px -30px rgba(0,0,0,.9), 0 0 0 1px rgba(255,255,255,.06), 0 0 120px -20px rgba(224,60,60,${glow})`
+  // Static box-shadow. The animated red glow lives on a sibling div
+  // driven by opacity only — much cheaper than re-stringing box-shadow
+  // per frame.
+  const shadow =
+    '0 40px 90px -30px rgba(0,0,0,.9), 0 0 0 1px rgba(255,255,255,.06)'
 
   /* ---------------- side copy ---------------- */
   const leftOpacity = useTransform(p, [0.48, 0.68], [0, 1])
@@ -137,9 +141,25 @@ export function PortraitReveal({
 
           {/* ---------- portrait ---------- */}
           <div
-            className="order-1 lg:order-2 justify-self-center"
+            className="order-1 lg:order-2 justify-self-center relative"
             style={{ perspective: 1400 }}
           >
+            {/* Cheap red glow — opacity-only. Sits under the portrait. */}
+            <motion.div
+              aria-hidden
+              style={{ opacity: glow }}
+              className="absolute inset-0 -m-10 rounded-[40px] pointer-events-none"
+            >
+              <div
+                className="w-full h-full rounded-[40px]"
+                style={{
+                  background:
+                    'radial-gradient(ellipse 60% 60% at 50% 50%, rgba(224,60,60,0.35), transparent 70%)',
+                  filter: 'blur(24px)',
+                }}
+              />
+            </motion.div>
+
             <motion.div
               style={{
                 scale,
@@ -177,7 +197,7 @@ export function PortraitReveal({
             className="order-3 max-w-md"
           >
             <p className="text-[#DEDBC8]/85 text-base sm:text-lg leading-relaxed">
-              <RevealWords text={paragraph} progress={p} start={0.6} end={0.86} />
+              <RevealWords text={paragraph} progress={p} start={0.58} end={0.98} />
             </p>
 
             <motion.div
@@ -253,14 +273,13 @@ function Word({
 }) {
   const reduce = useReducedMotion()
   const opacity = useTransform(progress, range, [0.12, 1])
-  const blur = useTransform(progress, range, reduce ? [0, 0] : [7, 0])
   const y = useTransform(progress, range, reduce ? [0, 0] : [6, 0])
+  // Small blur radius keeps the paint cost per word affordable across
+  // 80+ spans; larger values (7-14px) tank frame rate on Retina.
+  const blur = useTransform(progress, range, reduce ? [0, 0] : [4, 0])
   const filter = useMotionTemplate`blur(${blur}px)`
   return (
-    <motion.span
-      style={{ opacity, filter, y }}
-      className="inline-block mr-[0.3em] will-change-[filter,opacity]"
-    >
+    <motion.span style={{ opacity, y, filter }} className="inline-block mr-[0.3em]">
       {children}
     </motion.span>
   )
