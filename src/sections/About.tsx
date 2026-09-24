@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform, MotionValue } from 'framer-motion'
 import { useRef } from 'react'
 import { WordsPullUpMultiStyle } from '../components/WordsPullUpMultiStyle'
+import { PortraitCollage } from '../components/PortraitCollage'
 
 const BODY =
   "Five-plus years shipping data and AI systems across Life Sciences, Automotive, FinTech and Insurtech - from lakehouses that power bank underwriting to multi-agentic platforms in production. Today I'm CTO at StriveSteam. On the side I'm building OmniQuery, a data fabric you can talk to, and the Agent Platform, a self-hostable Claude-style runtime with git-versioned Skills. AWS Community Builder in Data and AI, 2025 & 2026 ."
@@ -27,7 +28,7 @@ function ProgressiveBody({ progress }: { progress: MotionValue<number> }) {
   const start = 0.12
   const end = 0.92
   return (
-    <p className="text-[#DEDBC8] text-sm sm:text-base md:text-lg leading-relaxed">
+    <p className="text-[#DEDBC8] text-sm md:text-base leading-relaxed">
       {chars.map((c, i) => {
         const charProgress =
           start + (end - start) * (i / Math.max(chars.length - 1, 1))
@@ -90,12 +91,16 @@ export function About() {
       <div className="noise-overlay opacity-[0.12] mix-blend-screen pointer-events-none" />
 
       <div className="sticky top-0 h-screen w-full flex items-center px-6 md:px-10 z-10">
-        <div className="mx-auto max-w-6xl w-full bg-[#101010] rounded-2xl md:rounded-[2rem] px-6 md:px-16 py-20 md:py-28 text-center">
-          <div className="text-primary text-[10px] sm:text-xs tracking-[0.2em] uppercase mb-8">
+        <div className="mx-auto max-w-4xl w-full bg-[#141414] ring-1 ring-white/[0.08] shadow-[0_40px_80px_-30px_rgba(0,0,0,0.7)] rounded-2xl md:rounded-[2rem] px-6 md:px-12 py-10 md:py-14 text-center">
+          <div className="mb-6 md:mb-8">
+            <PortraitCollage progress={scrollYProgress} maxWidth={160} />
+          </div>
+
+          <div className="text-primary text-[10px] sm:text-xs tracking-[0.2em] uppercase mb-5">
             Data - AI - Systems
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl max-w-3xl mx-auto leading-[0.95] sm:leading-[0.9]">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl max-w-2xl mx-auto leading-[1.05]">
             <WordsPullUpMultiStyle
               segments={[
                 { text: 'I am Lalit Moharana,', className: 'font-normal' },
@@ -111,7 +116,7 @@ export function About() {
             />
           </h2>
 
-          <div className="mt-10 md:mt-14 max-w-2xl mx-auto">
+          <div className="mt-6 md:mt-8 max-w-xl mx-auto">
             <ProgressiveBody progress={scrollYProgress} />
           </div>
         </div>

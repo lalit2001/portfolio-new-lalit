@@ -1,40 +1,81 @@
+import { motion, useTransform, MotionValue } from 'framer-motion'
+
 /**
- * Displays the pre-processed halftone portrait inside a circular frame.
- * The source at /my-portrait-halftone.png is already halftoned, so we just
- * present it with the site's polish (glow, ring, caption pill).
+ * Scroll-linked portrait reveal.
+ *
+ * As the About section's scroll progress moves 0 -> ~0.35, the portrait
+ * card grows from a small monochrome thumbnail into a full-size colour
+ * card, with a subtle Y-axis tilt that eases out to zero.  Beyond 0.35
+ * the card holds at final state while the About text keeps revealing.
  */
-export function PortraitCollage() {
+export function PortraitCollage({
+  progress,
+  maxWidth = 260,
+}: {
+  progress: MotionValue<number>
+  maxWidth?: number
+}) {
+  const REVEAL_END = 0.35
+
+  const scale = useTransform(progress, [0, REVEAL_END], [0.45, 1])
+  const grayscale = useTransform(progress, [0, REVEAL_END], [1, 0])
+  const rotateY = useTransform(progress, [0, REVEAL_END], [22, 0])
+  const y = useTransform(progress, [0, REVEAL_END], [16, 0])
+  const shadowIntensity = useTransform(progress, [0, REVEAL_END], [0.25, 0.7])
+
+  const filter = useTransform(grayscale, (g) => `grayscale(${g})`)
+  const boxShadow = useTransform(
+    shadowIntensity,
+    (v) => `0 40px 80px -25px rgba(0,0,0,${v}), 0 12px 30px -12px rgba(0,0,0,${v * 0.6})`,
+  )
+
   return (
-    <div className="relative aspect-square w-full max-w-[340px] mx-auto">
+    <div
+      style={{ perspective: 1600, width: maxWidth }}
+      className="relative mx-auto"
+    >
+      {/* Ambient accent glow behind the card */}
       <div
         aria-hidden
-        className="absolute -inset-6 rounded-full pointer-events-none"
+        className="absolute inset-0 rounded-3xl pointer-events-none"
         style={{
           background:
-            'radial-gradient(circle, rgba(169, 233, 251, 0.12) 0%, rgba(252, 215, 237, 0.06) 40%, transparent 70%)',
-          filter: 'blur(20px)',
+            'radial-gradient(circle at 50% 60%, rgba(169, 233, 251, 0.14) 0%, rgba(252, 215, 237, 0.06) 40%, transparent 70%)',
+          filter: 'blur(28px)',
+          transform: 'scale(1.25)',
         }}
       />
 
-      <div className="relative aspect-square w-full rounded-full overflow-hidden ring-1 ring-primary/20 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.8)] bg-[#0a0a0a]">
+      <motion.div
+        style={{
+          scale,
+          rotateY,
+          y,
+          filter,
+          boxShadow,
+          transformStyle: 'preserve-3d',
+          transformOrigin: 'center center',
+          aspectRatio: '3 / 4',
+        }}
+        className="relative w-full rounded-3xl overflow-hidden ring-1 ring-white/10 bg-[#0a0a0a]"
+      >
         <img
-          src="/my-image.png"
+          src="/new-me-image.jpg"
           alt="Portrait of Lalit Moharana"
-          className="absolute inset-0 w-full h-full object-cover object-[center_38%] scale-[1.05]"
+          className="absolute inset-0 w-full h-full object-cover"
         />
 
+        {/* Subtle inner highlight along the top edge */}
         <div
           aria-hidden
-          className="absolute inset-0 rounded-full pointer-events-none"
+          className="absolute inset-0 rounded-3xl pointer-events-none"
           style={{
-            boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.06)',
+            boxShadow:
+              'inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 0 1px rgba(255,255,255,0.05)',
           }}
         />
-      </div>
+      </motion.div>
 
-      <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap text-[9px] tracking-[0.3em] uppercase text-primary/60 bg-[#101010] px-3 py-1 rounded-full ring-1 ring-white/[0.06]">
-        Lalit M. · 2026
-      </div>
     </div>
   )
 }
