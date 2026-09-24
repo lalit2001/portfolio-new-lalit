@@ -248,9 +248,9 @@ function IconTile({
       initial={
         reduce
           ? { opacity: 0 }
-          : { opacity: 0, y: 10, scale: 0.9, filter: 'blur(4px)' }
+          : { opacity: 0, y: 10, scale: 0.9 }
       }
-      whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, margin: '-40px' }}
       whileHover={
         reduce
@@ -268,7 +268,7 @@ function IconTile({
         delay: 0.15 + Math.min(index, 14) * 0.045,
         ease: [0.22, 1, 0.36, 1],
       }}
-      className={`group/tile relative flex items-center gap-2 rounded-xl border border-white/[0.1] bg-black/60 backdrop-blur-[2px] shadow-[0_10px_28px_-10px_rgba(0,0,0,0.7)] whitespace-nowrap cursor-default ${padding} ${className}`}
+      className={`group/tile relative flex items-center gap-2 rounded-xl border border-white/[0.1] bg-black/60 shadow-[0_10px_28px_-10px_rgba(0,0,0,0.7)] whitespace-nowrap cursor-default ${padding} ${className}`}
       style={style}
     >
       <BrandIcon slug={tool.slug} label={tool.label} size={iconSize} color={accent} />
