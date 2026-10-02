@@ -1,5 +1,19 @@
 [
   {
+    "slug": "querying-the-lake-aurora-iceberg",
+    "title": "Querying the lake, without leaving the warehouse",
+    "date": "2026-10-02",
+    "excerpt": "A warts-included build of Amazon Aurora PostgreSQL's direct query support for Apache Iceberg - real S3 lake, real Serverless v2 cluster, every command and every error message, ending in one query that spans five years of lake history and this morning's live rows.",
+    "tags": [
+      "aurora",
+      "iceberg",
+      "postgres",
+      "aws",
+      "data-lake"
+    ],
+    "cover": "/posts/images/querying-the-lake-aurora-iceberg/cover.png"
+  },
+  {
     "slug": "design-patterns-agentic-python",
     "title": "Complete Guide to All 23 Design Patterns in Agentic Python Systems",
     "date": "2026-04-23",
