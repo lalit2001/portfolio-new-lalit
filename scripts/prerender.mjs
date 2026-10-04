@@ -237,15 +237,70 @@ function injectJsonLd(html, block) {
 
 const PRERENDER_HIDE_STYLE = `
     <style>
-      /* Prerendered content is for crawlers / first paint only.
-         Hide once React has populated #root, and keep it visually inert
-         beforehand so FOUC is minimal. */
+      /* Prerendered content serves crawlers AND no-JS visitors.
+         By default we keep it off-screen so JS users never see FOUC
+         before React mounts.  Once #root is populated we hide it fully.
+         The <noscript> block below promotes it back to a readable layout
+         when JavaScript is disabled, so no-JS visitors still get the
+         full homepage / post content instead of a blank page. */
       #prerender { position: absolute; left: -99999px; top: 0; width: 1px; height: 1px; overflow: hidden; }
       #root:not(:empty) ~ #prerender { display: none; }
-    </style>`
+    </style>
+    <noscript>
+      <style>
+        /* No-JS fallback — show the prerendered content as a real
+           document, cream on black, matching the site palette. */
+        #prerender {
+          position: static !important;
+          left: auto !important;
+          width: auto !important;
+          height: auto !important;
+          overflow: visible !important;
+          display: block !important;
+          max-width: 46rem;
+          margin: 3rem auto 6rem;
+          padding: 0 1.5rem;
+          color: #DEDBC8;
+          font-family: 'Almarai', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          line-height: 1.65;
+        }
+        #prerender h1 { font-size: 2rem; line-height: 1.15; margin: 0 0 1rem; }
+        #prerender h2 { font-size: 1.4rem; line-height: 1.2; margin: 2.4em 0 0.6em; }
+        #prerender h3 { font-size: 1.15rem; margin: 1.8em 0 0.5em; }
+        #prerender h4 { font-size: 1rem; margin: 1.4em 0 0.4em; }
+        #prerender p  { margin: 0 0 1em; color: rgba(222,219,200,0.82); }
+        #prerender a  { color: #DEDBC8; text-decoration: underline; text-underline-offset: 3px; }
+        #prerender ul, #prerender ol { padding-left: 1.4em; margin: 0 0 1em; }
+        #prerender li { margin: 0.35em 0; }
+        #prerender img, #prerender svg {
+          display: block; max-width: 100%; height: auto;
+          margin: 2em auto; border-radius: 14px;
+        }
+        #prerender code {
+          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          background: rgba(255,255,255,0.06); padding: 0.15em 0.4em;
+          border-radius: 4px; font-size: 0.9em;
+        }
+        #prerender pre {
+          background: #0a0a0a; border: 1px solid rgba(255,255,255,0.06);
+          border-radius: 12px; padding: 1.1em 1.3em; overflow-x: auto;
+          font-size: 0.85em; line-height: 1.55;
+        }
+        #prerender pre code { background: transparent; padding: 0; border-radius: 0; }
+        #prerender blockquote {
+          border-left: 2px solid rgba(222,219,200,0.25);
+          padding: 0.2em 0 0.2em 1.2em;
+          color: rgba(222,219,200,0.72); margin: 0 0 1em;
+        }
+        #prerender table { width: 100%; border-collapse: collapse; margin: 2em 0; font-size: 0.9em; }
+        #prerender th, #prerender td { padding: 0.6em 0.9em; border-bottom: 1px solid rgba(255,255,255,0.08); text-align: left; }
+        #prerender th { color: #DEDBC8; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.78em; }
+        #prerender hr { border: 0; border-top: 1px solid rgba(255,255,255,0.08); margin: 2em 0; }
+      </style>
+    </noscript>`
 
 function injectHeadStyle(html) {
-  if (html.includes('/* Prerendered content is for crawlers')) return html
+  if (html.includes('Prerendered content serves crawlers')) return html
   return html.replace(/<\/head>/i, `${PRERENDER_HIDE_STYLE}\n  </head>`)
 }
 
