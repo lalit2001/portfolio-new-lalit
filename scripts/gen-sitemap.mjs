@@ -5,12 +5,13 @@
  * copying public/posts/index.json) and emits dist/sitemap.xml pointing at:
  *
  *   - the homepage
- *   - each hash-anchored section (#about, #projects, #skills, #engagements, #writing, #contact)
- *   - each blog post as #post/<slug>
+ *   - each blog post at /post/<slug> (real URLs; dist/post/<slug>/index.html
+ *     is written by scripts/prerender.mjs before this runs)
  *
- * Google crawls hash routes for JS-rendered SPAs and will follow these
- * fragments to the client-rendered content.  Override the base URL by
- * setting SITE_URL in the environment (defaults to https://lalitm.in).
+ * Google ignores URL fragments, so hash-anchored section URLs are not
+ * emitted - they would collapse into the homepage anyway.  Override the
+ * base URL by setting SITE_URL in the environment (defaults to
+ * https://lalitm.in).
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -66,14 +67,8 @@ function main() {
       changefreq: 'weekly',
       priority: '1.0',
     },
-    ...['about', 'projects', 'skills', 'engagements', 'writing', 'contact'].map((h) => ({
-      loc: `${SITE_URL}/#${h}`,
-      lastmod: today,
-      changefreq: 'monthly',
-      priority: '0.7',
-    })),
     ...posts.map((p) => ({
-      loc: `${SITE_URL}/#post/${p.slug}`,
+      loc: `${SITE_URL}/post/${p.slug}`,
       lastmod: iso(p.date),
       changefreq: 'yearly',
       priority: '0.8',

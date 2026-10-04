@@ -16,11 +16,20 @@ const WritingArchive = lazy(() =>
 
 const HOMEPAGE_LIMIT = 3
 
-function readHash(): { archive: boolean; slug: string | null } {
+/**
+ * Resolve the current archive / post route from BOTH the pathname and the
+ * hash.  Real routes (`/post/<slug>`) are preferred for SEO and are what
+ * prerender.mjs emits, but legacy `#post/<slug>` hashes are still accepted
+ * so links in old tweets / sitemaps keep working.
+ */
+function readRoute(): { archive: boolean; slug: string | null } {
+  const pathMatch = window.location.pathname.match(/^\/post\/([\w-]+)\/?$/)
+  if (pathMatch) return { archive: false, slug: pathMatch[1] }
+
   const h = window.location.hash
   if (h === '#writing/all') return { archive: true, slug: null }
-  const m = h.match(/^#post\/([\w-]+)$/)
-  return { archive: false, slug: m ? m[1] : null }
+  const hashMatch = h.match(/^#post\/([\w-]+)$/)
+  return { archive: false, slug: hashMatch ? hashMatch[1] : null }
 }
 
 function EmptyState({ error }: { error: string | null }) {
@@ -62,8 +71,8 @@ export function Writing() {
   const [active, setActive] = useState<BlogPostMeta | null>(null)
   const [archiveOpen, setArchiveOpen] = useState(false)
 
-  const applyHash = useCallback(() => {
-    const { archive, slug } = readHash()
+  const applyRoute = useCallback(() => {
+    const { archive, slug } = readRoute()
     setArchiveOpen(archive)
     if (slug) {
       const found = posts.find((p) => p.slug === slug)
@@ -74,36 +83,41 @@ export function Writing() {
   }, [posts])
 
   useEffect(() => {
-    applyHash()
-  }, [applyHash])
+    applyRoute()
+  }, [applyRoute])
 
   useEffect(() => {
-    window.addEventListener('hashchange', applyHash)
-    return () => window.removeEventListener('hashchange', applyHash)
-  }, [applyHash])
+    window.addEventListener('hashchange', applyRoute)
+    window.addEventListener('popstate', applyRoute)
+    return () => {
+      window.removeEventListener('hashchange', applyRoute)
+      window.removeEventListener('popstate', applyRoute)
+    }
+  }, [applyRoute])
 
   const openPost = (p: BlogPostMeta) => {
     setActive(p)
-    history.pushState(null, '', `#post/${p.slug}`)
+    // Real URL for SEO; hash routes still redirect here on load.
+    history.pushState(null, '', `/post/${p.slug}`)
   }
 
   const closePost = () => {
     setActive(null)
     if (archiveOpen) {
-      history.pushState(null, '', '#writing/all')
-    } else if (window.location.hash.startsWith('#post/')) {
-      history.pushState(null, '', '#writing')
+      history.pushState(null, '', '/#writing/all')
+    } else {
+      history.pushState(null, '', '/#writing')
     }
   }
 
   const openArchive = () => {
     setArchiveOpen(true)
-    history.pushState(null, '', '#writing/all')
+    history.pushState(null, '', '/#writing/all')
   }
 
   const closeArchive = () => {
     setArchiveOpen(false)
-    history.pushState(null, '', '#writing')
+    history.pushState(null, '', '/#writing')
   }
 
   const visible = posts.slice(0, HOMEPAGE_LIMIT)

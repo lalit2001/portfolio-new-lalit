@@ -10,9 +10,25 @@ interface Props {
 
 export function PostCard({ post, onOpen, index = 0 }: Props) {
   return (
-    <motion.button
-      type="button"
-      onClick={() => onOpen(post)}
+    <motion.a
+      href={`/post/${post.slug}`}
+      // Hijack normal left-click to open the in-app reader (keeps the SPA
+      // transitions).  Modified clicks and right-click fall through so
+      // "open in new tab" still works and gets a real server-rendered
+      // page.
+      onClick={(e) => {
+        if (
+          e.defaultPrevented ||
+          e.button !== 0 ||
+          e.metaKey ||
+          e.ctrlKey ||
+          e.shiftKey ||
+          e.altKey
+        )
+          return
+        e.preventDefault()
+        onOpen(post)
+      }}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
@@ -21,7 +37,7 @@ export function PostCard({ post, onOpen, index = 0 }: Props) {
         delay: Math.min(index, 8) * 0.06,
         ease: [0.22, 1, 0.36, 1],
       }}
-      className="group relative flex flex-col text-left rounded-2xl bg-[#0e0e0e] ring-1 ring-white/[0.06] hover:ring-white/[0.18] transition-all overflow-hidden"
+      className="group relative flex flex-col text-left rounded-2xl bg-[#0e0e0e] ring-1 ring-white/[0.06] hover:ring-white/[0.18] transition-all overflow-hidden no-underline"
     >
       <div className="relative w-full aspect-[16/10] overflow-hidden bg-black">
         {post.cover ? (
@@ -83,6 +99,6 @@ export function PostCard({ post, onOpen, index = 0 }: Props) {
           </p>
         )}
       </div>
-    </motion.button>
+    </motion.a>
   )
 }

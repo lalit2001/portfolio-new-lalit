@@ -3,7 +3,7 @@ import { BlogPostMeta } from '../config/blog'
 
 /**
  * While a blog post is open, swap the page-level SEO metadata so the URL
- * `#post/<slug>` looks like a real article to Google / social crawlers:
+ * `/post/<slug>` looks like a real article to Google / social crawlers:
  *
  *  - Title, description
  *  - canonical <link>
@@ -21,7 +21,7 @@ export function usePostSeo(post: BlogPostMeta | null) {
       typeof window !== 'undefined'
         ? window.location.origin
         : 'https://lalitm.in'
-    const url = `${origin}/#post/${post.slug}`
+    const url = `${origin}/post/${post.slug}`
     const cover = post.cover
       ? post.cover.startsWith('http')
         ? post.cover
