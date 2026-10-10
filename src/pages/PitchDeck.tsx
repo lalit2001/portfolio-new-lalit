@@ -9,7 +9,7 @@ import { useEffect, useRef } from 'react'
  * clean and the portfolio's SPA fallback keeps working on static hosts.
  */
 // Bump when deck.html changes so browsers do not serve a stale copy.
-const DECK_VERSION = '2026-10-10-17'
+const DECK_VERSION = '2026-10-10-18'
 
 export function PitchDeck() {
   const ref = useRef<HTMLIFrameElement>(null)
