@@ -70,6 +70,19 @@ const TESTIMONIALS: Testimonial[] = [
     quoteHtml:
       "When he joined, we were on an old-school MySQL setup held together by cron jobs. He designed, built and scaled a <em>config-driven lakehouse</em> on Iceberg and Apache Doris - fully open-source, any cloud - and it's still running the business without him touching it. The migration was the least dramatic part. That's the compliment.",
   },
+  // {
+  //   name: 'Prajwal Kr',
+  //   initials: 'PK',
+  //   role: 'Head of Validation & Innovation',
+  //   company: 'Merck',
+  //   companyUrl: 'https://www.merckgroup.com/en',
+  //   linkedin: 'https://www.linkedin.com/in/prajwal-kr-7005ab20/',
+  //   photo: '/clients/prajwal-kr.png',
+  //   accent: 'lav',
+  //   tag: 'PRAX AI',
+  //   quoteHtml:
+  //     "Periodic reviews used to cost our teams weeks - hundreds of tables, lakhs of documents, all manual. <em>PRAX AI</em>, the tool he built with us, automates the ingestion and the AI analysis and hands reviewers answers with evidence attached. Doing that in a validated pharma environment is the hard part. He got that from day one.",
+  // },
   {
     name: 'Sanjeeb Mohapatra',
     initials: 'SM',

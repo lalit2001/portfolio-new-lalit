@@ -13,6 +13,7 @@ const NAV: { label: string; href: string }[] = [
 ]
 
 const CHIPS = [
+  // { label: 'CTO · StriveSteam' },
   { label: 'AWS Community Builder' },
   { label: 'Agentic AI · Data · Cloud' },
   { label: 'Gurugram', icon: MapPin },
