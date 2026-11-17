@@ -13,7 +13,7 @@ export default function App() {
       <ScrollProgress />
       <Hero />
       <PortraitReveal
-        src="/new-me-image.jpg"
+        src="/lalit-portrait-2026.jpg"
         alt="Portrait of Lalit Moharana"
         eyebrow="Data - AI - Systems"
         greeting="I am Lalit Moharana,"

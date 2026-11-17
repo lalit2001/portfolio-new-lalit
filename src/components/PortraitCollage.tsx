@@ -60,7 +60,7 @@ export function PortraitCollage({
         className="relative w-full rounded-3xl overflow-hidden ring-1 ring-white/10 bg-[#0a0a0a]"
       >
         <img
-          src="/new-me-image.jpg"
+          src="/lalit-portrait-2026.jpg"
           alt="Portrait of Lalit Moharana"
           className="absolute inset-0 w-full h-full object-cover"
         />
